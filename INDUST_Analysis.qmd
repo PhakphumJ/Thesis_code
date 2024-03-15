@@ -1,0 +1,68 @@
+---
+title: "Thesis_INDUS_Analysis"
+format: html
+---
+
+In this document/code, I will examine key dimensions of manafacturing firms. The main goal is to see whether there are differences in key dimensions across different regions. The main characteristics that I will examine are:
+
+1. Firm size (Number of employees)
+  i) 2540: (A26 + A31)
+  ii) 2550: (A24 + A28)
+  iii) 2560: (B04 + B08)
+2. Foreign Investment
+  i) 2540: A05
+  ii) 2550: A09
+  iii) 2560: A09
+3. Exporting
+  i) 2540: A11
+  ii) 2550: A15
+  iii) 2560: A12
+4. Sales
+  i) 2540: F01
+  ii) 2550: G01
+  iii) 2560: D01
+5. Profit before tax (Total income - Cost of sales - Administrative expenses - Costs of raw materials, production, goods, work done by others - wages bill)
+  i) 2540: F09 - E01 - E02 - C01 - C02 - C03 - C04 - B04 - B08 - B09 - B10 - B11
+  ii) 2550: G13 - E01 - E02 - C01 - C02 - C03 - C04 - B05 - B10
+  iii) 2560: D13 - C21 - C41 - C06 - B19 - B24
+6. Total Fixed Assets
+  i) 2540: H07
+  ii) 2550: I08
+  iii) 2560:
+7. Problems of operation
+  i) 2540: H11_1, H11_2, H11_3
+  ii) 2550: no info
+  iii) 2560: J02, J03, J04, J05, J06, J07, J08, J09, J10, J11, J12, J13, J14, J15, J16, J17
+8. Needs from the government
+  i) 2560: J19, J20, J21, J22, J23, J24, J25, J26, J27, J28, J29, J30, J31, J32, J33, J34 
+9. R&D Costs
+  i) 2540: No info
+  ii) 2550: E28
+  iii) 2560: C32
+10. Number of firms
+  i) 2540: ??
+  ii) 2550: sum of weights
+  iii) 2560: sum of weights
+
+
+
+## Import and Clean Data
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(haven)
+
+# Set working directory
+setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
+
+# Importing the data
+INDUS_2540 <- read_sav("Data\\INDUS 2540 (1997)\\Microdata INDUS 2540\\Microdata INDUS 2540.sav")
+
+INDUS_2550 <- read_sav("Data\\INDUS 2550 (2007)\\Microdata INDUS 2550\\Microdata INDUS 2550.sav")
+
+INDUS_2560 <- read_sav("Data\\INDUS 2560 (2018)\\Microdata INDUS 2560\\Microdata INDUS 2560.sav")
+
+
+```

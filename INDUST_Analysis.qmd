@@ -56,6 +56,7 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(haven)
+library(ggstats)
 
 # Set working directory
 setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
@@ -77,6 +78,41 @@ INDUS_2550 <- INDUS_2550 %>% mutate(WGT_CWT = WGT_CWT/10000, WGT_REG = WGT_REG/1
 
 ```
 
+## Categorize number of employees (follow the same categorization as in year 2550)
+1. 1
+2. 2-3
+3. 4-5
+4. 6-10
+5. 11-15
+6. 16-20
+7. 21-25
+8. 26-30
+9. 31-50
+10. 51-100
+11. 101-200
+12. 201-500
+13. 501-1000
+14. > 1000
+
+```{r}
+## Categorized number of employees (2560)\
+# 1 + NA should be 1
+INDUS_2560 <- INDUS_2560 %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = ifelse(is.na(B08), 0, B08)) %>% mutate(SIZE_R = case_when(B04 + B08 == 1 ~ 1, B04 + B08 >= 2 & B04 + B08 <= 3 ~ 2, B04 + B08 >= 4 & B04 + B08 <= 5 ~ 3, B04 + B08 >= 6 & B04 + B08 <= 10 ~ 4, B04 + B08 >= 11 & B04 + B08 <= 15 ~ 5, B04 + B08 >= 16 & B04 + B08 <= 20 ~ 6, B04 + B08 >= 21 & B04 + B08 <= 25 ~ 7, B04 + B08 >= 26 & B04 + B08 <= 30 ~ 8, B04 + B08 >= 31 & B04 + B08 <= 50 ~ 9, B04 + B08 >= 51 & B04 + B08 <= 100 ~ 10, B04 + B08 >= 101 & B04 + B08 <= 200 ~ 11, B04 + B08 >= 201 & B04 + B08 <= 500 ~ 12, B04 + B08 >= 501 & B04 + B08 <= 1000 ~ 13, B04 + B08 > 1000 ~ 14))
+
+```
+
+
+
+```{r}
+## Convert SIZE_R to factor
+INDUS_2550 <- INDUS_2550 %>% mutate(SIZE_R = factor(SIZE_R, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14), labels = c("1", "2-3", "4-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31-50", "51-100", "101-200", "201-500", "501-1000", ">1000")))
+
+INDUS_2560 <- INDUS_2560 %>% mutate(SIZE_R = factor(SIZE_R, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14), labels = c("1", "2-3", "4-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31-50", "51-100", "101-200", "201-500", "501-1000", ">1000")))
+
+
+```
+
+
 
 ## Tabulating the data
 ### Firm Size (by region)
@@ -84,7 +120,47 @@ INDUS_2550 <- INDUS_2550 %>% mutate(WGT_CWT = WGT_CWT/10000, WGT_REG = WGT_REG/1
 ```{r}
 ### Calculate the average number of employees by region
 # 2550
-Avg_emp_2550 <- INDUS_2550 %>% group_by(REG) %>% summarise(Avg_emp_50 = weighted.mean(A24 + A28, WGT_REG, na.rm = TRUE))
+Avg_emp_2550 <- INDUS_2550 %>% mutate(A24 = ifelse(is.na(A24), 0, A24), A28 = ifelse(is.na(A28), 0, A28)) %>% group_by(REG) %>% summarise(Avg_emp_50 = weighted.mean(A24 + A28, WGT_REG, na.rm = TRUE))
+
+# 2560
+Avg_emp_2560 <- INDUS_2560 %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = ifelse(is.na(B08), 0, B08)) %>% group_by(REG) %>% summarise(Avg_emp_60 = weighted.mean(B04 + B08, WGT, na.rm = TRUE))
+
+```
+
+### Number of firms (by region)
+
+```{r}
+# 2550
+Num_firms_2550 <- INDUS_2550 %>% group_by(REG) %>% summarise(Num_firms_50 = sum(WGT_REG, na.rm = TRUE))
+
+# 2560
+Num_firms_2560 <- INDUS_2560 %>% group_by(REG) %>% summarise(Num_firms_60 = sum(WGT, na.rm = TRUE))
+```
+
+
+
+## Plotting the data
+### Distribution of Firm Size (by region)
+
+```{r}
+# 2550
+ggplot(INDUS_2550 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT_REG, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_wrap(~REG, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion")
+```
+
+```{r}
+
+# 2560
+ggplot(INDUS_2560 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_wrap(~REG, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion")
+
+
+```
+
+```{r}
+## Overlay the two graphs
+Dist_overlay <- ggplot(NULL, aes(x = SIZE_R, y = after_stat(prop))) + geom_bar(data = INDUS_2550 %>% drop_na(SIZE_R), aes(weight = WGT_REG, fill = "2550"), stat = "prop", alpha = 0.4) + geom_bar(data = INDUS_2560 %>% drop_na(SIZE_R), aes(weight = WGT, fill = "2560"), stat = "prop", alpha = 0.4) + facet_wrap(~REG, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion") + labs(fill = "Year") + theme(legend.position = "bottom")
+
+Dist_overlay
+
 
 ```
 

@@ -1,7 +1,10 @@
 ---
 title: "Thesis_INDUS_Analysis"
 format: html
+execute:
+  warning: false
 ---
+## Explanation
 
 In this document/code, I will examine key dimensions of manafacturing firms. The main goal is to see whether there are differences in key dimensions across different regions. The main characteristics that I will examine are:
 
@@ -66,3 +69,22 @@ INDUS_2560 <- read_sav("Data\\INDUS 2560 (2018)\\Microdata INDUS 2560\\Microdata
 
 
 ```
+
+## Pre-processing the data
+### Divide weight by 10,000
+```{r}
+INDUS_2550 <- INDUS_2550 %>% mutate(WGT_CWT = WGT_CWT/10000, WGT_REG = WGT_REG/10000)
+
+```
+
+
+## Tabulating the data
+### Firm Size (by region)
+
+```{r}
+### Calculate the average number of employees by region
+# 2550
+Avg_emp_2550 <- INDUS_2550 %>% group_by(REG) %>% summarise(Avg_emp_50 = weighted.mean(A24 + A28, WGT_REG, na.rm = TRUE))
+
+```
+

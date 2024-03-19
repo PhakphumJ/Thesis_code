@@ -6,6 +6,8 @@ format: html
 ## Importing the data
 
 ```{r}
+remove(list = ls())
+
 library(readxl)
 library(dplyr)
 library(ggplot2)
@@ -38,7 +40,7 @@ LFS_HIGH_EDU_value <- LFS_HIGH_EDU_tab %>% group_by(reg, Year) %>% summarise(Per
 ## Proportion of employment in agriculture
 LFS_AGR_prop <- LFS_sec %>% filter(SECTOR == "Agriculture")
 
-# Use only year > 2541
+# Use only year => 2541
 LFS_HIGH_EDU_value <- LFS_HIGH_EDU_value %>% filter(Year > 2540)
 LFS_AGR_prop <- LFS_AGR_prop %>% filter(Year > 2540)
 
@@ -70,4 +72,21 @@ ggplot() + geom_line(data = LFS_HIGH_EDU_value, aes(x = Year, y = Percentage ,co
   geom_line(data = LFS_AGR_prop, aes(x = Year, y = Percentage, color = "red")) + facet_rep_wrap(~reg, labeller = region_labeller, ncol = 2, repeat.tick.labels = TRUE) + scale_color_manual(values = c("black", "red"), labels = c("% of labor force completed at least upper-secondary education", "% of employment in agriculture sector")) + labs(title = "Education and Agricultural Employment by regioon", x = "Year", y = "Percentage (%)") + theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) + scale_x_continuous(breaks = seq(1998, 2022, 2))
 ```
 
+```{r}
+### Plot average wages by sector and region.
+# Use data only from year >= 2541
+LFS_wage <- LFS_wage %>% filter(Year > 2540)
+
+## Make year C.E. (-543)
+LFS_wage$Year <- LFS_wage$Year - 543
+
+## remove agricultural wage from Bangkok since noisy.
+LFS_wage <- LFS_wage %>% filter(!(SECTOR == "Agriculture" & reg == "1"))
+
+# Plot
+ggplot(LFS_wage, aes(x = Year, y = WAGE, color = SECTOR)) + geom_line() + facet_rep_wrap(~reg, labeller = region_labeller, ncol = 2, repeat.tick.labels = TRUE) + labs(title = "Average wage by sector and region", x = "Year", y = "Average wage (Baht)") + theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) + scale_x_continuous(breaks = seq(1998, 2022, 2))
+```
+
+```{r}
+```
 

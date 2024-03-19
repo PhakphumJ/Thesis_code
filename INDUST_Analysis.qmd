@@ -51,12 +51,15 @@ In this document/code, I will examine key dimensions of manafacturing firms. The
 
 ## Import and Clean Data
 ```{r}
+remove(list = ls())
+
 library(readxl)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(haven)
 library(ggstats)
+library(lemon)
 
 # Set working directory
 setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
@@ -67,6 +70,8 @@ INDUS_2540 <- read_sav("Data\\INDUS 2540 (1997)\\Microdata INDUS 2540\\Microdata
 INDUS_2550 <- read_sav("Data\\INDUS 2550 (2007)\\Microdata INDUS 2550\\Microdata INDUS 2550.sav")
 
 INDUS_2560 <- read_sav("Data\\INDUS 2560 (2018)\\Microdata INDUS 2560\\Microdata INDUS 2560.sav")
+
+LFS_LF <- read_excel("Data/Output/All_YEAR_TOTAL_LF_annual_final.xlsx")
 
 
 ```
@@ -138,29 +143,104 @@ Num_firms_2560 <- INDUS_2560 %>% group_by(REG) %>% summarise(Num_firms_60 = sum(
 ```
 
 
+#### Compare with the labor force.
+
+```{r}
+### Join the three tables (Average number of employees, Number of firms, and labor force)
+## 2549
+Emp_Num_LF_2549 <- Avg_emp_2550 %>% left_join(Num_firms_2550, by = "REG")
+
+# Join with the labor force
+Emp_Num_LF_2549 <- Emp_Num_LF_2549 %>% left_join(LFS_LF %>% filter(Year == 2549), by = c("REG" = "reg"))
+
+# Divide the labor force by 10,000
+Emp_Num_LF_2549 <- Emp_Num_LF_2549 %>% mutate(wgt = wgt/10000)
+
+
+#Rename the columns
+Emp_Num_LF_2549 <- Emp_Num_LF_2549 %>% rename(Avg_emp = Avg_emp_50, Num_firms = Num_firms_50, Labor_Force = wgt)
+
+## 2559
+Emp_Num_LF_2559 <- Avg_emp_2560 %>% left_join(Num_firms_2560, by = "REG")
+
+# Join with the labor force
+Emp_Num_LF_2559 <- Emp_Num_LF_2559 %>% left_join(LFS_LF %>% filter(Year == 2559), by = c("REG" = "reg"))
+
+
+#Rename the columns
+Emp_Num_LF_2559 <- Emp_Num_LF_2559 %>% rename(Avg_emp = Avg_emp_60, Num_firms = Num_firms_60, Labor_Force = wgt)
+
+## Concatenate the two tables
+Emp_Num_LF <- rbind(Emp_Num_LF_2549, Emp_Num_LF_2559)
+
+## Convert year to C.E.
+Emp_Num_LF$Year <- Emp_Num_LF$Year - 543
+
+### Make another dataframe where the number of firms is divided by 10,000 and the labor force is divided by 1,000,000
+Emp_Num_LF_scaled <- Emp_Num_LF %>% mutate(Num_firms = Num_firms/10000, Labor_Force = Labor_Force/1000000)
+
+```
+
+
 
 ## Plotting the data
+
+```{r}
+## Make a region labeller.
+region_labeller <- as_labeller(c( "0" = "National",
+  "1" = "Bangkok",
+  "2" = "Central",
+  "3" = "North",
+  "4" = "Northeast",
+  "5" = "South"
+))
+```
+
+
 ### Distribution of Firm Size (by region)
 
 ```{r}
 # 2550
-ggplot(INDUS_2550 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT_REG, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_wrap(~REG, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion")
+ggplot(INDUS_2550 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT_REG, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion")
 ```
+
 
 ```{r}
 
 # 2560
-ggplot(INDUS_2560 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_wrap(~REG, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion")
+ggplot(INDUS_2560 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion")
 
 
 ```
 
 ```{r}
 ## Overlay the two graphs
-Dist_overlay <- ggplot(NULL, aes(x = SIZE_R, y = after_stat(prop))) + geom_bar(data = INDUS_2550 %>% drop_na(SIZE_R), aes(weight = WGT_REG, fill = "2550"), stat = "prop", alpha = 0.4) + geom_bar(data = INDUS_2560 %>% drop_na(SIZE_R), aes(weight = WGT, fill = "2560"), stat = "prop", alpha = 0.4) + facet_wrap(~REG, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion") + labs(fill = "Year") + theme(legend.position = "bottom")
+Dist_overlay <- ggplot(NULL, aes(x = SIZE_R, y = after_stat(prop))) + geom_bar(data = INDUS_2550 %>% drop_na(SIZE_R), aes(weight = WGT_REG, fill = "2006"), stat = "prop", alpha = 0.4) + geom_bar(data = INDUS_2560 %>% drop_na(SIZE_R), aes(weight = WGT, fill = "2016"), stat = "prop", alpha = 0.4) + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion") + labs(fill = "Year") + theme(legend.position = "bottom")
+
 
 Dist_overlay
 
 
 ```
+
+### Number of firms, average number of employees, and labor force (by region)
+
+```{r}
+### Grouped bar chart. Each region is a facet.
+# Make year as discrete
+Emp_Num_LF_scaled$Year <- as.factor(Emp_Num_LF_scaled$Year)
+
+## Convert the data to long format
+Emp_Num_LF_long <- Emp_Num_LF_scaled %>% pivot_longer(cols = c("Avg_emp", "Num_firms", "Labor_Force"), names_to = "Variable", values_to = "Value")
+
+# Order in each group.
+Emp_Num_LF_long$Variable <- factor(Emp_Num_LF_long$Variable, levels = c("Avg_emp", "Num_firms", "Labor_Force"))
+
+
+# Plot
+ggplot(Emp_Num_LF_long) + aes(x = Year, y = Value, fill = Variable) + geom_col(position = "dodge") + facet_wrap(~REG, labeller = region_labeller, ncol = 2) + labs(title = "Number of firms, average number of employees, and labor force (by region)", x = "Year", y = "Value") + theme(legend.position = "bottom") + scale_fill_manual(values = c("blue", "red", "green"), labels = c("Average number of employees", "Number of firms (10,000)", "Labor force (millions)")) + theme(legend.position = "bottom", legend.title = element_blank())
+
+
+```
+
 

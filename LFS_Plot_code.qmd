@@ -1,0 +1,24 @@
+---
+title: "LFS_Plot"
+format: html
+---
+
+## Importing the data
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+
+# Set working directory
+setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
+
+# Import the data
+LFS_edu <- read_excel("Data/Output/All_YEAR_ALL_AGE_EDU_annual_pct_final.xlsx")
+
+LFS_sec <- read_excel("Data/Output/All_YEAR_ALL_AGE_SEC_annual_pct_final.xlsx")
+
+LFS_wage <- read_excel("Data/Output/All_YEAR_WAGE_SEC_annual_final.xlsx")
+```
+

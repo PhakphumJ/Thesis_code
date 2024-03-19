@@ -10,6 +10,7 @@ library(readxl)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
+library(lemon)
 
 # Set working directory
 setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
@@ -21,4 +22,52 @@ LFS_sec <- read_excel("Data/Output/All_YEAR_ALL_AGE_SEC_annual_pct_final.xlsx")
 
 LFS_wage <- read_excel("Data/Output/All_YEAR_WAGE_SEC_annual_final.xlsx")
 ```
+
+## Data preparation
+I will compress information by plotting only the proportion of labor force with at least upper secondary education and the proportion of employment in agriculture. 
+
+```{r}
+### Creat a new df with value of interest
+## At least upper secondary education
+# Def: p(Upper secondary or Associate) + p(Bachelor or higher)
+LFS_HIGH_EDU_tab <- LFS_edu %>% filter(EDCODE_NEW == "Upper secondary or Associate" | EDCODE_NEW == "Bachelor or higher")
+
+# sum the percentage of the two categories in each reg and year.
+LFS_HIGH_EDU_value <- LFS_HIGH_EDU_tab %>% group_by(reg, Year) %>% summarise(Percentage = sum(Percentage))
+
+## Proportion of employment in agriculture
+LFS_AGR_prop <- LFS_sec %>% filter(SECTOR == "Agriculture")
+
+# Use only year > 2541
+LFS_HIGH_EDU_value <- LFS_HIGH_EDU_value %>% filter(Year > 2540)
+LFS_AGR_prop <- LFS_AGR_prop %>% filter(Year > 2540)
+
+## Make year C.E. (-543)
+LFS_HIGH_EDU_value$Year <- LFS_HIGH_EDU_value$Year - 543
+LFS_AGR_prop$Year <- LFS_AGR_prop$Year - 543
+
+
+```
+
+## Plotting the data
+```{r}
+## Make a region labeller.
+region_labeller <- as_labeller(c( "0" = "National",
+  "1" = "Bangkok",
+  "2" = "Central",
+  "3" = "North",
+  "4" = "Northeast",
+  "5" = "South"
+))
+
+
+```
+
+```{r}
+# Plotting the proportion of labor force with at least upper secondary education and the proportion of employment in agriculture
+
+ggplot() + geom_line(data = LFS_HIGH_EDU_value, aes(x = Year, y = Percentage ,color = "black")) + 
+  geom_line(data = LFS_AGR_prop, aes(x = Year, y = Percentage, color = "red")) + facet_rep_wrap(~reg, labeller = region_labeller, ncol = 2, repeat.tick.labels = TRUE) + scale_color_manual(values = c("black", "red"), labels = c("% of labor force completed at least upper-secondary education", "% of employment in agriculture sector")) + labs(title = "Education and Agricultural Employment by regioon", x = "Year", y = "Percentage (%)") + theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) + scale_x_continuous(breaks = seq(1998, 2022, 2))
+```
+
 

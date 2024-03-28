@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Thesis_INDUS_Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="INDUST_Analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="INDUST_Analysis_files/libs/quarto-html/quarto.js"></script>
+<script src="INDUST_Analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="INDUST_Analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="INDUST_Analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="INDUST_Analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="INDUST_Analysis_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="INDUST_Analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="INDUST_Analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="INDUST_Analysis_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Thesis_INDUS_Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="explanation" class="level2">
+<h2 class="anchored" data-anchor-id="explanation">Explanation</h2>
+<p>In this document/code, I will examine key dimensions of manafacturing firms. The main goal is to see whether there are differences in key dimensions across different regions. The main characteristics that I will examine are:</p>
+<ol type="1">
+<li>Firm size (Number of employees)</li>
+</ol>
+<ol type="i">
+<li>2540: (A26 + A31)</li>
+<li>2550: (A24 + A28)</li>
+<li>2560: (B04 + B08)</li>
+</ol>
+<ol start="2" type="1">
+<li>Foreign Investment</li>
+</ol>
+<ol type="i">
+<li>2540: A05</li>
+<li>2550: A09</li>
+<li>2560: A09</li>
+</ol>
+<ol start="3" type="1">
+<li>Exporting</li>
+</ol>
+<ol type="i">
+<li>2540: A11</li>
+<li>2550: A15</li>
+<li>2560: A12</li>
+</ol>
+<ol start="4" type="1">
+<li>Sales</li>
+</ol>
+<ol type="i">
+<li>2540: F01</li>
+<li>2550: G01</li>
+<li>2560: D01</li>
+</ol>
+<ol start="5" type="1">
+<li>Profit before tax (Total income - Cost of sales - Administrative expenses - Costs of raw materials, production, goods, work done by others - wages bill)</li>
+</ol>
+<ol type="i">
+<li>2540: F09 - E01 - E02 - C01 - C02 - C03 - C04 - B04 - B08 - B09 - B10 - B11</li>
+<li>2550: G01 + G13 - E01 - E02 - C01 - C02 - C03 - C04 - B05 - B10</li>
+<li>2560: D01 + D13 - C21 - C41 - C06 - B19 - B24</li>
+</ol>
+<ol start="6" type="1">
+<li>Total Fixed Assets</li>
+</ol>
+<ol type="i">
+<li>2540: H07</li>
+<li>2550: I08</li>
+<li>2560:</li>
+</ol>
+<ol start="7" type="1">
+<li>Problems of operation</li>
+</ol>
+<ol type="i">
+<li>2560: J02, J03, J04, J05, J06, J07, J08, J09, J10, J11, J12, J13, J14, J15, J16, J17 –&gt; Group into:</li>
+</ol>
+<ol type="a">
+<li>Low Demand or Marketing Problems: J02, J10, J11</li>
+<li>Labor Shortages: J05</li>
+<li>Lack of capital: J09</li>
+<li>Technology Problem: J06, J07</li>
+</ol>
+<ol start="8" type="1">
+<li>Needs from the government</li>
+</ol>
+<ol type="i">
+<li>2560: J19, J20, J21, J22, J23, J24, J25, J26, J27, J28, J29, J30, J31, J32, J33, J34 –&gt; Group into:</li>
+</ol>
+<ol type="a">
+<li>Skilled_Labor_support: J19</li>
+<li>Productivity_support: J20, J32</li>
+<li>Capital_Support: J21, J22, J23, J32</li>
+<li>Output_Market_Support: J25, J30</li>
+</ol>
+<ol start="9" type="1">
+<li>R&amp;D Costs</li>
+</ol>
+<ol type="i">
+<li>2540: No info</li>
+<li>2550: E28</li>
+<li>2560: C32</li>
+</ol>
+<ol start="10" type="1">
+<li>Number of firms</li>
+</ol>
+<ol type="i">
+<li>2540: ??</li>
+<li>2550: sum of weights</li>
+<li>2560: sum of weights</li>
+</ol>
+<ol start="11" type="1">
+<li>Estimated TFP (estimated using sales, wage bill, and fixed assets).</li>
+<li>Value-added/Employee: Value added is calculated as sales - cost of raw materials + change in inventory of raw materials.</li>
+</ol>
+<ol type="i">
+<li>2550: (G01 + (D05 - D01) - C01)/(A24 + A28)</li>
+<li>2560: (D01 + (C12 – C07) – C01)/(B04 + B08)</li>
+</ol>
+<ol start="13" type="1">
+<li>K/L</li>
+</ol>
+<ol type="i">
+<li>2550: I08/(A24 + A28)</li>
+<li>2560: E16/(B04 + B08)</li>
+</ol>
+</section>
+<section id="import-and-clean-data" class="level2">
+<h2 class="anchored" data-anchor-id="import-and-clean-data">Import and Clean Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstats)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lemon)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mmtable2)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gapminder)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Set working directory</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Importing the data</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>INDUS_2540 <span class="ot">&lt;-</span> <span class="fu">read_sav</span>(<span class="st">"Data</span><span class="sc">\\</span><span class="st">INDUS 2540 (1997)</span><span class="sc">\\</span><span class="st">Microdata INDUS 2540</span><span class="sc">\\</span><span class="st">Microdata INDUS 2540.sav"</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>INDUS_2550 <span class="ot">&lt;-</span> <span class="fu">read_sav</span>(<span class="st">"Data</span><span class="sc">\\</span><span class="st">INDUS 2550 (2007)</span><span class="sc">\\</span><span class="st">Microdata INDUS 2550</span><span class="sc">\\</span><span class="st">Microdata INDUS 2550.sav"</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>INDUS_2560 <span class="ot">&lt;-</span> <span class="fu">read_sav</span>(<span class="st">"Data</span><span class="sc">\\</span><span class="st">INDUS 2560 (2018)</span><span class="sc">\\</span><span class="st">Microdata INDUS 2560</span><span class="sc">\\</span><span class="st">Microdata INDUS 2560.sav"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>LFS_LF <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"Data/Output/All_YEAR_TOTAL_LF_annual_final.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="analysis-of-all-firms" class="level1">
+<h1>Analysis of all firms</h1>
+<section id="pre-processing-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="pre-processing-the-data">Pre-processing the data</h2>
+<section id="divide-weight-by-10000" class="level3">
+<h3 class="anchored" data-anchor-id="divide-weight-by-10000">Divide weight by 10,000</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>INDUS_2550 <span class="ot">&lt;-</span> INDUS_2550 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">WGT_CWT =</span> WGT_CWT<span class="sc">/</span><span class="dv">10000</span>, <span class="at">WGT_REG =</span> WGT_REG<span class="sc">/</span><span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="group-the-needs-from-the-government" class="level2">
+<h2 class="anchored" data-anchor-id="group-the-needs-from-the-government">Group the needs from the government</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## First, turn missing values into 0</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>INDUS_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">J19 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J19), <span class="dv">0</span>, J19), <span class="at">J20 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J20), <span class="dv">0</span>, J20), <span class="at">J21 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J21), <span class="dv">0</span>, J21), <span class="at">J22 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J22), <span class="dv">0</span>, J22), <span class="at">J23 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J23), <span class="dv">0</span>, J23), <span class="at">J24 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J24), <span class="dv">0</span>, J24), <span class="at">J25 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J25), <span class="dv">0</span>, J25), <span class="at">J26 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J26), <span class="dv">0</span>, J26), <span class="at">J27 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J27), <span class="dv">0</span>, J27), <span class="at">J28 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J28), <span class="dv">0</span>, J28), <span class="at">J29 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J29), <span class="dv">0</span>, J29), <span class="at">J30 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J30), <span class="dv">0</span>, J30), <span class="at">J31 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J31), <span class="dv">0</span>, J31), <span class="at">J32 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J32), <span class="dv">0</span>, J32), <span class="at">J33 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J33), <span class="dv">0</span>, J33), <span class="at">J34 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J34), <span class="dv">0</span>, J34))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Group the needs from the government (4 groups)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>INDUS_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Skilled_Labor_support =</span> J19, <span class="at">Productivity_support =</span> J20 <span class="sc">+</span> J32, <span class="at">Capital_Support =</span> J21 <span class="sc">+</span> J22 <span class="sc">+</span> J23 <span class="sc">+</span> J32, <span class="at">Output_Market_Support =</span> J25 <span class="sc">+</span> J30)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># If &gt; 0 then 1, else 0</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>INDUS_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Skilled_Labor_support =</span> <span class="fu">ifelse</span>(Skilled_Labor_support <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">Productivity_support =</span> <span class="fu">ifelse</span>(Productivity_support <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">Capital_Support =</span> <span class="fu">ifelse</span>(Capital_Support <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">Output_Market_Support =</span> <span class="fu">ifelse</span>(Output_Market_Support <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="group-the-problems-of-operation" class="level2">
+<h2 class="anchored" data-anchor-id="group-the-problems-of-operation">Group the problems of operation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## First, turn missing values into 0</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>INDUS_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">J02 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J02), <span class="dv">0</span>, J02), <span class="at">J03 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J03), <span class="dv">0</span>, J03), <span class="at">J04 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J04), <span class="dv">0</span>, J04), <span class="at">J05 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J05), <span class="dv">0</span>, J05), <span class="at">J06 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J06), <span class="dv">0</span>, J06), <span class="at">J07 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J07), <span class="dv">0</span>, J07), <span class="at">J08 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J08), <span class="dv">0</span>, J08), <span class="at">J09 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J09), <span class="dv">0</span>, J09), <span class="at">J10 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J10), <span class="dv">0</span>, J10), <span class="at">J11 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J11), <span class="dv">0</span>, J11), <span class="at">J12 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J12), <span class="dv">0</span>, J12), <span class="at">J13 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J13), <span class="dv">0</span>, J13), <span class="at">J14 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J14), <span class="dv">0</span>, J14), <span class="at">J15 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J15), <span class="dv">0</span>, J15), <span class="at">J16 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J16), <span class="dv">0</span>, J16), <span class="at">J17 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(J17), <span class="dv">0</span>, J17))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Group the problems of operation (4 groups)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>INDUS_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Low_Demand_Marketing_Problems =</span> J02 <span class="sc">+</span> J10 <span class="sc">+</span> J11, <span class="at">Labor_Shortages =</span> J05, <span class="at">Lack_of_Capital =</span> J09, <span class="at">Technology_Problem =</span> J06 <span class="sc">+</span> J07)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># If &gt; 0 then 1, else 0</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>INDUS_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Low_Demand_Marketing_Problems =</span> <span class="fu">ifelse</span>(Low_Demand_Marketing_Problems <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">Labor_Shortages =</span> <span class="fu">ifelse</span>(Labor_Shortages <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">Lack_of_Capital =</span> <span class="fu">ifelse</span>(Lack_of_Capital <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">Technology_Problem =</span> <span class="fu">ifelse</span>(Technology_Problem <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="calculate-value-added-per-employee" class="level2">
+<h2 class="anchored" data-anchor-id="calculate-value-added-per-employee">Calculate value-added per employee</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using only firms with sales &gt; 12.000</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2550. (G01 + (D05 - D01) - C01)/(A24 + A28)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>INDUS_2550_VA_filtered <span class="ot">&lt;-</span> INDUS_2550 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(G01 <span class="sc">&gt;</span> <span class="dv">12000</span>, <span class="sc">!</span><span class="fu">is.na</span>(G01), <span class="sc">!</span><span class="fu">is.na</span>(D05), <span class="sc">!</span><span class="fu">is.na</span>(D01), <span class="sc">!</span><span class="fu">is.na</span>(C01))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># If A24, A28 = NA then replace with 0</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>INDUS_2550_VA_filtered <span class="ot">&lt;-</span> INDUS_2550_VA_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">A24 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(A24), <span class="dv">0</span>, A24), <span class="at">A28 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(A28), <span class="dv">0</span>, A28))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate value-added.</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>INDUS_2550_VA_filtered <span class="ot">&lt;-</span> INDUS_2550_VA_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Value_Added =</span> (G01 <span class="sc">+</span> (D05 <span class="sc">-</span> D01) <span class="sc">-</span> C01))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate value-added per employee.</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>INDUS_2550_VA_filtered <span class="ot">&lt;-</span> INDUS_2550_VA_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Value_Added_per_emp =</span> Value_Added<span class="sc">/</span>(A24 <span class="sc">+</span> A28))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560. (D01 + (C12 – C07) – C01)/(B04 + B08)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>INDUS_2560_VA_filtered <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(D01 <span class="sc">&gt;</span> <span class="dv">12000</span>, <span class="sc">!</span><span class="fu">is.na</span>(D01), <span class="sc">!</span><span class="fu">is.na</span>(C12), <span class="sc">!</span><span class="fu">is.na</span>(C07), <span class="sc">!</span><span class="fu">is.na</span>(C01))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># If B04, B08 = NA then replace with 0</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>INDUS_2560_VA_filtered <span class="ot">&lt;-</span> INDUS_2560_VA_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">B04 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(B04), <span class="dv">0</span>, B04), <span class="at">B08 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(B08), <span class="dv">0</span>, B08))</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate value-added.</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>INDUS_2560_VA_filtered <span class="ot">&lt;-</span> INDUS_2560_VA_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Value_Added =</span> (D01 <span class="sc">+</span> (C12 <span class="sc">-</span> C07) <span class="sc">-</span> C01))</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate value-added per employee.</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>INDUS_2560_VA_filtered <span class="ot">&lt;-</span> INDUS_2560_VA_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Value_Added_per_emp =</span> Value_Added<span class="sc">/</span>(B04 <span class="sc">+</span> B08))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="calculate-kl" class="level2">
+<h2 class="anchored" data-anchor-id="calculate-kl">Calculate K/L</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using only firms with sales &gt; 12.000, and fixed assets &gt; 6,000.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2550. I08/(A24 + A28)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>INDUS_2550_KL_filtered <span class="ot">&lt;-</span> INDUS_2550 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(G01 <span class="sc">&gt;</span> <span class="dv">12000</span>, I08 <span class="sc">&gt;</span> <span class="dv">6000</span>, <span class="sc">!</span><span class="fu">is.na</span>(G01), <span class="sc">!</span><span class="fu">is.na</span>(I08), <span class="sc">!</span><span class="fu">is.na</span>(A24), <span class="sc">!</span><span class="fu">is.na</span>(A28))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace missing A24, A28 with 0</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>INDUS_2550_KL_filtered <span class="ot">&lt;-</span> INDUS_2550_KL_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">A24 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(A24), <span class="dv">0</span>, A24), <span class="at">A28 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(A28), <span class="dv">0</span>, A28))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate K/L</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>INDUS_2550_KL_filtered <span class="ot">&lt;-</span> INDUS_2550_KL_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Capital_to_Labor =</span> I08<span class="sc">/</span>(A24 <span class="sc">+</span> A28))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560. E16/(B04 + B08)</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>INDUS_2560_KL_filtered <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(D01 <span class="sc">&gt;</span> <span class="dv">12000</span>, E16 <span class="sc">&gt;</span> <span class="dv">6000</span>, <span class="sc">!</span><span class="fu">is.na</span>(D01), <span class="sc">!</span><span class="fu">is.na</span>(E16), <span class="sc">!</span><span class="fu">is.na</span>(B04), <span class="sc">!</span><span class="fu">is.na</span>(B08))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace missing B04, B08 with 0</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>INDUS_2560_KL_filtered <span class="ot">&lt;-</span> INDUS_2560_KL_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">B04 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(B04), <span class="dv">0</span>, B04), <span class="at">B08 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(B08), <span class="dv">0</span>, B08))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate K/L</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>INDUS_2560_KL_filtered <span class="ot">&lt;-</span> INDUS_2560_KL_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Capital_to_Labor =</span> E16<span class="sc">/</span>(B04 <span class="sc">+</span> B08))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="categorize-number-of-employees-follow-the-same-categorization-as-in-year-2550" class="level3">
+<h3 class="anchored" data-anchor-id="categorize-number-of-employees-follow-the-same-categorization-as-in-year-2550">Categorize number of employees (follow the same categorization as in year 2550)</h3>
+<ol type="1">
+<li>1</li>
+<li>2-3</li>
+<li>4-5</li>
+<li>6-10</li>
+<li>11-15</li>
+<li>16-20</li>
+<li>21-25</li>
+<li>26-30</li>
+<li>31-50</li>
+<li>51-100</li>
+<li>101-200</li>
+<li>201-500</li>
+<li>501-1000</li>
+<li><blockquote class="blockquote">
+<p>1000</p>
+</blockquote></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Categorized number of employees (2560)\</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 + NA should be 1</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>INDUS_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">B04 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(B04), <span class="dv">0</span>, B04), <span class="at">B08 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(B08), <span class="dv">0</span>, B08)) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">SIZE_R =</span> <span class="fu">case_when</span>(B04 <span class="sc">+</span> B08 <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="dv">1</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">2</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">3</span> <span class="sc">~</span> <span class="dv">2</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">4</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">5</span> <span class="sc">~</span> <span class="dv">3</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">6</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">10</span> <span class="sc">~</span> <span class="dv">4</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">11</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">15</span> <span class="sc">~</span> <span class="dv">5</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">16</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">20</span> <span class="sc">~</span> <span class="dv">6</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">21</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">25</span> <span class="sc">~</span> <span class="dv">7</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">26</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">30</span> <span class="sc">~</span> <span class="dv">8</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">31</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">50</span> <span class="sc">~</span> <span class="dv">9</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">51</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">100</span> <span class="sc">~</span> <span class="dv">10</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">101</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">200</span> <span class="sc">~</span> <span class="dv">11</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">201</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">500</span> <span class="sc">~</span> <span class="dv">12</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">501</span> <span class="sc">&amp;</span> B04 <span class="sc">+</span> B08 <span class="sc">&lt;=</span> <span class="dv">1000</span> <span class="sc">~</span> <span class="dv">13</span>, B04 <span class="sc">+</span> B08 <span class="sc">&gt;</span> <span class="dv">1000</span> <span class="sc">~</span> <span class="dv">14</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Convert SIZE_R to factor</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>INDUS_2550 <span class="ot">&lt;-</span> INDUS_2550 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">SIZE_R =</span> <span class="fu">factor</span>(SIZE_R, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2-3"</span>, <span class="st">"4-5"</span>, <span class="st">"6-10"</span>, <span class="st">"11-15"</span>, <span class="st">"16-20"</span>, <span class="st">"21-25"</span>, <span class="st">"26-30"</span>, <span class="st">"31-50"</span>, <span class="st">"51-100"</span>, <span class="st">"101-200"</span>, <span class="st">"201-500"</span>, <span class="st">"501-1000"</span>, <span class="st">"&gt;1000"</span>)))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>INDUS_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">SIZE_R =</span> <span class="fu">factor</span>(SIZE_R, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2-3"</span>, <span class="st">"4-5"</span>, <span class="st">"6-10"</span>, <span class="st">"11-15"</span>, <span class="st">"16-20"</span>, <span class="st">"21-25"</span>, <span class="st">"26-30"</span>, <span class="st">"31-50"</span>, <span class="st">"51-100"</span>, <span class="st">"101-200"</span>, <span class="st">"201-500"</span>, <span class="st">"501-1000"</span>, <span class="st">"&gt;1000"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="tabulating-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="tabulating-the-data">Tabulating the data</h2>
+<section id="firm-size-by-region" class="level3">
+<h3 class="anchored" data-anchor-id="firm-size-by-region">Firm Size (by region)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Calculate the average number of employees by region</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2550</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>Avg_emp_2550 <span class="ot">&lt;-</span> INDUS_2550 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">A24 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(A24), <span class="dv">0</span>, A24), <span class="at">A28 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(A28), <span class="dv">0</span>, A28)) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(REG) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Avg_emp_50 =</span> <span class="fu">weighted.mean</span>(A24 <span class="sc">+</span> A28, WGT_REG, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>Avg_emp_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">B04 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(B04), <span class="dv">0</span>, B04), <span class="at">B08 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(B08), <span class="dv">0</span>, B08)) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(REG) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Avg_emp_60 =</span> <span class="fu">weighted.mean</span>(B04 <span class="sc">+</span> B08, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="number-of-firms-by-region" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-firms-by-region">Number of firms (by region)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2550</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Num_firms_2550 <span class="ot">&lt;-</span> INDUS_2550 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(REG) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Num_firms_50 =</span> <span class="fu">sum</span>(WGT_REG, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>Num_firms_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(REG) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Num_firms_60 =</span> <span class="fu">sum</span>(WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="compare-with-the-labor-force." class="level4">
+<h4 class="anchored" data-anchor-id="compare-with-the-labor-force.">Compare with the labor force.</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Join the three tables (Average number of employees, Number of firms, and labor force)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 2549</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_2549 <span class="ot">&lt;-</span> Avg_emp_2550 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(Num_firms_2550, <span class="at">by =</span> <span class="st">"REG"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Join with the labor force</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_2549 <span class="ot">&lt;-</span> Emp_Num_LF_2549 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(LFS_LF <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="dv">2549</span>), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"REG"</span> <span class="ot">=</span> <span class="st">"reg"</span>))</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Divide the labor force by 10,000</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_2549 <span class="ot">&lt;-</span> Emp_Num_LF_2549 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">wgt =</span> wgt<span class="sc">/</span><span class="dv">10000</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#Rename the columns</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_2549 <span class="ot">&lt;-</span> Emp_Num_LF_2549 <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">Avg_emp =</span> Avg_emp_50, <span class="at">Num_firms =</span> Num_firms_50, <span class="at">Labor_Force =</span> wgt)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2559</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_2559 <span class="ot">&lt;-</span> Avg_emp_2560 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(Num_firms_2560, <span class="at">by =</span> <span class="st">"REG"</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Join with the labor force</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_2559 <span class="ot">&lt;-</span> Emp_Num_LF_2559 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(LFS_LF <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="dv">2559</span>), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"REG"</span> <span class="ot">=</span> <span class="st">"reg"</span>))</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#Rename the columns</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_2559 <span class="ot">&lt;-</span> Emp_Num_LF_2559 <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">Avg_emp =</span> Avg_emp_60, <span class="at">Num_firms =</span> Num_firms_60, <span class="at">Labor_Force =</span> wgt)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Concatenate the two tables</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Emp_Num_LF_2549, Emp_Num_LF_2559)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Convert year to C.E.</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF<span class="sc">$</span>Year <span class="ot">&lt;-</span> Emp_Num_LF<span class="sc">$</span>Year <span class="sc">-</span> <span class="dv">543</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="do">### Make another dataframe where the number of firms is divided by 10,000 and the labor force is divided by 1,000,000</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_scaled <span class="ot">&lt;-</span> Emp_Num_LF <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Num_firms =</span> Num_firms<span class="sc">/</span><span class="dv">10000</span>, <span class="at">Labor_Force =</span> Labor_Force<span class="sc">/</span><span class="dv">1000000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="needs-from-the-government" class="level3">
+<h3 class="anchored" data-anchor-id="needs-from-the-government">Needs from the government</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate the proportion of firms that need support from the government in each category by region.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>Needs_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(REG) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Skilled_Labor_support =</span> <span class="fu">weighted.mean</span>(Skilled_Labor_support, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">Productivity_support =</span> <span class="fu">weighted.mean</span>(Productivity_support, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">Capital_Support =</span> <span class="fu">weighted.mean</span>(Capital_Support, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">Output_Market_Support =</span> <span class="fu">weighted.mean</span>(Output_Market_Support, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="problems-of-operation" class="level3">
+<h3 class="anchored" data-anchor-id="problems-of-operation">Problems of operation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate the proportion of firms that face problems of operation in each category by region.</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>Problems_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(REG) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Low_Demand_Marketing_Problems =</span> <span class="fu">weighted.mean</span>(Low_Demand_Marketing_Problems, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">Labor_Shortages =</span> <span class="fu">weighted.mean</span>(Labor_Shortages, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">Lack_of_Capital =</span> <span class="fu">weighted.mean</span>(Lack_of_Capital, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">Technology_Problem =</span> <span class="fu">weighted.mean</span>(Technology_Problem, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="kl" class="level3">
+<h3 class="anchored" data-anchor-id="kl">K/L</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Calculate average K/L by region.</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2550</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>Capital_to_Labor_2550 <span class="ot">&lt;-</span> INDUS_2550_KL_filtered <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(REG) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Avg_Capital_to_Labor =</span> <span class="fu">weighted.mean</span>(Capital_to_Labor, WGT_REG, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>Capital_to_Labor_2560 <span class="ot">&lt;-</span> INDUS_2560_KL_filtered <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(REG) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Avg_Capital_to_Labor =</span> <span class="fu">weighted.mean</span>(Capital_to_Labor, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="value-added-per-employee" class="level3">
+<h3 class="anchored" data-anchor-id="value-added-per-employee">Value-added per employee</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Calculate average value-added per employee by region.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2550</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>Value_Added_per_emp_2550 <span class="ot">&lt;-</span> INDUS_2550_VA_filtered <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(REG) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Avg_Value_Added_per_emp =</span> <span class="fu">weighted.mean</span>(Value_Added_per_emp, WGT_REG, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>Value_Added_per_emp_2560 <span class="ot">&lt;-</span> INDUS_2560_VA_filtered <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(REG) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">Avg_Value_Added_per_emp =</span> <span class="fu">weighted.mean</span>(Value_Added_per_emp, WGT, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="combine-to-make-two-main-tables." class="level2">
+<h2 class="anchored" data-anchor-id="combine-to-make-two-main-tables.">Combine to make two main tables.</h2>
+<section id="section" class="level3">
+<h3 class="anchored" data-anchor-id="section"></h3>
+</section>
+<section id="kl-and-value-added-per-employee" class="level3">
+<h3 class="anchored" data-anchor-id="kl-and-value-added-per-employee">K/L and Value-added per employee</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Combine K/L of two years</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># First, add year to the tables</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>Capital_to_Labor_2550 <span class="ot">&lt;-</span> Capital_to_Labor_2550 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="dv">2006</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>Capital_to_Labor_2560 <span class="ot">&lt;-</span> Capital_to_Labor_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="dv">2016</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate the two tables</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>Capital_to_Labor <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Capital_to_Labor_2550, Capital_to_Labor_2560)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Combine value-added per employee of two years</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># First, add year to the tables</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>Value_Added_per_emp_2550 <span class="ot">&lt;-</span> Value_Added_per_emp_2550 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="dv">2006</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>Value_Added_per_emp_2560 <span class="ot">&lt;-</span> Value_Added_per_emp_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="dv">2016</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate the two tables</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>Value_Added_per_emp <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Value_Added_per_emp_2550, Value_Added_per_emp_2560)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Combine the two tables</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>KLVAPerEmp <span class="ot">&lt;-</span> Capital_to_Labor <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(Value_Added_per_emp, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"REG"</span>, <span class="st">"Year"</span>))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Make long format</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>KLVAPerEmp_long <span class="ot">&lt;-</span> KLVAPerEmp <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Avg_Capital_to_Labor"</span>, <span class="st">"Avg_Value_Added_per_emp"</span>), <span class="at">names_to =</span> <span class="st">"Variable"</span>, <span class="at">values_to =</span> <span class="st">"Value"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>style_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">cell_borders</span>(<span class="at">sides =</span> <span class="st">"top"</span>,<span class="at">color =</span> <span class="st">"grey"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Make nice table using mmtable2</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Change region to actual names</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>KLVAPerEmp_long <span class="ot">&lt;-</span> KLVAPerEmp_long <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">REG =</span> <span class="fu">case_when</span>(REG <span class="sc">==</span> <span class="st">"1"</span> <span class="sc">~</span> <span class="st">"Bangkok"</span>, REG <span class="sc">==</span> <span class="st">"2"</span> <span class="sc">~</span> <span class="st">"Central"</span>, REG <span class="sc">==</span> <span class="st">"3"</span> <span class="sc">~</span> <span class="st">"North"</span>, REG <span class="sc">==</span> <span class="st">"4"</span> <span class="sc">~</span> <span class="st">"Northeast"</span>, REG <span class="sc">==</span> <span class="st">"5"</span> <span class="sc">~</span> <span class="st">"South"</span>))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>KLVAPerEmp <span class="ot">&lt;-</span> KLVAPerEmp <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">REG =</span> <span class="fu">case_when</span>(REG <span class="sc">==</span> <span class="st">"1"</span> <span class="sc">~</span> <span class="st">"Bangkok"</span>, REG <span class="sc">==</span> <span class="st">"2"</span> <span class="sc">~</span> <span class="st">"Central"</span>, REG <span class="sc">==</span> <span class="st">"3"</span> <span class="sc">~</span> <span class="st">"North"</span>, REG <span class="sc">==</span> <span class="st">"4"</span> <span class="sc">~</span> <span class="st">"Northeast"</span>, REG <span class="sc">==</span> <span class="st">"5"</span> <span class="sc">~</span> <span class="st">"South"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the table</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>Maintable2 <span class="ot">=</span> KLVAPerEmp_long <span class="sc">%&gt;%</span> <span class="fu">mmtable</span>(<span class="at">cells =</span> Value) <span class="sc">+</span> <span class="fu">header_left</span>(REG) <span class="sc">+</span> <span class="fu">header_top</span>(Year) <span class="sc">+</span> <span class="fu">header_top_left</span>(Variable)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(Maintable2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="rekrqxamhg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rekrqxamhg table {
+font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+#rekrqxamhg thead, #rekrqxamhg tbody, #rekrqxamhg tfoot, #rekrqxamhg tr, #rekrqxamhg td, #rekrqxamhg th {
+border-style: none;
+}
+#rekrqxamhg p {
+margin: 0;
+padding: 0;
+}
+#rekrqxamhg .gt_table {
+display: table;
+border-collapse: collapse;
+line-height: normal;
+margin-left: auto;
+margin-right: auto;
+color: #333333;
+font-size: 16px;
+font-weight: normal;
+font-style: normal;
+background-color: #FFFFFF;
+width: auto;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #A8A8A8;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #A8A8A8;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+}
+#rekrqxamhg .gt_caption {
+padding-top: 4px;
+padding-bottom: 4px;
+}
+#rekrqxamhg .gt_title {
+color: #333333;
+font-size: 125%;
+font-weight: initial;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-color: #FFFFFF;
+border-bottom-width: 0;
+}
+#rekrqxamhg .gt_subtitle {
+color: #333333;
+font-size: 85%;
+font-weight: initial;
+padding-top: 3px;
+padding-bottom: 5px;
+padding-left: 5px;
+padding-right: 5px;
+border-top-color: #FFFFFF;
+border-top-width: 0;
+}
+#rekrqxamhg .gt_heading {
+background-color: #FFFFFF;
+text-align: center;
+border-bottom-color: #FFFFFF;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+}
+#rekrqxamhg .gt_bottom_border {
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#rekrqxamhg .gt_col_headings {
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+}
+#rekrqxamhg .gt_col_heading {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: normal;
+text-transform: inherit;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: bottom;
+padding-top: 5px;
+padding-bottom: 6px;
+padding-left: 5px;
+padding-right: 5px;
+overflow-x: hidden;
+}
+#rekrqxamhg .gt_column_spanner_outer {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: normal;
+text-transform: inherit;
+padding-top: 0;
+padding-bottom: 0;
+padding-left: 4px;
+padding-right: 4px;
+}
+#rekrqxamhg .gt_column_spanner_outer:first-child {
+padding-left: 0;
+}
+#rekrqxamhg .gt_column_spanner_outer:last-child {
+padding-right: 0;
+}
+#rekrqxamhg .gt_column_spanner {
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+vertical-align: bottom;
+padding-top: 5px;
+padding-bottom: 5px;
+overflow-x: hidden;
+display: inline-block;
+width: 100%;
+}
+#rekrqxamhg .gt_spanner_row {
+border-bottom-style: hidden;
+}
+#rekrqxamhg .gt_group_heading {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: middle;
+text-align: left;
+}
+#rekrqxamhg .gt_empty_group_heading {
+padding: 0.5px;
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+vertical-align: middle;
+}
+#rekrqxamhg .gt_from_md > :first-child {
+margin-top: 0;
+}
+#rekrqxamhg .gt_from_md > :last-child {
+margin-bottom: 0;
+}
+#rekrqxamhg .gt_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+margin: 10px;
+border-top-style: solid;
+border-top-width: 1px;
+border-top-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: middle;
+overflow-x: hidden;
+}
+#rekrqxamhg .gt_stub {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-right-style: solid;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+padding-left: 5px;
+padding-right: 5px;
+}
+#rekrqxamhg .gt_stub_row_group {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-right-style: solid;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+padding-left: 5px;
+padding-right: 5px;
+vertical-align: top;
+}
+#rekrqxamhg .gt_row_group_first td {
+border-top-width: 2px;
+}
+#rekrqxamhg .gt_row_group_first th {
+border-top-width: 2px;
+}
+#rekrqxamhg .gt_summary_row {
+color: #333333;
+background-color: #FFFFFF;
+text-transform: inherit;
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#rekrqxamhg .gt_first_summary_row {
+border-top-style: solid;
+border-top-color: #D3D3D3;
+}
+#rekrqxamhg .gt_first_summary_row.thick {
+border-top-width: 2px;
+}
+#rekrqxamhg .gt_last_summary_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#rekrqxamhg .gt_grand_summary_row {
+color: #333333;
+background-color: #FFFFFF;
+text-transform: inherit;
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#rekrqxamhg .gt_first_grand_summary_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-top-style: double;
+border-top-width: 6px;
+border-top-color: #D3D3D3;
+}
+#rekrqxamhg .gt_last_grand_summary_row_top {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-style: double;
+border-bottom-width: 6px;
+border-bottom-color: #D3D3D3;
+}
+#rekrqxamhg .gt_striped {
+background-color: rgba(128, 128, 128, 0.05);
+}
+#rekrqxamhg .gt_table_body {
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#rekrqxamhg .gt_footnotes {
+color: #333333;
+background-color: #FFFFFF;
+border-bottom-style: none;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+}
+#rekrqxamhg .gt_footnote {
+margin: 0px;
+font-size: 90%;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#rekrqxamhg .gt_sourcenotes {
+color: #333333;
+background-color: #FFFFFF;
+border-bottom-style: none;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+}
+#rekrqxamhg .gt_sourcenote {
+font-size: 90%;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#rekrqxamhg .gt_left {
+text-align: left;
+}
+#rekrqxamhg .gt_center {
+text-align: center;
+}
+#rekrqxamhg .gt_right {
+text-align: right;
+font-variant-numeric: tabular-nums;
+}
+#rekrqxamhg .gt_font_normal {
+font-weight: normal;
+}
+#rekrqxamhg .gt_font_bold {
+font-weight: bold;
+}
+#rekrqxamhg .gt_font_italic {
+font-style: italic;
+}
+#rekrqxamhg .gt_super {
+font-size: 65%;
+}
+#rekrqxamhg .gt_footnote_marks {
+font-size: 75%;
+vertical-align: 0.4em;
+position: initial;
+}
+#rekrqxamhg .gt_asterisk {
+font-size: 100%;
+vertical-align: 0;
+}
+#rekrqxamhg .gt_indent_1 {
+text-indent: 5px;
+}
+#rekrqxamhg .gt_indent_2 {
+text-indent: 10px;
+}
+#rekrqxamhg .gt_indent_3 {
+text-indent: 15px;
+}
+#rekrqxamhg .gt_indent_4 {
+text-indent: 20px;
+}
+#rekrqxamhg .gt_indent_5 {
+text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<tbody class="gt_table_body">
+<tr><td headers=" " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px;"></td>
+<td headers="  " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right; font-weight: bold;">Avg_Capital_to_Labor</td>
+<td headers="   " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px;"> </td>
+<td headers="    " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right; font-weight: bold;">Avg_Value_Added_per_emp</td>
+<td headers="     " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px;"> </td></tr>
+<tr><td headers=" " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px;"></td>
+<td headers="  " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right; font-weight: bold;">2006</td>
+<td headers="   " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right; font-weight: bold;">2016</td>
+<td headers="    " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right; font-weight: bold;">2006</td>
+<td headers="     " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right; font-weight: bold;">2016</td></tr>
+<tr><td headers=" " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; font-weight: bold;">Bangkok</td>
+<td headers="  " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">374905.147637056</td>
+<td headers="   " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">1149775.51719021</td>
+<td headers="    " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">336653.384325406</td>
+<td headers="     " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">608900.669360166</td></tr>
+<tr><td headers=" " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; font-weight: bold;">Central</td>
+<td headers="  " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">540294.021376558</td>
+<td headers="   " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">1225954.29828713</td>
+<td headers="    " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">247087.478352062</td>
+<td headers="     " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">716090.850844475</td></tr>
+<tr><td headers=" " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; font-weight: bold;">North</td>
+<td headers="  " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">247412.970734001</td>
+<td headers="   " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">664393.071602142</td>
+<td headers="    " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">71194.340286281</td>
+<td headers="     " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">119636.716816589</td></tr>
+<tr><td headers=" " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; font-weight: bold;">Northeast</td>
+<td headers="  " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">222602.339593488</td>
+<td headers="   " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">553602.616755986</td>
+<td headers="    " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">46411.8281683347</td>
+<td headers="     " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">83648.5543110233</td></tr>
+<tr><td headers=" " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; font-weight: bold;">South</td>
+<td headers="  " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">340286.694174781</td>
+<td headers="   " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">912387.053478923</td>
+<td headers="    " class="gt_row gt_left" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">119291.279388797</td>
+<td headers="     " class="gt_row gt_right" style="background-color: #FFFFFF; color: #000000; font-size: 12px; text-align: right;">185395.613495607</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Let's try creating the table with gt.</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>KLVAPerEmp <span class="sc">%&gt;%</span> <span class="fu">gt</span>(<span class="at">rowname_col =</span> <span class="st">"REG"</span>, <span class="at">groupname_col =</span> <span class="st">"Year"</span>) <span class="sc">%&gt;%</span> <span class="fu">cols_label</span>(<span class="at">Avg_Capital_to_Labor =</span> <span class="st">"Average K/L"</span>, <span class="at">Avg_Value_Added_per_emp =</span> <span class="st">"Average Value-added per employee"</span>) <span class="sc">%&gt;%</span> <span class="fu">cols_align</span>(<span class="at">align =</span> <span class="st">"center"</span>) <span class="sc">%&gt;%</span> <span class="fu">cols_width</span>(<span class="fu">everything</span>() <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">160</span>)) <span class="sc">%&gt;%</span> <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="jaowkbczra" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jaowkbczra table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#jaowkbczra thead, #jaowkbczra tbody, #jaowkbczra tfoot, #jaowkbczra tr, #jaowkbczra td, #jaowkbczra th {
+  border-style: none;
+}
+
+#jaowkbczra p {
+  margin: 0;
+  padding: 0;
+}
+
+#jaowkbczra .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#jaowkbczra .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#jaowkbczra .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#jaowkbczra .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#jaowkbczra .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#jaowkbczra .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#jaowkbczra .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#jaowkbczra .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#jaowkbczra .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#jaowkbczra .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#jaowkbczra .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#jaowkbczra .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#jaowkbczra .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#jaowkbczra .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#jaowkbczra .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jaowkbczra .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#jaowkbczra .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#jaowkbczra .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#jaowkbczra .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jaowkbczra .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#jaowkbczra .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jaowkbczra .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#jaowkbczra .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jaowkbczra .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jaowkbczra .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jaowkbczra .gt_left {
+  text-align: left;
+}
+
+#jaowkbczra .gt_center {
+  text-align: center;
+}
+
+#jaowkbczra .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#jaowkbczra .gt_font_normal {
+  font-weight: normal;
+}
+
+#jaowkbczra .gt_font_bold {
+  font-weight: bold;
+}
+
+#jaowkbczra .gt_font_italic {
+  font-style: italic;
+}
+
+#jaowkbczra .gt_super {
+  font-size: 65%;
+}
+
+#jaowkbczra .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#jaowkbczra .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#jaowkbczra .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#jaowkbczra .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#jaowkbczra .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#jaowkbczra .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#jaowkbczra .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" style="table-layout: fixed;; width: 0px" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <colgroup>
+    <col style="width:160px;">
+    <col style="width:160px;">
+    <col style="width:160px;">
+  </colgroup>
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=""></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="Average K/L">Average K/L</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="Average Value-added per employee">Average Value-added per employee</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <th colspan="3" class="gt_group_heading" scope="colgroup" id="2006">2006</th>
+    </tr>
+    <tr class="gt_row_group_first"><th id="stub_1_1" scope="row" class="gt_row gt_center gt_stub">Bangkok</th>
+<td headers="2006 stub_1_1 Avg_Capital_to_Labor" class="gt_row gt_center">374,905</td>
+<td headers="2006 stub_1_1 Avg_Value_Added_per_emp" class="gt_row gt_center">336,653</td></tr>
+    <tr><th id="stub_1_2" scope="row" class="gt_row gt_center gt_stub">Central</th>
+<td headers="2006 stub_1_2 Avg_Capital_to_Labor" class="gt_row gt_center">540,294</td>
+<td headers="2006 stub_1_2 Avg_Value_Added_per_emp" class="gt_row gt_center">247,087</td></tr>
+    <tr><th id="stub_1_3" scope="row" class="gt_row gt_center gt_stub">North</th>
+<td headers="2006 stub_1_3 Avg_Capital_to_Labor" class="gt_row gt_center">247,413</td>
+<td headers="2006 stub_1_3 Avg_Value_Added_per_emp" class="gt_row gt_center">71,194</td></tr>
+    <tr><th id="stub_1_4" scope="row" class="gt_row gt_center gt_stub">Northeast</th>
+<td headers="2006 stub_1_4 Avg_Capital_to_Labor" class="gt_row gt_center">222,602</td>
+<td headers="2006 stub_1_4 Avg_Value_Added_per_emp" class="gt_row gt_center">46,412</td></tr>
+    <tr><th id="stub_1_5" scope="row" class="gt_row gt_center gt_stub">South</th>
+<td headers="2006 stub_1_5 Avg_Capital_to_Labor" class="gt_row gt_center">340,287</td>
+<td headers="2006 stub_1_5 Avg_Value_Added_per_emp" class="gt_row gt_center">119,291</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="3" class="gt_group_heading" scope="colgroup" id="2016">2016</th>
+    </tr>
+    <tr class="gt_row_group_first"><th id="stub_1_6" scope="row" class="gt_row gt_center gt_stub">Bangkok</th>
+<td headers="2016 stub_1_6 Avg_Capital_to_Labor" class="gt_row gt_center">1,149,776</td>
+<td headers="2016 stub_1_6 Avg_Value_Added_per_emp" class="gt_row gt_center">608,901</td></tr>
+    <tr><th id="stub_1_7" scope="row" class="gt_row gt_center gt_stub">Central</th>
+<td headers="2016 stub_1_7 Avg_Capital_to_Labor" class="gt_row gt_center">1,225,954</td>
+<td headers="2016 stub_1_7 Avg_Value_Added_per_emp" class="gt_row gt_center">716,091</td></tr>
+    <tr><th id="stub_1_8" scope="row" class="gt_row gt_center gt_stub">North</th>
+<td headers="2016 stub_1_8 Avg_Capital_to_Labor" class="gt_row gt_center">664,393</td>
+<td headers="2016 stub_1_8 Avg_Value_Added_per_emp" class="gt_row gt_center">119,637</td></tr>
+    <tr><th id="stub_1_9" scope="row" class="gt_row gt_center gt_stub">Northeast</th>
+<td headers="2016 stub_1_9 Avg_Capital_to_Labor" class="gt_row gt_center">553,603</td>
+<td headers="2016 stub_1_9 Avg_Value_Added_per_emp" class="gt_row gt_center">83,649</td></tr>
+    <tr><th id="stub_1_10" scope="row" class="gt_row gt_center gt_stub">South</th>
+<td headers="2016 stub_1_10 Avg_Capital_to_Labor" class="gt_row gt_center">912,387</td>
+<td headers="2016 stub_1_10 Avg_Value_Added_per_emp" class="gt_row gt_center">185,396</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="plotting-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-the-data">Plotting the data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Make a region labeller.</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>region_labeller <span class="ot">&lt;-</span> <span class="fu">as_labeller</span>(<span class="fu">c</span>( <span class="st">"0"</span> <span class="ot">=</span> <span class="st">"National"</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"1"</span> <span class="ot">=</span> <span class="st">"Bangkok"</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2"</span> <span class="ot">=</span> <span class="st">"Central"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"3"</span> <span class="ot">=</span> <span class="st">"North"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"4"</span> <span class="ot">=</span> <span class="st">"Northeast"</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"5"</span> <span class="ot">=</span> <span class="st">"South"</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="distribution-of-firm-size-by-region" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-firm-size-by-region">Distribution of Firm Size (by region)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2550</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(INDUS_2550 <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(SIZE_R)) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> SIZE_R, <span class="at">weight =</span> WGT_REG, <span class="at">y =</span> <span class="fu">after_stat</span>(prop)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"prop"</span>) <span class="sc">+</span> <span class="fu">facet_rep_wrap</span>(<span class="sc">~</span>REG, <span class="at">labeller =</span> region_labeller, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Firm Size (by region)"</span>, <span class="at">x =</span> <span class="st">"Number of Employees"</span>, <span class="at">y =</span> <span class="st">"Proportion"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="INDUST_Analysis_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(SIZE_R)) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> SIZE_R, <span class="at">weight =</span> WGT, <span class="at">y =</span> <span class="fu">after_stat</span>(prop)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"prop"</span>) <span class="sc">+</span> <span class="fu">facet_rep_wrap</span>(<span class="sc">~</span>REG, <span class="at">labeller =</span> region_labeller, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Firm Size (by region)"</span>, <span class="at">x =</span> <span class="st">"Number of Employees"</span>, <span class="at">y =</span> <span class="st">"Proportion"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="INDUST_Analysis_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Overlay the two graphs</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Dist_overlay <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="cn">NULL</span>, <span class="fu">aes</span>(<span class="at">x =</span> SIZE_R, <span class="at">y =</span> <span class="fu">after_stat</span>(prop))) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">data =</span> INDUS_2550 <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(SIZE_R), <span class="fu">aes</span>(<span class="at">weight =</span> WGT_REG, <span class="at">fill =</span> <span class="st">"2006"</span>), <span class="at">stat =</span> <span class="st">"prop"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">data =</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(SIZE_R), <span class="fu">aes</span>(<span class="at">weight =</span> WGT, <span class="at">fill =</span> <span class="st">"2016"</span>), <span class="at">stat =</span> <span class="st">"prop"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span> <span class="fu">facet_rep_wrap</span>(<span class="sc">~</span>REG, <span class="at">labeller =</span> region_labeller, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Firm Size (by region)"</span>, <span class="at">x =</span> <span class="st">"Number of Employees"</span>, <span class="at">y =</span> <span class="st">"Proportion"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Year"</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>Dist_overlay</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="INDUST_Analysis_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="number-of-firms-average-number-of-employees-and-labor-force-by-region" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-firms-average-number-of-employees-and-labor-force-by-region">Number of firms, average number of employees, and labor force (by region)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Grouped bar chart. Each region is a facet.</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Make year as discrete</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_scaled<span class="sc">$</span>Year <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(Emp_Num_LF_scaled<span class="sc">$</span>Year)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Convert the data to long format</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_long <span class="ot">&lt;-</span> Emp_Num_LF_scaled <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Avg_emp"</span>, <span class="st">"Num_firms"</span>, <span class="st">"Labor_Force"</span>), <span class="at">names_to =</span> <span class="st">"Variable"</span>, <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Order in each group.</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>Emp_Num_LF_long<span class="sc">$</span>Variable <span class="ot">&lt;-</span> <span class="fu">factor</span>(Emp_Num_LF_long<span class="sc">$</span>Variable, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Avg_emp"</span>, <span class="st">"Num_firms"</span>, <span class="st">"Labor_Force"</span>))</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Emp_Num_LF_long) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Value, <span class="at">fill =</span> Variable) <span class="sc">+</span> <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>REG, <span class="at">labeller =</span> region_labeller, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Number of firms, average number of employees, and labor force (by region)"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Value"</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"green"</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Average number of employees"</span>, <span class="st">"Number of firms (10,000)"</span>, <span class="st">"Labor force (millions)"</span>)) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="INDUST_Analysis_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="distribution-of-value-added-per-employee-by-region" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-value-added-per-employee-by-region">Distribution of value-added per employee (by region)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check how many have negative value-added per employee</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(INDUS_2550_VA_filtered<span class="sc">$</span>Value_Added_per_emp <span class="sc">&lt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 320</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2550</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Make REG as character</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>INDUS_2550_VA_filtered<span class="sc">$</span>REG <span class="ot">&lt;-</span> <span class="fu">as.character</span>(INDUS_2550_VA_filtered<span class="sc">$</span>REG)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Make ln(Value_Added_per_emp)</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>INDUS_2550_VA_filtered <span class="ot">&lt;-</span> INDUS_2550_VA_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ln_Value_Added_per_emp =</span> <span class="fu">log</span>(Value_Added_per_emp))</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(INDUS_2550_VA_filtered, <span class="fu">aes</span>(<span class="at">x =</span> ln_Value_Added_per_emp, <span class="at">weight =</span> WGT_REG,  <span class="at">group =</span> REG, <span class="at">color =</span> REG)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">warnWbw =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of value-added per employee (by region) in 2006"</span>, <span class="at">x =</span> <span class="st">"ln(Value-added per employee)"</span>, <span class="at">y =</span> <span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span> <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"purple"</span>, <span class="st">"orange"</span>), <span class="at">labels =</span> <span class="fu">c</span>( <span class="st">"Bangkok"</span>, <span class="st">"Central"</span>, <span class="st">"North"</span>, <span class="st">"Northeast"</span>, <span class="st">"South"</span>)) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="INDUST_Analysis_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Make REG as character</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>INDUS_2560_VA_filtered<span class="sc">$</span>REG <span class="ot">&lt;-</span> <span class="fu">as.character</span>(INDUS_2560_VA_filtered<span class="sc">$</span>REG)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Make ln(Value_Added_per_emp)</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>INDUS_2560_VA_filtered <span class="ot">&lt;-</span> INDUS_2560_VA_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ln_Value_Added_per_emp =</span> <span class="fu">log</span>(Value_Added_per_emp))</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(INDUS_2560_VA_filtered, <span class="fu">aes</span>(<span class="at">x =</span> ln_Value_Added_per_emp, <span class="at">weight =</span> WGT,  <span class="at">group =</span> REG, <span class="at">color =</span> REG)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">warnWbw =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of value-added per employee (by region) in 2016"</span>, <span class="at">x =</span> <span class="st">"ln(Value-added per employee)"</span>, <span class="at">y =</span> <span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span> <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"purple"</span>, <span class="st">"orange"</span>), <span class="at">labels =</span> <span class="fu">c</span>( <span class="st">"Bangkok"</span>, <span class="st">"Central"</span>, <span class="st">"North"</span>, <span class="st">"Northeast"</span>, <span class="st">"South"</span>)) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="INDUST_Analysis_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="distribution-of-kl-by-region" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-kl-by-region">Distribution of K/L (by region)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2550</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Make REG as character</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>INDUS_2550_KL_filtered<span class="sc">$</span>REG <span class="ot">&lt;-</span> <span class="fu">as.character</span>(INDUS_2550_KL_filtered<span class="sc">$</span>REG)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Make ln(Capital_to_Labor)</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>INDUS_2550_KL_filtered <span class="ot">&lt;-</span> INDUS_2550_KL_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ln_Capital_to_Labor =</span> <span class="fu">log</span>(Capital_to_Labor))</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(INDUS_2550_KL_filtered, <span class="fu">aes</span>(<span class="at">x =</span> ln_Capital_to_Labor, <span class="at">weight =</span> WGT_REG,  <span class="at">group =</span> REG, <span class="at">color =</span> REG)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">warnWbw =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of K/L (by region) in 2006"</span>, <span class="at">x =</span> <span class="st">"ln(K/L)"</span>, <span class="at">y =</span> <span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span> <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"purple"</span>, <span class="st">"orange"</span>), <span class="at">labels =</span> <span class="fu">c</span>( <span class="st">"Bangkok"</span>, <span class="st">"Central"</span>, <span class="st">"North"</span>, <span class="st">"Northeast"</span>, <span class="st">"South"</span>)) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="INDUST_Analysis_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2560</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Make REG as character</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>INDUS_2560_KL_filtered<span class="sc">$</span>REG <span class="ot">&lt;-</span> <span class="fu">as.character</span>(INDUS_2560_KL_filtered<span class="sc">$</span>REG)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Make ln(Capital_to_Labor)</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>INDUS_2560_KL_filtered <span class="ot">&lt;-</span> INDUS_2560_KL_filtered <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ln_Capital_to_Labor =</span> <span class="fu">log</span>(Capital_to_Labor))</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(INDUS_2560_KL_filtered, <span class="fu">aes</span>(<span class="at">x =</span> ln_Capital_to_Labor, <span class="at">weight =</span> WGT,  <span class="at">group =</span> REG, <span class="at">color =</span> REG)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">warnWbw =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of K/L (by region) in 2016"</span>, <span class="at">x =</span> <span class="st">"ln(K/L)"</span>, <span class="at">y =</span> <span class="st">"Density"</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span> <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"purple"</span>, <span class="st">"orange"</span>), <span class="at">labels =</span> <span class="fu">c</span>( <span class="st">"Bangkok"</span>, <span class="st">"Central"</span>, <span class="st">"North"</span>, <span class="st">"Northeast"</span>, <span class="st">"South"</span>)) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="INDUST_Analysis_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="analysis-of-firms-with-number-of-employees-10" class="level1">
+<h1>Analysis of firms with number of employees &gt; 10</h1>
+<section id="pre-processing-the-data-1" class="level2">
+<h2 class="anchored" data-anchor-id="pre-processing-the-data-1">Pre-processing the data</h2>
+<section id="filter-the-data-10-employees" class="level3">
+<h3 class="anchored" data-anchor-id="filter-the-data-10-employees">Filter the data &gt;= 10 employees</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">### First, replace NA with 0 in the number of employees</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>INDUS_2540 <span class="ot">&lt;-</span> INDUS_2540 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">A26 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(A26), <span class="dv">0</span>, A26), <span class="at">A31 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(A31), <span class="dv">0</span>, A31))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>INDUS_2550 <span class="ot">&lt;-</span> INDUS_2550 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">A24 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(A24), <span class="dv">0</span>, A24), <span class="at">A28 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(A28), <span class="dv">0</span>, A28))</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>INDUS_2560 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">B04 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(B04), <span class="dv">0</span>, B04), <span class="at">B08 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(B08), <span class="dv">0</span>, B08))</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Filter the data</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>INDUS_2540_atleast10 <span class="ot">&lt;-</span> INDUS_2540 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(A26 <span class="sc">+</span> A31 <span class="sc">&gt;=</span> <span class="dv">10</span>)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>INDUS_2550_atleast10 <span class="ot">&lt;-</span> INDUS_2550 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(A24 <span class="sc">+</span> A28 <span class="sc">&gt;=</span> <span class="dv">10</span>)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>INDUS_2560_atleast10 <span class="ot">&lt;-</span> INDUS_2560 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(B04 <span class="sc">+</span> B08 <span class="sc">&gt;=</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

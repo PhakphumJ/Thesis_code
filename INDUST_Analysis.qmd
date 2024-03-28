@@ -9,58 +9,46 @@ execute:
 In this document/code, I will examine key dimensions of manafacturing firms. The main goal is to see whether there are differences in key dimensions across different regions. The main characteristics that I will examine are:
 
 1. Firm size (Number of employees)
-  i) 2540: (A26 + A31)
-  ii) 2550: (A24 + A28)
+  i) 2550: (A24 + A28)
+  ii) 2555: (A20 + A24)
   iii) 2560: (B04 + B08)
+  iv) 2565: (B04 + B08)
 2. Foreign Investment
-  i) 2540: A05
-  ii) 2550: A09
+  i) 2550: A09
+  ii) 2555: A09
   iii) 2560: A09
-3. Exporting
-  i) 2540: A11
-  ii) 2550: A15
-  iii) 2560: A12
-4. Sales
-  i) 2540: F01
-  ii) 2550: G01
+  iv) 2565: A09
+3. Sales
+  i) 2550: G01
+  ii) 2555: G01
   iii) 2560: D01
-5. Profit before tax (Total income - Cost of sales - Administrative expenses - Costs of raw materials, production, goods, work done by others - wages bill)
-  i) 2540: F09 - E01 - E02 - C01 - C02 - C03 - C04 - B04 - B08 - B09 - B10 - B11
-  ii) 2550: G01 + G13 - E01 - E02 - C01 - C02 - C03 - C04 - B05 - B10
-  iii) 2560: D01 + D13 - C21 - C41 - C06 - B19 - B24
-6. Total Fixed Assets
-  i) 2540: H07
-  ii) 2550: I08
-  iii) 2560:
-7. Problems of operation
-  i) 2560: J02, J03, J04, J05, J06, J07, J08, J09, J10, J11, J12, J13, J14, J15, J16, J17
-  --> Group into:
-  a) Low Demand or Marketing Problems: J02, J10, J11
-  b) Labor Shortages: J05
-  c) Lack of capital: J09
-  d) Technology Problem: J06, J07
-8. Needs from the government
-  i) 2560: J19, J20, J21, J22, J23, J24, J25, J26, J27, J28, J29, J30, J31, J32, J33, J34
-  --> Group into:
-  a) Skilled_Labor_support: J19
-  b) Productivity_support: J20, J32
-  c) Capital_Support: J21, J22, J23, J32
-  d) Output_Market_Support: J25, J30
-9. R&D Costs
-  i) 2540: No info
-  ii) 2550: E28
+  iv) 2565: D01
+4. Total Fixed Assets
+  i) 2550: I08
+  ii) 2555: I05
+  iii) 2560: E16
+  iv) 2565: E16
+5. R&D Costs
+  i) 2550: E28
+  ii) 2555: F09
   iii) 2560: C32
-10. Number of firms
-  i) 2540: ??
-  ii) 2550: sum of weights
+  iv) 2565: C29
+6. Number of firms
+  i) 2550: sum of weights
+  ii) 2555: sum of weights
   iii) 2560: sum of weights
-11. Estimated TFP (estimated using sales, wage bill, and fixed assets).
-12. Value-added/Employee: Value added is calculated as sales - cost of raw materials + change in inventory of raw materials.
+  iv) 2565: sum of weights
+7. Estimated TFP (estimated using sales, wage bill, and fixed assets).
+8. Value-added/Employee: Value added is calculated as sales - cost of raw materials + change in inventory of raw materials.
   i) 2550: (G01 + (D05 - D01) - C01)/(A24 + A28)
-  ii) 2560: (D01 + (C12 – C07) – C01)/(B04 + B08)
-13. K/L
+  ii) 2555: (G01 + (D05 - D01) - C01)/(A20 + A24)
+  iii) 2560: (D01 + (C12 – C07) – C01)/(B04 + B08)
+  iv) 2565: (D01 + (C12 – C07) – C01)/(B04 + B08)
+9. K/L
   i) 2550: I08/(A24 + A28)
-  ii) 2560: E16/(B04 + B08)
+  ii) 2555: I05/(A20 + A24)
+  iii) 2560: E16/(B04 + B08)
+  iv) 2565: E16/(B04 + B08)
 
 
 
@@ -86,11 +74,14 @@ library(gapminder)
 setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
 
 # Importing the data
-INDUS_2540 <- read_sav("Data\\INDUS 2540 (1997)\\Microdata INDUS 2540\\Microdata INDUS 2540.sav")
 
 INDUS_2550 <- read_sav("Data\\INDUS 2550 (2007)\\Microdata INDUS 2550\\Microdata INDUS 2550.sav")
 
+INDUS_2555 <- read_sav("Data\\BIC 2555 (2012)\\BICINDUS 2555 (2012)\\Microdata BICINDUS 2555\\Microdata BICINDUS 2555.sav")
+
 INDUS_2560 <- read_sav("Data\\INDUS 2560 (2018)\\Microdata INDUS 2560\\Microdata INDUS 2560.sav")
+
+INDUS_2565 <- read_sav("Data\\BIC 2565 (2022)\\BICINDUS 2565 (2022)\\Microdata BICINDUS 2565\\Microdata BICINDUS 2565_N.sav")
 
 LFS_LF <- read_excel("Data/Output/All_YEAR_TOTAL_LF_annual_final.xlsx")
 

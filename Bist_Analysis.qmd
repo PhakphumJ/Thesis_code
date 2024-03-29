@@ -1,0 +1,70 @@
+---
+title: "Thesis_Business_Analysis"
+format: html
+---
+
+## Explanation
+
+In this document/code, I will examine key dimensions of business () firms. The main goal is to see whether there are differences in key dimensions across different regions. The main characteristics that I will examine are:
+
+1. Firm size (Number of employees)
+i) 2555: B05 + B10
+ii) 2565:
+
+2. Foreign Investment
+i) 2555: A09
+ii) 2565:
+
+3. Sales:
+i) 2555: D01 or D03 (hotels and guesthouses)
+ii) 2565:
+
+4. Fixed Assets:
+i) 2555: G06
+ii) 2565:
+
+5. R&D Cost:
+i) 2555: C09
+ii) 2565:
+
+6. Number of Firms:
+i) 2555: sum of weights
+ii) 2565: sum of weights
+
+7. Estimated TFP (estimated using sales, wage bill, and fixed assets).
+8. Sales per employee. I don't use value added because it is tricky for service sectors.
+i) 2555: (D01 or D03)  / Number of employees
+ii) 2565:
+
+9. K/L
+i) 2555: G06 / number of employees
+ii) 2565:
+
+## Import and Clean Data
+
+```{r}
+remove(list = ls())
+
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(haven)
+library(ggstats)
+library(lemon)
+library(kableExtra)
+library(mmtable2)
+library(stringr)
+library(purrr)
+library(gt)
+library(patchwork)
+
+# Set working directory
+setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
+
+# Importing the data
+BICTS_2555 <- read_sav("Data\\BIC 2555 (2012)\\BICTS 2555 (2012)\\Microdata BICTS 2555\\Microdata BICTS 2555.sav")
+
+BICTS_2565 <- read_sav("Data\\BIC 2565 (2022)\\BICTS 2565 (2022)\\Microdata BICTS 2565\\Microdata BICTS 2565_N.sav")
+```
+

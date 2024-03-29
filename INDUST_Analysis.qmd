@@ -23,11 +23,11 @@ In this document/code, I will examine key dimensions of manafacturing firms. The
   ii) 2555: G01
   iii) 2560: D01
   iv) 2565: D01
-4. Total Fixed Assets
-  i) 2550: I08
-  ii) 2555: I05
-  iii) 2560: E16
-  iv) 2565: E16
+4. Total Fixed Assets (Beginning of the year)
+  i) 2550: H08
+  ii) 2555: H05
+  iii) 2560: E08
+  iv) 2565: E08
 5. R&D Costs
   i) 2550: E28
   ii) 2555: F09
@@ -45,10 +45,10 @@ In this document/code, I will examine key dimensions of manafacturing firms. The
   iii) 2560: (D01 + (C12 – C07) – C01)/(B04 + B08)
   iv) 2565: (D01 + (C12 – C07) – C01)/(B04 + B08)
 9. K/L
-  i) 2550: I08/(A24 + A28)
-  ii) 2555: I05/(A20 + A24)
-  iii) 2560: E16/(B04 + B08)
-  iv) 2565: E16/(B04 + B08)
+  i) 2550: H08/(A24 + A28)
+  ii) 2555: H05/(A20 + A24)
+  iii) 2560: E08/(B04 + B08)
+  iv) 2565: E08/(B04 + B08)
 
 
 
@@ -182,32 +182,32 @@ INDUS_2565_VA_filtered <- INDUS_2565_VA_filtered %>% mutate(Value_Added_per_emp 
 
 ```{r}
 ## Using only firms with sales > 12.000, and fixed assets > 6,000.
-# 2550. I08/num_employ
-INDUS_2550_KL_filtered <- INDUS_2550 %>% filter(G01 > 12000, I08 > 6000, !is.na(G01), !is.na(I08), !is.na(A24), !is.na(A28))
+# 2550. H08/num_employ
+INDUS_2550_KL_filtered <- INDUS_2550 %>% filter(G01 > 12000, H08 > 6000, !is.na(G01), !is.na(H08), !is.na(A24), !is.na(A28))
 
 # Calculate K/L
-INDUS_2550_KL_filtered <- INDUS_2550_KL_filtered %>% mutate(Capital_to_Labor = I08/num_employ)
+INDUS_2550_KL_filtered <- INDUS_2550_KL_filtered %>% mutate(Capital_to_Labor = H08/num_employ)
 
 
-# 2555. I05/num_employ
-INDUS_2555_KL_filtered <- INDUS_2555 %>% filter(G01 > 12000, I05 > 6000, !is.na(G01), !is.na(I05), !is.na(A20), !is.na(A24))
-
-# Calculate K/L
-INDUS_2555_KL_filtered <- INDUS_2555_KL_filtered %>% mutate(Capital_to_Labor = I05/num_employ)
-
-
-# 2560. E16/(B04 + B08)
-INDUS_2560_KL_filtered <- INDUS_2560 %>% filter(D01 > 12000, E16 > 6000, !is.na(D01), !is.na(E16), !is.na(B04), !is.na(B08))
+# 2555. H05/num_employ
+INDUS_2555_KL_filtered <- INDUS_2555 %>% filter(G01 > 12000, H05 > 6000, !is.na(G01), !is.na(H05), !is.na(A20), !is.na(A24))
 
 # Calculate K/L
-INDUS_2560_KL_filtered <- INDUS_2560_KL_filtered %>% mutate(Capital_to_Labor = E16/num_employ)
+INDUS_2555_KL_filtered <- INDUS_2555_KL_filtered %>% mutate(Capital_to_Labor = H05/num_employ)
 
 
-# 2565. E16/(B04 + B08)
-INDUS_2565_KL_filtered <- INDUS_2565 %>% filter(D01 > 12000, E16 > 6000, !is.na(D01), !is.na(E16), !is.na(B04), !is.na(B08))
+# 2560. E08/num_employ
+INDUS_2560_KL_filtered <- INDUS_2560 %>% filter(D01 > 12000, E08 > 6000, !is.na(D01), !is.na(E08), !is.na(B04), !is.na(B08))
 
 # Calculate K/L
-INDUS_2565_KL_filtered <- INDUS_2565_KL_filtered %>% mutate(Capital_to_Labor = E16/num_employ)
+INDUS_2560_KL_filtered <- INDUS_2560_KL_filtered %>% mutate(Capital_to_Labor = E08/num_employ)
+
+
+# 2565. E08/num_employ
+INDUS_2565_KL_filtered <- INDUS_2565 %>% filter(D01 > 12000, E08 > 6000, !is.na(D01), !is.na(E08), !is.na(B04), !is.na(B08))
+
+# Calculate K/L
+INDUS_2565_KL_filtered <- INDUS_2565_KL_filtered %>% mutate(Capital_to_Labor = E08/num_employ)
 
 ```
 
@@ -644,19 +644,21 @@ ggplot(INDUS_2550_KL_filtered, aes(x = ln_Capital_to_Labor, weight = WGT_REG,  g
 
 ```
 
+
+
 ```{r}
-# 2560
+# 2565
 # Make REG as character
-INDUS_2560_KL_filtered$REG <- as.character(INDUS_2560_KL_filtered$REG)
+INDUS_2565_KL_filtered$REG <- as.character(INDUS_2565_KL_filtered$REG)
 
 # Make ln(Capital_to_Labor)
-INDUS_2560_KL_filtered <- INDUS_2560_KL_filtered %>% mutate(ln_Capital_to_Labor = log(Capital_to_Labor))
+INDUS_2565_KL_filtered <- INDUS_2565_KL_filtered %>% mutate(ln_Capital_to_Labor = log(Capital_to_Labor))
 
 # Plot
-ggplot(INDUS_2560_KL_filtered, aes(x = ln_Capital_to_Labor, weight = WGT,  group = REG, color = REG)) + geom_density(warnWbw = FALSE) + labs(title = "Distribution of K/L (by region) in 2016", x = "ln(K/L)", y = "Density") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange"), labels = c( "Bangkok", "Central", "North", "Northeast", "South")) + theme(legend.position = "bottom", legend.title = element_blank())
-
+ggplot(INDUS_2565_KL_filtered, aes(x = ln_Capital_to_Labor, weight = WGT,  group = REG, color = REG)) + geom_density(warnWbw = FALSE) + labs(title = "Distribution of K/L (by region) in 2021", x = "ln(K/L)", y = "Density") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange"), labels = c( "Bangkok", "Central", "North", "Northeast", "South")) + theme(legend.position = "bottom", legend.title = element_blank())
 
 ```
+
 
 ### Mean K/L and Mean Value-added per employee (by region)
 

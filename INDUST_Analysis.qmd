@@ -68,7 +68,7 @@ library(mmtable2)
 library(stringr)
 library(purrr)
 library(gt)
-library(gapminder)
+library(patchwork)
 
 # Set working directory
 setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
@@ -97,57 +97,84 @@ INDUS_2550 <- INDUS_2550 %>% mutate(WGT_CWT = WGT_CWT/10000, WGT_REG = WGT_REG/1
 
 ```
 
-## Group the needs from the government
+## Calculate the number of employees
 
 ```{r}
-## First, turn missing values into 0
-INDUS_2560 <- INDUS_2560 %>% mutate(J19 = ifelse(is.na(J19), 0, J19), J20 = ifelse(is.na(J20), 0, J20), J21 = ifelse(is.na(J21), 0, J21), J22 = ifelse(is.na(J22), 0, J22), J23 = ifelse(is.na(J23), 0, J23), J24 = ifelse(is.na(J24), 0, J24), J25 = ifelse(is.na(J25), 0, J25), J26 = ifelse(is.na(J26), 0, J26), J27 = ifelse(is.na(J27), 0, J27), J28 = ifelse(is.na(J28), 0, J28), J29 = ifelse(is.na(J29), 0, J29), J30 = ifelse(is.na(J30), 0, J30), J31 = ifelse(is.na(J31), 0, J31), J32 = ifelse(is.na(J32), 0, J32), J33 = ifelse(is.na(J33), 0, J33), J34 = ifelse(is.na(J34), 0, J34))
+## Calculate the number of employees
+# 2550
+# Replace NA with 0 in A24 and A28
+INDUS_2550 <- INDUS_2550 %>% mutate(A24 = ifelse(is.na(A24), 0, A24), A28 = ifelse(is.na(A28), 0, A28))
 
-## Group the needs from the government (4 groups)
-INDUS_2560 <- INDUS_2560 %>% mutate(Skilled_Labor_support = J19, Productivity_support = J20 + J32, Capital_Support = J21 + J22 + J23 + J32, Output_Market_Support = J25 + J30)
+INDUS_2550 <- INDUS_2550 %>% mutate(num_employ = A24 + A28)
 
-# If > 0 then 1, else 0
-INDUS_2560 <- INDUS_2560 %>% mutate(Skilled_Labor_support = ifelse(Skilled_Labor_support > 0, 1, 0), Productivity_support = ifelse(Productivity_support > 0, 1, 0), Capital_Support = ifelse(Capital_Support > 0, 1, 0), Output_Market_Support = ifelse(Output_Market_Support > 0, 1, 0))
+# 2555
+INDUS_2555 <- INDUS_2555 %>% mutate(A20 = ifelse(is.na(A20), 0, A20), A24 = ifelse(is.na(A24), 0, A24))
 
+INDUS_2555 <- INDUS_2555 %>% mutate(num_employ = A20 + A24)
+
+# 2560
+INDUS_2560 <- INDUS_2560 %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = ifelse(is.na(B08), 0, B08))
+
+INDUS_2560 <- INDUS_2560 %>% mutate(num_employ = B04 + B08)
+
+# 2565
+INDUS_2565 <- INDUS_2565 %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = ifelse(is.na(B08), 0, B08))
+
+INDUS_2565 <- INDUS_2565 %>% mutate(num_employ = B04 + B08)
 
 ```
 
-## Group the problems of operation
+```{r}
+## Let's examine SIZE_R, B04, and B08 of 2560
+INDUS_2560 %>% select(SIZE_R, B04, B08)
+
+## That's certainly weird. 
+```
 
 ```{r}
-## First, turn missing values into 0
-INDUS_2560 <- INDUS_2560 %>% mutate(J02 = ifelse(is.na(J02), 0, J02), J03 = ifelse(is.na(J03), 0, J03), J04 = ifelse(is.na(J04), 0, J04), J05 = ifelse(is.na(J05), 0, J05), J06 = ifelse(is.na(J06), 0, J06), J07 = ifelse(is.na(J07), 0, J07), J08 = ifelse(is.na(J08), 0, J08), J09 = ifelse(is.na(J09), 0, J09), J10 = ifelse(is.na(J10), 0, J10), J11 = ifelse(is.na(J11), 0, J11), J12 = ifelse(is.na(J12), 0, J12), J13 = ifelse(is.na(J13), 0, J13), J14 = ifelse(is.na(J14), 0, J14), J15 = ifelse(is.na(J15), 0, J15), J16 = ifelse(is.na(J16), 0, J16), J17 = ifelse(is.na(J17), 0, J17))
-
-## Group the problems of operation (4 groups)
-INDUS_2560 <- INDUS_2560 %>% mutate(Low_Demand_Marketing_Problems = J02 + J10 + J11, Labor_Shortages = J05, Lack_of_Capital = J09, Technology_Problem = J06 + J07)
-
-# If > 0 then 1, else 0
-INDUS_2560 <- INDUS_2560 %>% mutate(Low_Demand_Marketing_Problems = ifelse(Low_Demand_Marketing_Problems > 0, 1, 0), Labor_Shortages = ifelse(Labor_Shortages > 0, 1, 0), Lack_of_Capital = ifelse(Lack_of_Capital > 0, 1, 0), Technology_Problem = ifelse(Technology_Problem > 0, 1, 0))
-
+## Remove obs. with num_employ = 0
+INDUS_2550 <- INDUS_2550 %>% filter(num_employ > 0)
+INDUS_2555 <- INDUS_2555 %>% filter(num_employ > 0)
+INDUS_2560 <- INDUS_2560 %>% filter(num_employ > 0)
+INDUS_2565 <- INDUS_2565 %>% filter(num_employ > 0)
 ```
+
 
 
 ## Calculate value-added per employee
 
 ```{r}
 ## Using only firms with sales > 12.000
-# 2550. (G01 + (D05 - D01) - C01)/(A24 + A28)
+# 2550. (G01 + (D05 - D01) - C01)/num_employ
 INDUS_2550_VA_filtered <- INDUS_2550 %>% filter(G01 > 12000, !is.na(G01), !is.na(D05), !is.na(D01), !is.na(C01))
-# If A24, A28 = NA then replace with 0
-INDUS_2550_VA_filtered <- INDUS_2550_VA_filtered %>% mutate(A24 = ifelse(is.na(A24), 0, A24), A28 = ifelse(is.na(A28), 0, A28))
 # Calculate value-added.
 INDUS_2550_VA_filtered <- INDUS_2550_VA_filtered %>% mutate(Value_Added = (G01 + (D05 - D01) - C01))
 # Calculate value-added per employee.
-INDUS_2550_VA_filtered <- INDUS_2550_VA_filtered %>% mutate(Value_Added_per_emp = Value_Added/(A24 + A28))
+INDUS_2550_VA_filtered <- INDUS_2550_VA_filtered %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
 
-# 2560. (D01 + (C12 – C07) – C01)/(B04 + B08)
+
+# 2555. (G01 + (D05 - D01) - C01)/num_employ
+INDUS_2555_VA_filtered <- INDUS_2555 %>% filter(G01 > 12000, !is.na(G01), !is.na(D05), !is.na(D01), !is.na(C01))
+# Calculate value-added.
+INDUS_2555_VA_filtered <- INDUS_2555_VA_filtered %>% mutate(Value_Added = (G01 + (D05 - D01) - C01))
+# Calculate value-added per employee.
+INDUS_2555_VA_filtered <- INDUS_2555_VA_filtered %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
+
+
+# 2560. (D01 + (C12 – C07) – C01)/num_employ
 INDUS_2560_VA_filtered <- INDUS_2560 %>% filter(D01 > 12000, !is.na(D01), !is.na(C12), !is.na(C07), !is.na(C01))
-# If B04, B08 = NA then replace with 0
-INDUS_2560_VA_filtered <- INDUS_2560_VA_filtered %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = ifelse(is.na(B08), 0, B08))
 # Calculate value-added.
 INDUS_2560_VA_filtered <- INDUS_2560_VA_filtered %>% mutate(Value_Added = (D01 + (C12 - C07) - C01))
 # Calculate value-added per employee.
-INDUS_2560_VA_filtered <- INDUS_2560_VA_filtered %>% mutate(Value_Added_per_emp = Value_Added/(B04 + B08))
+INDUS_2560_VA_filtered <- INDUS_2560_VA_filtered %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
+
+
+# 2565. (D01 + (C12 – C07) – C01)/num_employ
+INDUS_2565_VA_filtered <- INDUS_2565 %>% filter(D01 > 12000, !is.na(D01), !is.na(C12), !is.na(C07), !is.na(C01))
+# Calculate value-added.
+INDUS_2565_VA_filtered <- INDUS_2565_VA_filtered %>% mutate(Value_Added = (D01 + (C12 - C07) - C01))
+# Calculate value-added per employee.
+INDUS_2565_VA_filtered <- INDUS_2565_VA_filtered %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
 ```
 
 
@@ -155,22 +182,78 @@ INDUS_2560_VA_filtered <- INDUS_2560_VA_filtered %>% mutate(Value_Added_per_emp 
 
 ```{r}
 ## Using only firms with sales > 12.000, and fixed assets > 6,000.
-# 2550. I08/(A24 + A28)
+# 2550. I08/num_employ
 INDUS_2550_KL_filtered <- INDUS_2550 %>% filter(G01 > 12000, I08 > 6000, !is.na(G01), !is.na(I08), !is.na(A24), !is.na(A28))
-# Replace missing A24, A28 with 0
-INDUS_2550_KL_filtered <- INDUS_2550_KL_filtered %>% mutate(A24 = ifelse(is.na(A24), 0, A24), A28 = ifelse(is.na(A28), 0, A28))
 
 # Calculate K/L
-INDUS_2550_KL_filtered <- INDUS_2550_KL_filtered %>% mutate(Capital_to_Labor = I08/(A24 + A28))
+INDUS_2550_KL_filtered <- INDUS_2550_KL_filtered %>% mutate(Capital_to_Labor = I08/num_employ)
+
+
+# 2555. I05/num_employ
+INDUS_2555_KL_filtered <- INDUS_2555 %>% filter(G01 > 12000, I05 > 6000, !is.na(G01), !is.na(I05), !is.na(A20), !is.na(A24))
+
+# Calculate K/L
+INDUS_2555_KL_filtered <- INDUS_2555_KL_filtered %>% mutate(Capital_to_Labor = I05/num_employ)
+
 
 # 2560. E16/(B04 + B08)
 INDUS_2560_KL_filtered <- INDUS_2560 %>% filter(D01 > 12000, E16 > 6000, !is.na(D01), !is.na(E16), !is.na(B04), !is.na(B08))
-# Replace missing B04, B08 with 0
-INDUS_2560_KL_filtered <- INDUS_2560_KL_filtered %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = ifelse(is.na(B08), 0, B08))
 
 # Calculate K/L
-INDUS_2560_KL_filtered <- INDUS_2560_KL_filtered %>% mutate(Capital_to_Labor = E16/(B04 + B08))
+INDUS_2560_KL_filtered <- INDUS_2560_KL_filtered %>% mutate(Capital_to_Labor = E16/num_employ)
+
+
+# 2565. E16/(B04 + B08)
+INDUS_2565_KL_filtered <- INDUS_2565 %>% filter(D01 > 12000, E16 > 6000, !is.na(D01), !is.na(E16), !is.na(B04), !is.na(B08))
+
+# Calculate K/L
+INDUS_2565_KL_filtered <- INDUS_2565_KL_filtered %>% mutate(Capital_to_Labor = E16/num_employ)
+
 ```
+
+
+## Categorize R&D expense whether it is zero or not.
+
+
+```{r}
+## Using only firms with sales > 12.000. Hance, use the same firms as in the value-added per employee.
+
+# 2550.
+# If E28 is NA, then replace it with 0.
+INDUS_2550_VA_filtered <- INDUS_2550_VA_filtered %>% mutate(E028 = ifelse(is.na(E028), 0, E028))
+
+# Categorize R&D expense
+INDUS_2550_VA_filtered <- INDUS_2550_VA_filtered %>% mutate(RD_above_0 = ifelse(E028 > 0, 1, 0))
+
+
+# 2555.
+# If F09 is NA, then replace it with 0.
+INDUS_2555_VA_filtered <- INDUS_2555_VA_filtered %>% mutate(F09 = ifelse(is.na(F09), 0, F09))
+
+# Categorize R&D expense
+INDUS_2555_VA_filtered <- INDUS_2555_VA_filtered %>% mutate(RD_above_0 = ifelse(F09 > 0, 1, 0))
+
+
+# 2560.
+# If C32 is NA, then replace it with 0.
+INDUS_2560_VA_filtered <- INDUS_2560_VA_filtered %>% mutate(C32 = ifelse(is.na(C32), 0, C32))
+
+# Categorize R&D expense
+INDUS_2560_VA_filtered <- INDUS_2560_VA_filtered %>% mutate(RD_above_0 = ifelse(C32 > 0, 1, 0))
+
+
+# 2565.
+# If C29 is NA, then replace it with 0.
+INDUS_2565_VA_filtered <- INDUS_2565_VA_filtered %>% mutate(C29 = ifelse(is.na(C29), 0, C29))
+
+# Categorize R&D expense
+INDUS_2565_VA_filtered <- INDUS_2565_VA_filtered %>% mutate(RD_above_0 = ifelse(C29 > 0, 1, 0))
+
+
+
+```
+
+
 
 
 ### Categorize number of employees (follow the same categorization as in year 2550)
@@ -189,10 +272,17 @@ INDUS_2560_KL_filtered <- INDUS_2560_KL_filtered %>% mutate(Capital_to_Labor = E
 13. 501-1000
 14. > 1000
 
+
+
 ```{r}
-## Categorized number of employees (2560)\
-# 1 + NA should be 1
-INDUS_2560 <- INDUS_2560 %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = ifelse(is.na(B08), 0, B08)) %>% mutate(SIZE_R = case_when(B04 + B08 == 1 ~ 1, B04 + B08 >= 2 & B04 + B08 <= 3 ~ 2, B04 + B08 >= 4 & B04 + B08 <= 5 ~ 3, B04 + B08 >= 6 & B04 + B08 <= 10 ~ 4, B04 + B08 >= 11 & B04 + B08 <= 15 ~ 5, B04 + B08 >= 16 & B04 + B08 <= 20 ~ 6, B04 + B08 >= 21 & B04 + B08 <= 25 ~ 7, B04 + B08 >= 26 & B04 + B08 <= 30 ~ 8, B04 + B08 >= 31 & B04 + B08 <= 50 ~ 9, B04 + B08 >= 51 & B04 + B08 <= 100 ~ 10, B04 + B08 >= 101 & B04 + B08 <= 200 ~ 11, B04 + B08 >= 201 & B04 + B08 <= 500 ~ 12, B04 + B08 >= 501 & B04 + B08 <= 1000 ~ 13, B04 + B08 > 1000 ~ 14))
+## Categorized number of employees (2555)
+INDUS_2555 <- INDUS_2555 %>% mutate(SIZE_R = case_when(num_employ == 1 ~ 1, num_employ %in% 2:3 ~ 2, num_employ %in% 4:5 ~ 3, num_employ %in% 6:10 ~ 4, num_employ %in% 11:15 ~ 5, num_employ %in% 16:20 ~ 6, num_employ %in% 21:25 ~ 7, num_employ %in% 26:30 ~ 8, num_employ %in% 31:50 ~ 9, num_employ %in% 51:100 ~ 10, num_employ %in% 101:200 ~ 11, num_employ %in% 201:500 ~ 12, num_employ %in% 501:1000 ~ 13, num_employ > 1000 ~ 14))
+
+## Categorized number of employees (2560)
+INDUS_2560 <- INDUS_2560 %>% mutate(SIZE_R = case_when(num_employ == 1 ~ 1, num_employ %in% 2:3 ~ 2, num_employ %in% 4:5 ~ 3, num_employ %in% 6:10 ~ 4, num_employ %in% 11:15 ~ 5, num_employ %in% 16:20 ~ 6, num_employ %in% 21:25 ~ 7, num_employ %in% 26:30 ~ 8, num_employ %in% 31:50 ~ 9, num_employ %in% 51:100 ~ 10, num_employ %in% 101:200 ~ 11, num_employ %in% 201:500 ~ 12, num_employ %in% 501:1000 ~ 13, num_employ > 1000 ~ 14))
+
+## Categorized number of employees (2565)
+INDUS_2565 <- INDUS_2565 %>% mutate(SIZE_R = case_when(num_employ == 1 ~ 1, num_employ %in% 2:3 ~ 2, num_employ %in% 4:5 ~ 3, num_employ %in% 6:10 ~ 4, num_employ %in% 11:15 ~ 5, num_employ %in% 16:20 ~ 6, num_employ %in% 21:25 ~ 7, num_employ %in% 26:30 ~ 8, num_employ %in% 31:50 ~ 9, num_employ %in% 51:100 ~ 10, num_employ %in% 101:200 ~ 11, num_employ %in% 201:500 ~ 12, num_employ %in% 501:1000 ~ 13, num_employ > 1000 ~ 14))
 
 ```
 
@@ -202,7 +292,11 @@ INDUS_2560 <- INDUS_2560 %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = ifel
 ## Convert SIZE_R to factor
 INDUS_2550 <- INDUS_2550 %>% mutate(SIZE_R = factor(SIZE_R, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14), labels = c("1", "2-3", "4-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31-50", "51-100", "101-200", "201-500", "501-1000", ">1000")))
 
+INDUS_2555 <- INDUS_2555 %>% mutate(SIZE_R = factor(SIZE_R, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14), labels = c("1", "2-3", "4-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31-50", "51-100", "101-200", "201-500", "501-1000", ">1000")))
+
 INDUS_2560 <- INDUS_2560 %>% mutate(SIZE_R = factor(SIZE_R, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14), labels = c("1", "2-3", "4-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31-50", "51-100", "101-200", "201-500", "501-1000", ">1000")))
+
+INDUS_2565 <- INDUS_2565 %>% mutate(SIZE_R = factor(SIZE_R, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14), labels = c("1", "2-3", "4-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31-50", "51-100", "101-200", "201-500", "501-1000", ">1000")))
 
 
 ```
@@ -215,10 +309,16 @@ INDUS_2560 <- INDUS_2560 %>% mutate(SIZE_R = factor(SIZE_R, levels = c(1, 2, 3, 
 ```{r}
 ### Calculate the average number of employees by region
 # 2550
-Avg_emp_2550 <- INDUS_2550 %>% mutate(A24 = ifelse(is.na(A24), 0, A24), A28 = ifelse(is.na(A28), 0, A28)) %>% group_by(REG) %>% summarise(Avg_emp_50 = weighted.mean(A24 + A28, WGT_REG, na.rm = TRUE))
+Avg_emp_2550 <- INDUS_2550 %>% group_by(REG) %>% summarise(Avg_emp_50 = weighted.mean(num_employ, WGT_REG, na.rm = TRUE))
+
+# 2555
+Avg_emp_2555 <- INDUS_2555 %>% group_by(REG) %>% summarise(Avg_emp_55 = weighted.mean(num_employ, WGT17, na.rm = TRUE))
 
 # 2560
-Avg_emp_2560 <- INDUS_2560 %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = ifelse(is.na(B08), 0, B08)) %>% group_by(REG) %>% summarise(Avg_emp_60 = weighted.mean(B04 + B08, WGT, na.rm = TRUE))
+Avg_emp_2560 <- INDUS_2560 %>% group_by(REG) %>% summarise(Avg_emp_60 = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# 2565
+Avg_emp_2565 <- INDUS_2565 %>% group_by(REG) %>% summarise(Avg_emp_65 = weighted.mean(num_employ, WGT, na.rm = TRUE))
 
 ```
 
@@ -228,8 +328,14 @@ Avg_emp_2560 <- INDUS_2560 %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = if
 # 2550
 Num_firms_2550 <- INDUS_2550 %>% group_by(REG) %>% summarise(Num_firms_50 = sum(WGT_REG, na.rm = TRUE))
 
+# 2555
+Num_firms_2555 <- INDUS_2555 %>% group_by(REG) %>% summarise(Num_firms_55 = sum(WGT17, na.rm = TRUE))
+
 # 2560
 Num_firms_2560 <- INDUS_2560 %>% group_by(REG) %>% summarise(Num_firms_60 = sum(WGT, na.rm = TRUE))
+
+# 2565
+Num_firms_2565 <- INDUS_2565 %>% group_by(REG) %>% summarise(Num_firms_65 = sum(WGT, na.rm = TRUE))
 ```
 
 
@@ -246,9 +352,22 @@ Emp_Num_LF_2549 <- Emp_Num_LF_2549 %>% left_join(LFS_LF %>% filter(Year == 2549)
 # Divide the labor force by 10,000
 Emp_Num_LF_2549 <- Emp_Num_LF_2549 %>% mutate(wgt = wgt/10000)
 
-
 #Rename the columns
 Emp_Num_LF_2549 <- Emp_Num_LF_2549 %>% rename(Avg_emp = Avg_emp_50, Num_firms = Num_firms_50, Labor_Force = wgt)
+
+
+## 2554
+Emp_Num_LF_2554 <- Avg_emp_2555 %>% left_join(Num_firms_2555, by = "REG")
+
+# Join with the labor force
+Emp_Num_LF_2554 <- Emp_Num_LF_2554 %>% left_join(LFS_LF %>% filter(Year == 2554), by = c("REG" = "reg"))
+
+# Divide the labor force by 10,000
+Emp_Num_LF_2554 <- Emp_Num_LF_2554 %>% mutate(wgt = wgt/10000)
+
+#Rename the columns
+Emp_Num_LF_2554 <- Emp_Num_LF_2554 %>% rename(Avg_emp = Avg_emp_55, Num_firms = Num_firms_55, Labor_Force = wgt)
+
 
 ## 2559
 Emp_Num_LF_2559 <- Avg_emp_2560 %>% left_join(Num_firms_2560, by = "REG")
@@ -256,40 +375,31 @@ Emp_Num_LF_2559 <- Avg_emp_2560 %>% left_join(Num_firms_2560, by = "REG")
 # Join with the labor force
 Emp_Num_LF_2559 <- Emp_Num_LF_2559 %>% left_join(LFS_LF %>% filter(Year == 2559), by = c("REG" = "reg"))
 
-
 #Rename the columns
 Emp_Num_LF_2559 <- Emp_Num_LF_2559 %>% rename(Avg_emp = Avg_emp_60, Num_firms = Num_firms_60, Labor_Force = wgt)
 
-## Concatenate the two tables
-Emp_Num_LF <- rbind(Emp_Num_LF_2549, Emp_Num_LF_2559)
+
+## 2564
+Emp_Num_LF_2564 <- Avg_emp_2565 %>% left_join(Num_firms_2565, by = "REG")
+
+# Join with the labor force
+Emp_Num_LF_2564 <- Emp_Num_LF_2564 %>% left_join(LFS_LF %>% filter(Year == 2564), by = c("REG" = "reg"))
+
+#Rename the columns
+Emp_Num_LF_2564 <- Emp_Num_LF_2564 %>% rename(Avg_emp = Avg_emp_65, Num_firms = Num_firms_65, Labor_Force = wgt)
+
+```
+
+
+```{r}
+## Concatenate the four tables
+Emp_Num_LF <- rbind(Emp_Num_LF_2549, Emp_Num_LF_2554, Emp_Num_LF_2559, Emp_Num_LF_2564)
 
 ## Convert year to C.E.
 Emp_Num_LF$Year <- Emp_Num_LF$Year - 543
 
 ### Make another dataframe where the number of firms is divided by 10,000 and the labor force is divided by 1,000,000
 Emp_Num_LF_scaled <- Emp_Num_LF %>% mutate(Num_firms = Num_firms/10000, Labor_Force = Labor_Force/1000000)
-
-```
-
-
-### Needs from the government
-
-```{r}
-## Calculate the proportion of firms that need support from the government in each category by region.
-# 2560
-Needs_2560 <- INDUS_2560 %>% group_by(REG) %>% summarise(Skilled_Labor_support = weighted.mean(Skilled_Labor_support, WGT, na.rm = TRUE), Productivity_support = weighted.mean(Productivity_support, WGT, na.rm = TRUE), Capital_Support = weighted.mean(Capital_Support, WGT, na.rm = TRUE), Output_Market_Support = weighted.mean(Output_Market_Support, WGT, na.rm = TRUE))
-
-
-
-```
-
-
-### Problems of operation
-
-```{r}
-## Calculate the proportion of firms that face problems of operation in each category by region.
-# 2560
-Problems_2560 <- INDUS_2560 %>% group_by(REG) %>% summarise(Low_Demand_Marketing_Problems = weighted.mean(Low_Demand_Marketing_Problems, WGT, na.rm = TRUE), Labor_Shortages = weighted.mean(Labor_Shortages, WGT, na.rm = TRUE), Lack_of_Capital = weighted.mean(Lack_of_Capital, WGT, na.rm = TRUE), Technology_Problem = weighted.mean(Technology_Problem, WGT, na.rm = TRUE))
 
 ```
 
@@ -301,8 +411,14 @@ Problems_2560 <- INDUS_2560 %>% group_by(REG) %>% summarise(Low_Demand_Marketing
 # 2550
 Capital_to_Labor_2550 <- INDUS_2550_KL_filtered %>% group_by(REG) %>% summarise(Avg_Capital_to_Labor = weighted.mean(Capital_to_Labor, WGT_REG, na.rm = TRUE))
 
+# 2555
+Capital_to_Labor_2555 <- INDUS_2555_KL_filtered %>% group_by(REG) %>% summarise(Avg_Capital_to_Labor = weighted.mean(Capital_to_Labor, WGT17, na.rm = TRUE))
+
 # 2560
 Capital_to_Labor_2560 <- INDUS_2560_KL_filtered %>% group_by(REG) %>% summarise(Avg_Capital_to_Labor = weighted.mean(Capital_to_Labor, WGT, na.rm = TRUE))
+
+# 2565
+Capital_to_Labor_2565 <- INDUS_2565_KL_filtered %>% group_by(REG) %>% summarise(Avg_Capital_to_Labor = weighted.mean(Capital_to_Labor, WGT, na.rm = TRUE))
 
 ```
 
@@ -313,9 +429,36 @@ Capital_to_Labor_2560 <- INDUS_2560_KL_filtered %>% group_by(REG) %>% summarise(
 # 2550
 Value_Added_per_emp_2550 <- INDUS_2550_VA_filtered %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT_REG, na.rm = TRUE))
 
+# 2555
+Value_Added_per_emp_2555 <- INDUS_2555_VA_filtered %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT17, na.rm = TRUE))
+
 # 2560
 Value_Added_per_emp_2560 <- INDUS_2560_VA_filtered %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT, na.rm = TRUE))
+
+# 2565
+Value_Added_per_emp_2565 <- INDUS_2565_VA_filtered %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT, na.rm = TRUE))
 ```
+
+
+### R&D expense
+
+```{r}
+### Calculate the proportion of firms with R&D expense above 0 in each region.
+# 2550
+RD_2550 <- INDUS_2550_VA_filtered %>% group_by(REG, RD_above_0) %>% summarise(Num_firms = sum(WGT_REG, na.rm = TRUE)) %>% mutate(Prop = Num_firms*100/sum(Num_firms))
+
+# 2555
+RD_2555 <- INDUS_2555_VA_filtered %>% group_by(REG, RD_above_0) %>% summarise(Num_firms = sum(WGT17, na.rm = TRUE)) %>% mutate(Prop = Num_firms*100/sum(Num_firms))
+
+# 2560
+RD_2560 <- INDUS_2560_VA_filtered %>% group_by(REG, RD_above_0) %>% summarise(Num_firms = sum(WGT, na.rm = TRUE)) %>% mutate(Prop = Num_firms*100/sum(Num_firms))
+
+# 2565
+RD_2565 <- INDUS_2565_VA_filtered %>% group_by(REG, RD_above_0) %>% summarise(Num_firms = sum(WGT, na.rm = TRUE)) %>% mutate(Prop = Num_firms*100/sum(Num_firms))
+
+```
+
+
 
 ## Combine to make two main tables.
 ### Number of firms, average number of employees, and labor force
@@ -340,10 +483,12 @@ Emp_Num_LF_scaled %>% gt(rowname_col = "REG", groupname_col = "Year") %>% cols_l
 ### Combine K/L of two years
 # First, add year to the tables
 Capital_to_Labor_2550 <- Capital_to_Labor_2550 %>% mutate(Year = 2006)
+Capital_to_Labor_2555 <- Capital_to_Labor_2555 %>% mutate(Year = 2011)
 Capital_to_Labor_2560 <- Capital_to_Labor_2560 %>% mutate(Year = 2016)
+Capital_to_Labor_2565 <- Capital_to_Labor_2565 %>% mutate(Year = 2021)
 
 # Concatenate the two tables
-Capital_to_Labor <- rbind(Capital_to_Labor_2550, Capital_to_Labor_2560)
+Capital_to_Labor <- rbind(Capital_to_Labor_2550, Capital_to_Labor_2555, Capital_to_Labor_2560, Capital_to_Labor_2565)
 
 ```
 
@@ -351,10 +496,12 @@ Capital_to_Labor <- rbind(Capital_to_Labor_2550, Capital_to_Labor_2560)
 ### Combine value-added per employee of two years
 # First, add year to the tables
 Value_Added_per_emp_2550 <- Value_Added_per_emp_2550 %>% mutate(Year = 2006)
+Value_Added_per_emp_2555 <- Value_Added_per_emp_2555 %>% mutate(Year = 2011)
 Value_Added_per_emp_2560 <- Value_Added_per_emp_2560 %>% mutate(Year = 2016)
+Value_Added_per_emp_2565 <- Value_Added_per_emp_2565 %>% mutate(Year = 2021)
 
 # Concatenate the two tables
-Value_Added_per_emp <- rbind(Value_Added_per_emp_2550, Value_Added_per_emp_2560)
+Value_Added_per_emp <- rbind(Value_Added_per_emp_2550, Value_Added_per_emp_2555, Value_Added_per_emp_2560, Value_Added_per_emp_2565)
 
 ```
 
@@ -411,8 +558,15 @@ ggplot(INDUS_2560 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT, y = after
 ```
 
 ```{r}
+
+# 2565
+ggplot(INDUS_2565 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion")
+```
+
+
+```{r}
 ## Overlay the two graphs
-Dist_overlay <- ggplot(NULL, aes(x = SIZE_R, y = after_stat(prop))) + geom_bar(data = INDUS_2550 %>% drop_na(SIZE_R), aes(weight = WGT_REG, fill = "2006"), stat = "prop", alpha = 0.4) + geom_bar(data = INDUS_2560 %>% drop_na(SIZE_R), aes(weight = WGT, fill = "2016"), stat = "prop", alpha = 0.4) + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion") + labs(fill = "Year") + theme(legend.position = "bottom")
+Dist_overlay <- ggplot(NULL, aes(x = SIZE_R, y = after_stat(prop))) + geom_bar(data = INDUS_2550 %>% drop_na(SIZE_R), aes(weight = WGT_REG, fill = "2006"), stat = "prop", alpha = 0.4) + geom_bar(data = INDUS_2565 %>% drop_na(SIZE_R), aes(weight = WGT, fill = "2021"), stat = "prop", alpha = 0.4) + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion") + labs(fill = "Year") + theme(legend.position = "bottom")
 
 
 Dist_overlay
@@ -435,7 +589,7 @@ Emp_Num_LF_long$Variable <- factor(Emp_Num_LF_long$Variable, levels = c("Avg_emp
 
 
 # Plot
-ggplot(Emp_Num_LF_long) + aes(x = Year, y = Value, fill = Variable) + geom_col(position = "dodge") + facet_wrap(~REG, labeller = region_labeller, ncol = 2) + labs(title = "Number of firms, average number of employees, and labor force (by region)", x = "Year", y = "Value") + theme(legend.position = "bottom") + scale_fill_manual(values = c("blue", "red", "green"), labels = c("Average number of employees", "Number of firms (10,000)", "Labor force (millions)")) + theme(legend.position = "bottom", legend.title = element_blank())
+ggplot(Emp_Num_LF_long) + aes(x = Year, y = Value, fill = Variable) + geom_col(position = "dodge") + facet_wrap(~REG, ncol = 2) + labs(title = "Number of firms, average number of employees, and labor force (by region)", x = "Year", y = "Value") + theme(legend.position = "bottom") + scale_fill_manual(values = c("blue", "red", "green"), labels = c("Average number of employees", "Number of firms (10,000)", "Labor force (millions)")) + theme(legend.position = "bottom", legend.title = element_blank())
 
 
 ```
@@ -504,29 +658,24 @@ ggplot(INDUS_2560_KL_filtered, aes(x = ln_Capital_to_Labor, weight = WGT,  group
 
 ```
 
-
-# Analysis of firms with number of employees > 10 
-
-## Pre-processing the data
-### Filter the data >= 10 employees
+### Mean K/L and Mean Value-added per employee (by region)
 
 ```{r}
-### First, replace NA with 0 in the number of employees
-INDUS_2540 <- INDUS_2540 %>% mutate(A26 = ifelse(is.na(A26), 0, A26), A31 = ifelse(is.na(A31), 0, A31))
+### Plot K/L
+K_LL_plot <- ggplot(KLVAPerEmp, aes(x= Year, y = Avg_Capital_to_Labor)) + geom_line(aes(color = REG, group = REG)) + labs(x = "Year", y = "Average K/L (THB)") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange")) + theme(legend.position = "bottom", legend.title = element_blank()) + scale_y_continuous(labels = scales::comma)
 
-INDUS_2550 <- INDUS_2550 %>% mutate(A24 = ifelse(is.na(A24), 0, A24), A28 = ifelse(is.na(A28), 0, A28))
+K_LL_plot
+```
+```{r}
+### Plot Value-added per employee
+VA_plot <- ggplot(KLVAPerEmp, aes(x= Year, y = Avg_Value_Added_per_emp)) + geom_line(aes(color = REG, group = REG)) + labs(x = "Year", y = "Average Value-added per employee (THB)") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange")) + theme(legend.position = "bottom", legend.title = element_blank()) + scale_y_continuous(labels = scales::comma)
 
-INDUS_2560 <- INDUS_2560 %>% mutate(B04 = ifelse(is.na(B04), 0, B04), B08 = ifelse(is.na(B08), 0, B08))
-
-## Filter the data
-INDUS_2540_atleast10 <- INDUS_2540 %>% filter(A26 + A31 >= 10)
-
-INDUS_2550_atleast10 <- INDUS_2550 %>% filter(A24 + A28 >= 10)
-
-INDUS_2560_atleast10 <- INDUS_2560 %>% filter(B04 + B08 >= 10)
-
-
-
+VA_plot
 ```
 
+```{r}
+## Combine the two plots
+K_LL_plot + VA_plot + plot_annotation(title = "Mean K/L and Mean Value-added per employee (by region)") + plot_layout(guides = "collect") & theme(legend.position = 'bottom')
+
+```
 

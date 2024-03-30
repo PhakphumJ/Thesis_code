@@ -480,14 +480,14 @@ Emp_Num_LF_scaled %>% gt(rowname_col = "REG", groupname_col = "Year") %>% cols_l
 ### K/L and Value-added per employee
 
 ```{r}
-### Combine K/L of two years
+### Combine K/L of all years
 # First, add year to the tables
 Capital_to_Labor_2550 <- Capital_to_Labor_2550 %>% mutate(Year = 2006)
 Capital_to_Labor_2555 <- Capital_to_Labor_2555 %>% mutate(Year = 2011)
 Capital_to_Labor_2560 <- Capital_to_Labor_2560 %>% mutate(Year = 2016)
 Capital_to_Labor_2565 <- Capital_to_Labor_2565 %>% mutate(Year = 2021)
 
-# Concatenate the two tables
+# Concatenate the four tables
 Capital_to_Labor <- rbind(Capital_to_Labor_2550, Capital_to_Labor_2555, Capital_to_Labor_2560, Capital_to_Labor_2565)
 
 ```
@@ -598,12 +598,6 @@ ggplot(Emp_Num_LF_long) + aes(x = Year, y = Value, fill = Variable) + geom_col(p
 ### Distribution of value-added per employee (by region)
 
 ```{r}
-## Check how many have negative value-added per employee
-sum(INDUS_2550_VA_filtered$Value_Added_per_emp < 0)
-```
-
-
-```{r}
 # 2550
 # Make REG as character
 INDUS_2550_VA_filtered$REG <- as.character(INDUS_2550_VA_filtered$REG)
@@ -664,13 +658,13 @@ ggplot(INDUS_2565_KL_filtered, aes(x = ln_Capital_to_Labor, weight = WGT,  group
 
 ```{r}
 ### Plot K/L
-K_LL_plot <- ggplot(KLVAPerEmp, aes(x= Year, y = Avg_Capital_to_Labor)) + geom_line(aes(color = REG, group = REG)) + labs(x = "Year", y = "Average K/L (THB)") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange")) + theme(legend.position = "bottom", legend.title = element_blank()) + scale_y_continuous(labels = scales::comma)
+K_LL_plot <- ggplot(KLVAPerEmp, aes(x= Year, y = Avg_Capital_to_Labor)) + geom_line(aes(color = REG, group = REG)) + labs(x = "Year", y = "Average K/L (THB)") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange")) + theme(legend.position = "bottom", legend.title = element_blank()) + scale_y_continuous(labels = scales::comma) + scale_x_continuous(breaks = c(2006, 2011, 2016, 2021))
 
 K_LL_plot
 ```
 ```{r}
 ### Plot Value-added per employee
-VA_plot <- ggplot(KLVAPerEmp, aes(x= Year, y = Avg_Value_Added_per_emp)) + geom_line(aes(color = REG, group = REG)) + labs(x = "Year", y = "Average Value-added per employee (THB)") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange")) + theme(legend.position = "bottom", legend.title = element_blank()) + scale_y_continuous(labels = scales::comma)
+VA_plot <- ggplot(KLVAPerEmp, aes(x= Year, y = Avg_Value_Added_per_emp)) + geom_line(aes(color = REG, group = REG)) + labs(x = "Year", y = "Average Value-added per employee (THB)") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange")) + theme(legend.position = "bottom", legend.title = element_blank()) + scale_y_continuous(labels = scales::comma) + scale_x_continuous(breaks = c(2006, 2011, 2016, 2021))
 
 VA_plot
 ```

@@ -8,24 +8,24 @@ format: html
 In this document/code, I will examine key dimensions of business () firms. The main goal is to see whether there are differences in key dimensions across different regions. The main characteristics that I will examine are:
 
 1. Firm size (Number of employees)
-i) 2555: B05 + B10
-ii) 2565:
+i) 2555: b05 + b10
+ii) 2565: B07 + B14
 
 2. Foreign Investment
-i) 2555: A09
-ii) 2565:
+i) 2555: a09
+ii) 2565: A11
 
 3. Sales:
-i) 2555: D01 or D03 (hotels and guesthouses)
-ii) 2565:
+i) 2555: d01 or d03 (hotels and guesthouses)
+ii) 2565: D01 or D03 (hotels and guesthouses)
 
 4. Fixed Assets:
-i) 2555: G06
-ii) 2565:
+i) 2555: f06
+ii) 2565: E08
 
 5. R&D Cost:
-i) 2555: C09
-ii) 2565:
+i) 2555: c09
+ii) 2565: C09
 
 6. Number of Firms:
 i) 2555: sum of weights
@@ -33,12 +33,12 @@ ii) 2565: sum of weights
 
 7. Estimated TFP (estimated using sales, wage bill, and fixed assets).
 8. Sales per employee. I don't use value added because it is tricky for service sectors.
-i) 2555: (D01 or D03)  / Number of employees
-ii) 2565:
+i) 2555: (d01 or d03)  / Number of employees
+ii) 2565: (D01 or D03)  / Number of employees
 
 9. K/L
-i) 2555: G06 / number of employees
-ii) 2565:
+i) 2555: f06 / number of employees
+ii) 2565: E08 / number of employees
 
 ## Import and Clean Data
 
@@ -66,5 +66,461 @@ setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_
 BICTS_2555 <- read_sav("Data\\BIC 2555 (2012)\\BICTS 2555 (2012)\\Microdata BICTS 2555\\Microdata BICTS 2555.sav")
 
 BICTS_2565 <- read_sav("Data\\BIC 2565 (2022)\\BICTS 2565 (2022)\\Microdata BICTS 2565\\Microdata BICTS 2565_N.sav")
+
+LFS_LF <- read_excel("Data/Output/All_YEAR_TOTAL_LF_annual_final.xlsx")
+
+## Drop rows with missing weights
+BICTS_2565 <- BICTS_2565 %>%
+  filter(!is.na(WGT))
+
+## Drop rows with wgt5 == 0
+BICTS_2555 <- BICTS_2555 %>% 
+  filter(wgt5 != 0)
 ```
+
+
+## Prepare the data
+
+### Calculate the number of employees
+
+```{r}
+## Calculate the number of employees
+# 2555
+# Replace missing values with 0
+BICTS_2555 <- BICTS_2555 %>% 
+  mutate(b05 = ifelse(is.na(b05), 0, b05),
+         b10 = ifelse(is.na(b10), 0, b10))
+# Calculate the number
+BICTS_2555 <- BICTS_2555 %>% 
+  mutate(num_employ = b05 + b10)
+
+# 2565
+# Replace missing values with 0
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(B07 = ifelse(is.na(B07), 0, B07),
+         B14 = ifelse(is.na(B14), 0, B14))
+
+# Calculate the number
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(num_employ = B07 + B14)
+
+```
+
+```{r}
+## Drop those with 0 employees
+BICTS_2555 <- BICTS_2555 %>% 
+  filter(num_employ > 0)
+
+BICTS_2565 <- BICTS_2565 %>% 
+  filter(num_employ > 0)
+```
+
+### Calculate the sales per employee
+
+```{r}
+## Calculate the sales per employee
+# Use only those with sales > 12,000
+# 2555
+# Replace missing values with 0
+BICTS_2555 <- BICTS_2555 %>% 
+  mutate(d01 = ifelse(is.na(d01), 0, d01),
+         d03 = ifelse(is.na(d03), 0, d03))
+
+# Calculate the sales
+BICTS_2555 <- BICTS_2555 %>% 
+  mutate(sales = d01 + d03)
+
+## Drop those with sales < 12,000
+BICTS_2555_sales_filtered <- BICTS_2555 %>% 
+  filter(sales > 12000)
+
+# Calculate the sales per employee
+BICTS_2555_sales_filtered <- BICTS_2555_sales_filtered %>% 
+  mutate(sales_per_employee = sales / num_employ)
+
+
+# 2565
+# Replace missing values with 0
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(D01 = ifelse(is.na(D01), 0, D01),
+         D03 = ifelse(is.na(D03), 0, D03))
+
+# Calculate the sales
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(sales = D01 + D03)
+
+## Drop those with sales < 12,000
+BICTS_2565_sales_filtered <- BICTS_2565 %>% 
+  filter(sales > 12000)
+
+# Calculate the sales per employee
+BICTS_2565_sales_filtered <- BICTS_2565_sales_filtered %>% 
+  mutate(sales_per_employee = sales / num_employ)
+
+```
+
+### Calculate the K/L
+
+```{r}
+## Using only firms with sales > 12.000, and fixed assets > 6,000.
+## There seems to be outlier in the fixed assets. So, I will drop those with top 0.5% of fixed assets.
+
+# 2555
+# Replace missing values with 0
+BICTS_2555_KL_filtered <- BICTS_2555 %>% 
+  mutate(f06 = ifelse(is.na(f06), 0, f06))
+
+# Drop those with fixed assets < 6,000
+BICTS_2555_KL_filtered <- BICTS_2555_KL_filtered %>% 
+  filter(f06 > 6000)
+
+# Drop those with fixed assets that are in the top 0.5
+BICTS_2555_KL_filtered <- BICTS_2555_KL_filtered %>% 
+  filter(f06 < quantile(f06, 0.995))
+
+# Calculate the K/L
+BICTS_2555_KL_filtered <- BICTS_2555_KL_filtered %>% 
+  mutate(KL = f06 / num_employ)
+
+
+# 2565
+# Replace missing values with 0
+BICTS_2565_KL_filtered <- BICTS_2565 %>% 
+  mutate(E08 = ifelse(is.na(E08), 0, E08))
+
+# Drop those with fixed assets < 6,000
+BICTS_2565_KL_filtered <- BICTS_2565_KL_filtered %>% 
+  filter(E08 > 6000)
+
+# Drop those with fixed assets that are in the top 0.5
+BICTS_2565_KL_filtered <- BICTS_2565_KL_filtered %>% 
+  filter(E08 < quantile(E08, 0.995))
+
+# Calculate the K/L
+BICTS_2565_KL_filtered <- BICTS_2565_KL_filtered %>% 
+  mutate(KL = E08 / num_employ)
+
+```
+
+### Categorize number of employees (follow the same categorization as in year 2550)
+1. 1
+2. 2-3
+3. 4-5
+4. 6-10
+5. 11-15
+6. 16-20
+7. 21-25
+8. 26-30
+9. 31-50
+10. 51-100
+11. 101-200
+12. 201-500
+13. 501-1000
+14. > 1000
+
+```{r}
+## Categorize the number of employees
+# 2555
+BICTS_2555 <- BICTS_2555 %>% 
+  mutate(sizer = case_when(
+    num_employ == 1 ~ "1",
+    num_employ %in% 2:3 ~ "2-3",
+    num_employ %in% 4:5 ~ "4-5",
+    num_employ %in% 6:10 ~ "6-10",
+    num_employ %in% 11:15 ~ "11-15",
+    num_employ %in% 16:20 ~ "16-20",
+    num_employ %in% 21:25 ~ "21-25",
+    num_employ %in% 26:30 ~ "26-30",
+    num_employ %in% 31:50 ~ "31-50",
+    num_employ %in% 51:100 ~ "51-100",
+    num_employ %in% 101:200 ~ "101-200",
+    num_employ %in% 201:500 ~ "201-500",
+    num_employ %in% 501:1000 ~ "501-1000",
+    num_employ > 1000 ~ "> 1000"
+  ))
+
+# Rename the column to SIZE_R
+BICTS_2555 <- BICTS_2555 %>% 
+  rename(SIZE_R = sizer)
+
+# 2565
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(SIZE_R = case_when(
+    num_employ == 1 ~ "1",
+    num_employ %in% 2:3 ~ "2-3",
+    num_employ %in% 4:5 ~ "4-5",
+    num_employ %in% 6:10 ~ "6-10",
+    num_employ %in% 11:15 ~ "11-15",
+    num_employ %in% 16:20 ~ "16-20",
+    num_employ %in% 21:25 ~ "21-25",
+    num_employ %in% 26:30 ~ "26-30",
+    num_employ %in% 31:50 ~ "31-50",
+    num_employ %in% 51:100 ~ "51-100",
+    num_employ %in% 101:200 ~ "101-200",
+    num_employ %in% 201:500 ~ "201-500",
+    num_employ %in% 501:1000 ~ "501-1000",
+    num_employ > 1000 ~ "> 1000"
+  ))
+
+```
+
+```{r}
+## Convert SIZE_R to factor
+BICTS_2555 <- BICTS_2555 %>% 
+  mutate(SIZE_R = factor(SIZE_R, levels = c("1", "2-3", "4-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31-50", "51-100", "101-200", "201-500", "501-1000", "> 1000")))
+
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(SIZE_R = factor(SIZE_R, levels = c("1", "2-3", "4-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31-50", "51-100", "101-200", "201-500", "501-1000", "> 1000")))
+```
+
+## Tabulating the data
+### Firm Size (by region)
+
+```{r}
+### Calculate the average number of employees by region
+# 2555
+Avg_num_employ_2555 <- BICTS_2555 %>% group_by(reg) %>% summarise(avg_num_employ = weighted.mean(num_employ, wgt5 , na.rm = TRUE))
+
+# 2565
+Avg_num_employ_2565 <- BICTS_2565 %>% group_by(REG) %>% summarise(avg_num_employ = weighted.mean(num_employ, WGT , na.rm = TRUE))
+```
+
+### Number of firms (by region)
+
+```{r}
+### Calculate the number of firms by region
+# 2555
+num_firms_2555 <- BICTS_2555 %>% group_by(reg) %>% summarise(num_firms = sum(wgt5))
+
+# 2565
+num_firms_2565 <- BICTS_2565 %>% group_by(REG) %>% summarise(num_firms = sum(WGT))
+
+```
+
+
+#### Compare with the labor force.
+
+```{r}
+### Join the three tables (Average number of employees, Number of firms, and labor force)
+# 2554
+Emp_Num_LF_2554 <- Avg_num_employ_2555 %>% 
+  left_join(num_firms_2555, by = c("reg" = "reg")) %>% 
+  left_join(LFS_LF %>% filter(Year == 2554), by = c("reg" = "reg"))
+
+# Divide the labor force by 10,000
+Emp_Num_LF_2554 <- Emp_Num_LF_2554 %>% 
+  mutate(wgt = wgt / 10000)
+
+#Rename the columns
+Emp_Num_LF_2554 <- Emp_Num_LF_2554 %>% 
+  rename(REG = reg, Labor_force = wgt)
+
+# 2564
+Emp_Num_LF_2564 <- Avg_num_employ_2565 %>% 
+  left_join(num_firms_2565, by = c("REG" = "REG")) %>% 
+  left_join(LFS_LF %>% filter(Year == 2564), by = c("REG" = "reg"))
+
+# Rename the columns
+Emp_Num_LF_2564 <- Emp_Num_LF_2564 %>% 
+  rename(Labor_force = wgt)
+```
+
+```{r}
+## Concatenate the two tables
+Emp_Num_LF <- rbind(Emp_Num_LF_2554, Emp_Num_LF_2564)
+
+# Convert Year to C.E.
+Emp_Num_LF <- Emp_Num_LF %>% 
+  mutate(Year = Year - 543)
+
+### Make another dataframe where the number of firms is divided by 10,000 and the labor force is divided by 1,000,000
+Emp_Num_LF_scaled <- Emp_Num_LF %>% 
+  mutate(num_firms = num_firms / 10000,
+         Labor_force = Labor_force / 1000000)
+
+
+```
+
+
+### K/L
+
+```{r}
+### Calculate the average K/L by region
+# 2555
+Avg_KL_2555 <- BICTS_2555_KL_filtered %>% group_by(reg) %>% summarise(avg_KL = weighted.mean(KL, wgt5 , na.rm = TRUE))
+
+# 2565
+Avg_KL_2565 <- BICTS_2565_KL_filtered %>% group_by(REG) %>% summarise(avg_KL = weighted.mean(KL, WGT , na.rm = TRUE))
+```
+
+### Sales per employee
+
+```{r}
+### Calculate the average sales per employee by region
+# 2555
+Avg_sales_per_employee_2555 <- BICTS_2555_sales_filtered %>% group_by(reg) %>% summarise(avg_sales_per_employee = weighted.mean(sales_per_employee, wgt5 , na.rm = TRUE))
+
+# 2565
+Avg_sales_per_employee_2565 <- BICTS_2565_sales_filtered %>% group_by(REG) %>% summarise(avg_sales_per_employee = weighted.mean(sales_per_employee, WGT , na.rm = TRUE))
+
+```
+
+## Combine to make two main tables.
+### Number of firms, average number of employees, and labor force
+
+```{r}
+# Change region to actual names
+Emp_Num_LF_scaled <- Emp_Num_LF_scaled %>% 
+  mutate(REG = case_when(REG == "1" ~ "Bangkok", REG == "2" ~ "Central", REG == "3" ~ "North", REG == "4" ~ "Northeast", REG == "5" ~ "South"))
+```
+
+```{r}
+## Let's try creating the table with gt.
+Emp_Num_LF_scaled %>% 
+  gt(rowname_col = "REG", groupname_col = "Year") %>% cols_label(avg_num_employ = "Average number of employees", num_firms = "Number of firms (in 10,000)", Labor_force = "Labor force (in million)") %>% cols_align(align = "center") %>% cols_width(everything() ~ px(160)) %>% fmt_number(decimals = 2)
+
+
+```
+
+### Sales per employee and K/L
+
+```{r}
+### Combine K/L of all years
+# First, add year to the tables
+Avg_KL_2555 <- Avg_KL_2555 %>% 
+  mutate(Year = 2011)
+
+# rename the column reg to REG
+Avg_KL_2555 <- Avg_KL_2555 %>% 
+  rename(REG = reg)
+
+Avg_KL_2565 <- Avg_KL_2565 %>%
+  mutate(Year = 2021)
+
+# Combine the two tables
+Avg_KL <- rbind(Avg_KL_2555, Avg_KL_2565)
+```
+
+```{r}
+### Combine sales per employee of all years
+# First, add year to the tables
+Avg_sales_per_employee_2555 <- Avg_sales_per_employee_2555 %>% 
+  mutate(Year = 2011)
+
+# rename the column reg to REG
+Avg_sales_per_employee_2555 <- Avg_sales_per_employee_2555 %>% 
+  rename(REG = reg)
+
+Avg_sales_per_employee_2565 <- Avg_sales_per_employee_2565 %>%
+  mutate(Year = 2021)
+
+# Combine the two tables
+Avg_sales_per_employee <- rbind(Avg_sales_per_employee_2555, Avg_sales_per_employee_2565)
+```
+
+```{r}
+## Combine the two tables
+Sales_KL <- Avg_sales_per_employee %>% 
+  left_join(Avg_KL, by = c("REG", "Year"))
+```
+
+```{r}
+### Make nice table 
+# Change region to actual names
+Sales_KL <- Sales_KL %>% 
+  mutate(REG = case_when(REG == "1" ~ "Bangkok", REG == "2" ~ "Central", REG == "3" ~ "North", REG == "4" ~ "Northeast", REG == "5" ~ "South"))
+```
+
+```{r}
+## Let's try creating the table with gt.
+Sales_KL %>% 
+  gt(rowname_col = "REG", groupname_col = "Year") %>% cols_label(avg_sales_per_employee = "Average sales per employee", avg_KL = "Average K/L") %>% cols_align(align = "center") %>% cols_width(everything() ~ px(160)) %>% fmt_number(decimals = 2)
+
+
+```
+
+## Plotting the data
+
+```{r}
+## Make a region labeller.
+region_labeller <- as_labeller(c( "0" = "National",
+  "1" = "Bangkok",
+  "2" = "Central",
+  "3" = "North",
+  "4" = "Northeast",
+  "5" = "South"
+))
+```
+
+
+### Distribution of Firm Size (by region)
+
+```{r}
+## 2555
+# Rename reg to REG
+BICTS_2555 <- BICTS_2555 %>% 
+  rename(REG = reg)
+
+# Plot
+BICTS_2555 %>% 
+  ggplot(aes(x = SIZE_R, weight = wgt5, y = after_stat(prop))) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion")
+```
+```{r}
+## 2565
+# Plot
+BICTS_2565 %>% 
+  ggplot(aes(x = SIZE_R, weight = WGT, y = after_stat(prop))) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion")
+
+```
+```{r}
+## Overlay the two graphs
+Dist_overlay <- ggplot(NULL, aes(x = SIZE_R, y = after_stat(prop))) + geom_bar(data = BICTS_2555, aes(weight = wgt5, fill = "2011"), stat = "prop", alpha = 0.4) + geom_bar(data = BICTS_2565, aes(weight = WGT, fill = "2021"), stat = "prop", alpha = 0.4) + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of Employees", y = "Proportion") + labs(fill = "Year") + theme(legend.position = "bottom")
+
+Dist_overlay
+
+```
+
+### Number of firms, average number of employees, and labor force (by region)
+
+```{r}
+### Grouped bar chart. Each region is a facet.
+# Make year as discrete
+Emp_Num_LF_scaled <- Emp_Num_LF_scaled %>% 
+  mutate(Year = as.factor(Year))
+
+## Convert the data to long format
+Emp_Num_LF_long <- Emp_Num_LF_scaled %>% 
+  pivot_longer(cols = c("avg_num_employ", "num_firms", "Labor_force"), names_to = "Variable", values_to = "Value")
+
+# Order in each group.
+Emp_Num_LF_long$Variable <- factor(Emp_Num_LF_long$Variable, levels = c("avg_num_employ", "num_firms", "Labor_force"))
+
+# Plot
+ggplot(Emp_Num_LF_long) + aes(x = Year, y = Value, fill = Variable) + geom_col(position = "dodge") + facet_wrap(~REG, ncol = 2) + labs(title = "Number of firms, average number of employees, and labor force (by region)", x = "Year", y = "Value") + theme(legend.position = "bottom") + scale_fill_manual(values = c("blue", "red", "green"), labels = c("Average number of employees", "Number of firms (10,000)", "Labor force (millions)")) + theme(legend.position = "bottom", legend.title = element_blank())
+
+
+```
+
+### Mean K/L and Sales per employee (by region)
+
+```{r}
+### Plot K/L
+K_LL_plot <- ggplot(Sales_KL, aes(x = Year, y = avg_KL, color = REG)) + geom_line() + labs(x = "Year", y = "Average K/L (THB)") + theme(legend.position = "bottom") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange")) + theme(legend.position = "bottom", legend.title = element_blank()) + scale_y_continuous(labels = scales::comma) + scale_x_continuous(breaks = c(2011, 2021))
+
+
+K_LL_plot 
+```
+```{r}
+### Plot Output per employee
+Sales_per_employee_plot <- ggplot(Sales_KL, aes(x = Year, y = avg_sales_per_employee, color = REG)) + geom_line() + labs(x = "Year", y = "Average Sales per Employee (THB)") + theme(legend.position = "bottom") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange")) + theme(legend.position = "bottom", legend.title = element_blank()) + scale_y_continuous(labels = scales::comma) + scale_x_continuous(breaks = c(2011, 2021))
+
+Sales_per_employee_plot
+```
+
+```{r}
+## Combine the two plots
+K_LL_plot + Sales_per_employee_plot + plot_annotation(title = "Mean K/L and Mean Sales per employee (by region)") + plot_layout(guides = "collect") & theme(legend.position = 'bottom')
+
+```
+
 

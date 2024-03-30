@@ -52,7 +52,7 @@ In this document/code, I will examine key dimensions of manafacturing firms. The
 
 Before analysing, I will trim the data by removing firms with sales lower than 6,000, fixed assets lower than 10,000, firms with zero workers. 
 
-I also remove firms with top and bottom 0.5% of value-added per worker or top and bottom 0.5% of K/L.
+I also remove firms with top and bottom 1% of value-added per worker or top and bottom 1% of K/L.
 
 Moreover, we remove obseravations detected to be duplicates based on seven variables: (i) years in operation,
 (ii) total employment, (iii) wage compensation, (iv) raw materials, (v) initial raw material stocks,
@@ -365,39 +365,39 @@ INDUS_2565 <- INDUS_2565 %>% mutate(SIZE_R = factor(SIZE_R, levels = c(1, 2, 3, 
 
 
 ### Trimming sample
-Top and bottom 0.5% of value-added per worker or top and bottom 0.5% of K/L.
+Top and bottom 1% of value-added per worker or top and bottom 1% of K/L.
 
 
 ```{r}
-### Trimming those with value-added per worker in bottom 0.5% and top 0.5% or top and bottom 0.5% of K/L.
+### Trimming those with value-added per worker in bottom 1% and top 1% or top and bottom 1% of K/L.
 
 ## 2550
-# Calculate the 0.5% and 99.5% quantiles of value-added per worker
-q_2550 <- weighted.quantile(INDUS_2550$Value_Added_per_emp, probs = c(0.005, 0.995), weights = INDUS_2550$WGT_REG)
+# Calculate the 1% and 99% quantiles of value-added per worker
+q_2550 <- weighted.quantile(INDUS_2550$Value_Added_per_emp, probs = c(0.01, 0.99), weights = INDUS_2550$WGT_REG)
 
-# Calculate the 0.5% and 99.5% quantiles of K/L
-q_2550_KL <- weighted.quantile(INDUS_2550$Capital_to_Labor, probs = c(0.005, 0.995), weights = INDUS_2550$WGT_REG)
+# Calculate the 1% and 99% quantiles of K/L
+q_2550_KL <- weighted.quantile(INDUS_2550$Capital_to_Labor, probs = c(0.01, 0.99), weights = INDUS_2550$WGT_REG)
 
 ## 2555
-# Calculate the 0.5% and 99.5% quantiles of value-added per worker
-q_2555 <- weighted.quantile(INDUS_2555$Value_Added_per_emp, probs = c(0.005, 0.995), weights = INDUS_2555$WGT17)
+# Calculate the 1% and 99% quantiles of value-added per worker
+q_2555 <- weighted.quantile(INDUS_2555$Value_Added_per_emp, probs = c(0.01, 0.99), weights = INDUS_2555$WGT17)
 
-# Calculate the 0.5% and 99.5% quantiles of K/L
-q_2555_KL <- weighted.quantile(INDUS_2555$Capital_to_Labor, probs = c(0.005, 0.995), weights = INDUS_2555$WGT17)
+# Calculate the 1% and 99% quantiles of K/L
+q_2555_KL <- weighted.quantile(INDUS_2555$Capital_to_Labor, probs = c(0.01, 0.99), weights = INDUS_2555$WGT17)
 
 ## 2560
-# Calculate the 0.5% and 99.5% quantiles of value-added per worker
-q_2560 <- weighted.quantile(INDUS_2560$Value_Added_per_emp, probs = c(0.005, 0.995), weights = INDUS_2560$WGT)
+# Calculate the 1% and 99% quantiles of value-added per worker
+q_2560 <- weighted.quantile(INDUS_2560$Value_Added_per_emp, probs = c(0.01, 0.99), weights = INDUS_2560$WGT)
 
-# Calculate the 0.5% and 99.5% quantiles of K/L
-q_2560_KL <- weighted.quantile(INDUS_2560$Capital_to_Labor, probs = c(0.005, 0.995), weights = INDUS_2560$WGT)
+# Calculate the 1% and 99% quantiles of K/L
+q_2560_KL <- weighted.quantile(INDUS_2560$Capital_to_Labor, probs = c(0.01, 0.99), weights = INDUS_2560$WGT)
 
 ## 2565
-# Calculate the 0.5% and 99.5% quantiles of value-added per worker
-q_2565 <- weighted.quantile(INDUS_2565$Value_Added_per_emp, probs = c(0.005, 0.995), weights = INDUS_2565$WGT)
+# Calculate the 1% and 99% quantiles of value-added per worker
+q_2565 <- weighted.quantile(INDUS_2565$Value_Added_per_emp, probs = c(0.01, 0.99), weights = INDUS_2565$WGT)
 
-# Calculate the 0.5% and 99.5% quantiles of K/L
-q_2565_KL <- weighted.quantile(INDUS_2565$Capital_to_Labor, probs = c(0.005, 0.995), weights = INDUS_2565$WGT)
+# Calculate the 1% and 99% quantiles of K/L
+q_2565_KL <- weighted.quantile(INDUS_2565$Capital_to_Labor, probs = c(0.01, 0.99), weights = INDUS_2565$WGT)
 
 ```
 
@@ -794,6 +794,32 @@ K_LL_plot + VA_plot + plot_annotation(title = "Mean K/L and Mean Value-added per
 ## Correlating stuff with the size of firms (scatter plot)
 
 ```{r}
+### Plot weighted mean of number of workers in each sales bin. 
+
+## Create a dataframe with the weighted mean of number of workers in each sales bin.
+
+# 2565
+# First, have to bin sales (D01). Want 50 bins.
+INDUS_2565 <- INDUS_2565 %>% mutate(Sales_bin = ntile(D01, 50))
+
+# Calculate the weighted mean of number of workers in each sales bin.
+Num_emp_and_sales_bin <- INDUS_2565 %>% group_by(Sales_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+Sales_and_num_work_plot_raw <- ggplot(Num_emp_and_sales_bin, aes(x = Sales_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales bin", x = "Sales bin", y = "Average number of workers")
+
+Sales_and_num_work_plot_raw
+```
+
+```{r}
+### Plot weighted mean of number of workers in each sales bin. But limit y-axis to 200.
+
+Sales_and_num_work_plot_cut <- ggplot(Num_emp_and_sales_bin, aes(x = Sales_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales bin", x = "Sales bin", y = "Average number of workers") + ylim(0, 200)
+
+Sales_and_num_work_plot_cut
+```
+
+```{r}
 ### Scatter plot between ln(K/L) and number of workers
 # 2565
 ggplot(INDUS_2565) + aes(x = ln_Capital_to_Labor, y = num_employ) + geom_point(alpha = 0.3) + ylim(0, 1500)
@@ -801,10 +827,49 @@ ggplot(INDUS_2565) + aes(x = ln_Capital_to_Labor, y = num_employ) + geom_point(a
 ```
 
 ```{r}
+### Plot weighted mean of number of workers in each K/L bin.
+
+## Create a dataframe with the weighted mean of number of workers in each K/L bin.
+
+# 2565
+# First, have to bin K/L. Want 50 bins.
+
+INDUS_2565 <- INDUS_2565 %>% mutate(KL_bin = ntile(Capital_to_Labor, 100))
+
+# Calculate the weighted mean of number of workers in each K/L bin.
+Num_emp_and_KL_bin <- INDUS_2565 %>% group_by(KL_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+KL_and_num_work_plot_raw <- ggplot(Num_emp_and_KL_bin, aes(x = KL_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each K/L bin", x = "K/L bin", y = "Average number of workers")
+
+KL_and_num_work_plot_raw
+
+```
+
+
+```{r}
 ### Scatter plot between ln(Value-added per worker) and number of workers
 # 2565
 ggplot(INDUS_2565) + aes(x = ln_Value_Added_per_emp, y = num_employ) + geom_point(alpha = 0.3) + ylim(0, 1500)
 
+```
+
+```{r}
+### Plot weighted mean of number of workers in each value-added bin.
+
+## Create a dataframe with the weighted mean of number of workers in each value-added bin.
+
+# 2565
+# First, have to bin value-added per worker. Want 50 bins.
+INDUS_2565 <- INDUS_2565 %>% mutate(VA_bin = ntile(Value_Added_per_emp, 100))
+
+# Calculate the weighted mean of number of workers in each value-added bin.
+Num_emp_and_VA_bin <- INDUS_2565 %>% group_by(VA_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+VA_and_num_work_plot_raw <- ggplot(Num_emp_and_VA_bin, aes(x = VA_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each value-added per worker bin", x = "Value-added per worker bin", y = "Average number of workers")
+
+VA_and_num_work_plot_raw
 ```
 
 

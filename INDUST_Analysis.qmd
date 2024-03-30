@@ -49,6 +49,11 @@ In this document/code, I will examine key dimensions of manafacturing firms. The
   ii) 2555: H05/(A20 + A24)
   iii) 2560: E08/(B04 + B08)
   iv) 2565: E08/(B04 + B08)
+10. Sales per worker
+  i) 2550: G01/num_employ
+  ii) 2555: G01/num_employ
+  iii) 2560: D01/num_employ
+  iv) 2565: D01/num_employ
 
 Before analysing, I will trim the data by removing firms with sales lower than 6,000, fixed assets lower than 10,000, firms with zero workers. 
 
@@ -77,7 +82,6 @@ library(gt)
 library(patchwork)
 library(cNORM)
 library(hutils)
-library(rattle)
 
 # Set working directory
 setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
@@ -199,7 +203,11 @@ INDUS_2565 <- INDUS_2565 %>% filter(num_employ > 0)
 
 ```{r}
 ### See if there's absurdly high number of workers
-INDUS_2550 %>% filter(num_employ > 2500)
+INDUS_2550 %>% filter(num_employ > 2500) %>% select(num_employ, WGT_REG, SIZE_R)
+```
+
+```{r}
+INDUS_2565 %>% filter(num_employ > 5000) %>% select(num_employ, WGT, SIZE_R)
 ```
 
 
@@ -210,18 +218,30 @@ We will use the following variables to detect duplicates: (i) years in operation
 
 ```{r}
 ## 2550
+# shuffle the data first.
+INDUS_2550 <- INDUS_2550[sample(1:nrow(INDUS_2550)),]
+
 INDUS_2550 <- INDUS_2550 %>% distinct(A04, num_employ, B05, C01 ,D01, D03, H08, .keep_all = TRUE)
 
 
 ## 2555
+# shuffle the data first.
+INDUS_2555 <- INDUS_2555[sample(1:nrow(INDUS_2555)),]
+
 INDUS_2555 <- INDUS_2555 %>% distinct(A04, num_employ, B07, C01 ,D01, D03, H05, .keep_all = TRUE)
 
 
 ## 2560
+# shuffle the data first.
+INDUS_2560 <- INDUS_2560[sample(1:nrow(INDUS_2560)),]
+
 INDUS_2560 <- INDUS_2560 %>% distinct(A04, num_employ, B19, C01 ,C07, C09, E08, .keep_all = TRUE)
 
 
 ## 2565
+# shuffle the data first.
+INDUS_2565 <- INDUS_2565[sample(1:nrow(INDUS_2565)),]
+
 INDUS_2565 <- INDUS_2565 %>% distinct(A04, num_employ, B19, C01 ,C07, C09, E08, .keep_all = TRUE)
 ```
 
@@ -329,6 +349,23 @@ INDUS_2565 <- INDUS_2565 %>% mutate(RD_above_0 = ifelse(C29 > 0, 1, 0))
 
 ```
 
+## Calculate sales per worker
+
+```{r}
+### Calculate sales per worker
+# 2550. G01/num_employ
+INDUS_2550 <- INDUS_2550 %>% mutate(Sales_per_emp = G01/num_employ)
+
+# 2555. G01/num_employ
+INDUS_2555 <- INDUS_2555 %>% mutate(Sales_per_emp = G01/num_employ)
+
+# 2560. D01/num_employ
+INDUS_2560 <- INDUS_2560 %>% mutate(Sales_per_emp = D01/num_employ)
+
+# 2565. D01/num_employ
+INDUS_2565 <- INDUS_2565 %>% mutate(Sales_per_emp = D01/num_employ)
+
+```
 
 
 ### Categorize number of workers (follow the same categorization as in year 2550)
@@ -431,6 +468,11 @@ INDUS_2565 <- INDUS_2565 %>% filter(!(Value_Added_per_emp < q_2565[1] | Value_Ad
 
 ```
 
+```{r}
+### Examine the absurdly high number of workers
+INDUS_2560 %>% filter(num_employ > 5000) %>% select(SIZE_R, num_employ, WGT)
+
+```
 
 
 ## Tabulating the data
@@ -570,6 +612,24 @@ Value_Added_per_emp_2565 <- INDUS_2565 %>% group_by(REG) %>% summarise(Avg_Value
 ```
 
 
+### Sales per worker
+
+```{r}
+### Calculate average sales per worker by region.
+# 2550
+Sales_per_emp_2550 <- INDUS_2550 %>% group_by(REG) %>% summarise(Avg_Sales_per_emp = weighted.mean(Sales_per_emp, WGT_REG, na.rm = TRUE))
+
+# 2555
+Sales_per_emp_2555 <- INDUS_2555 %>% group_by(REG) %>% summarise(Avg_Sales_per_emp = weighted.mean(Sales_per_emp, WGT17, na.rm = TRUE))
+
+# 2560
+Sales_per_emp_2560 <- INDUS_2560 %>% group_by(REG) %>% summarise(Avg_Sales_per_emp = weighted.mean(Sales_per_emp, WGT, na.rm = TRUE))
+
+# 2565
+Sales_per_emp_2565 <- INDUS_2565 %>% group_by(REG) %>% summarise(Avg_Sales_per_emp = weighted.mean(Sales_per_emp, WGT, na.rm = TRUE))
+```
+
+
 ### R&D expense
 
 ```{r}
@@ -607,7 +667,8 @@ Emp_Num_LF_scaled %>% gt(rowname_col = "REG", groupname_col = "Year") %>% cols_l
 ```
 
 
-### K/L and Value-added per worker
+### K/L and Value-added per worker and Sales per worker
+
 
 ```{r}
 ### Combine K/L of all years
@@ -623,21 +684,37 @@ Capital_to_Labor <- rbind(Capital_to_Labor_2550, Capital_to_Labor_2555, Capital_
 ```
 
 ```{r}
-### Combine value-added per worker of two years
+### Combine value-added per worker of four years
 # First, add year to the tables
 Value_Added_per_emp_2550 <- Value_Added_per_emp_2550 %>% mutate(Year = 2006)
 Value_Added_per_emp_2555 <- Value_Added_per_emp_2555 %>% mutate(Year = 2011)
 Value_Added_per_emp_2560 <- Value_Added_per_emp_2560 %>% mutate(Year = 2016)
 Value_Added_per_emp_2565 <- Value_Added_per_emp_2565 %>% mutate(Year = 2021)
 
-# Concatenate the two tables
+# Concatenate the four tables
 Value_Added_per_emp <- rbind(Value_Added_per_emp_2550, Value_Added_per_emp_2555, Value_Added_per_emp_2560, Value_Added_per_emp_2565)
 
 ```
 
 ```{r}
-## Combine the two tables
+### Combine sales per worker of four years
+# First, add year to the tables
+Sales_per_emp_2550 <- Sales_per_emp_2550 %>% mutate(Year = 2006)
+Sales_per_emp_2555 <- Sales_per_emp_2555 %>% mutate(Year = 2011)
+Sales_per_emp_2560 <- Sales_per_emp_2560 %>% mutate(Year = 2016)
+Sales_per_emp_2565 <- Sales_per_emp_2565 %>% mutate(Year = 2021)
+
+# Concatenate the four tables
+Sales_per_emp <- rbind(Sales_per_emp_2550, Sales_per_emp_2555, Sales_per_emp_2560, Sales_per_emp_2565)
+
+```
+
+
+```{r}
+## Combine the three tables
 KLVAPerEmp <- Capital_to_Labor %>% left_join(Value_Added_per_emp, by = c("REG", "Year"))
+
+KLVAPerEmp <- KLVAPerEmp %>% left_join(Sales_per_emp, by = c("REG", "Year"))
 
 ```
 
@@ -651,7 +728,7 @@ KLVAPerEmp <- KLVAPerEmp %>% mutate(REG = case_when(REG == "1" ~ "Bangkok", REG 
 
 ```{r}
 ## Let's try creating the table with gt.
-KLVAPerEmp %>% gt(rowname_col = "REG", groupname_col = "Year") %>% cols_label(Avg_Capital_to_Labor = "Average K/L", Avg_Value_Added_per_emp = "Average Value-added per worker") %>% cols_align(align = "center") %>% cols_width(everything() ~ px(160)) %>% fmt_number(decimals = 0)
+KLVAPerEmp %>% gt(rowname_col = "REG", groupname_col = "Year") %>% cols_label(Avg_Capital_to_Labor = "Average K/L", Avg_Value_Added_per_emp = "Average Value-added per worker", Avg_Sales_per_emp = "Average Sales per worker") %>% cols_align(align = "center") %>% cols_width(everything() ~ px(160)) %>% fmt_number(decimals = 0)
   
 
 ```
@@ -784,7 +861,7 @@ ggplot(INDUS_2565, aes(x = ln_Capital_to_Labor, weight = WGT,  group = REG, colo
 ```
 
 
-### Mean K/L and Mean Value-added per worker (by region)
+### Mean K/L, Mean Value-added per worker, and Mean Sales per worker (by region)
 
 ```{r}
 ### Plot K/L
@@ -792,6 +869,7 @@ K_LL_plot <- ggplot(KLVAPerEmp, aes(x= Year, y = Avg_Capital_to_Labor)) + geom_l
 
 K_LL_plot
 ```
+
 ```{r}
 ### Plot Value-added per worker
 VA_plot <- ggplot(KLVAPerEmp, aes(x= Year, y = Avg_Value_Added_per_emp)) + geom_line(aes(color = REG, group = REG)) + labs(x = "Year", y = "Average Value-added per worker (THB)") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange")) + theme(legend.position = "bottom", legend.title = element_blank()) + scale_y_continuous(labels = scales::comma) + scale_x_continuous(breaks = c(2006, 2011, 2016, 2021))
@@ -799,9 +877,27 @@ VA_plot <- ggplot(KLVAPerEmp, aes(x= Year, y = Avg_Value_Added_per_emp)) + geom_
 VA_plot
 ```
 
+
+```{r}
+### Plot Sales per worker
+Sales_plot <- ggplot(KLVAPerEmp, aes(x= Year, y = Avg_Sales_per_emp)) + geom_line(aes(color = REG, group = REG)) + labs(x = "Year", y = "Average Sales per worker (THB)") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange")) + theme(legend.position = "bottom", legend.title = element_blank()) + scale_y_continuous(labels = scales::comma) + scale_x_continuous(breaks = c(2006, 2011, 2016, 2021))
+
+Sales_plot
+```
+
+
 ```{r}
 ## Combine the two plots
 K_LL_plot + VA_plot + plot_annotation(title = "Mean K/L and Mean Value-added per worker (by region)") + plot_layout(guides = "collect") & theme(legend.position = 'bottom')
+
+```
+
+
+```{r}
+## Combine the three plots
+(K_LL_plot | VA_plot) / 
+  Sales_plot + plot_annotation(title = "Mean K/L, Mean Value-added per worker, and Mean Sales per worker (by region)") + plot_layout(guides = "collect") & theme(legend.position = 'bottom')
+
 
 ```
 
@@ -820,9 +916,35 @@ INDUS_2565 <- INDUS_2565 %>% mutate(Sales_bin = cut(D01, breaks = 25, labels = F
 Num_emp_and_sales_bin <- INDUS_2565 %>% group_by(Sales_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
 
 # Plot
-Sales_and_num_work_plot_raw <- ggplot(Num_emp_and_sales_bin, aes(x = Sales_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales bin", x = "Sales bin", y = "Average number of workers")
+Sales_and_num_work_plot_raw <- ggplot(Num_emp_and_sales_bin, aes(x = Sales_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales bin (equal width bins)", x = "Sales bin", y = "Average number of workers")
 
 Sales_and_num_work_plot_raw
+```
+
+```{r}
+### Plot weighted mean of number of workers in each sales bin. 
+
+## Create a dataframe with the weighted mean of number of workers in each sales bin.
+
+# 2565
+# First, have to bin sales (D01). Want 25 bins. Use equal frequency binning.
+
+INDUS_2565 <- INDUS_2565 %>% mutate(Sales_bin = weighted_ntile(D01, n = 25, weights = WGT))
+
+# Calculate the weighted mean of number of workers in each sales bin.
+Num_emp_and_sales_bin <- INDUS_2565 %>% group_by(Sales_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+Sales_and_num_work_plot_eq_freq <- ggplot(Num_emp_and_sales_bin, aes(x = Sales_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales bin (equal frequency bins)", x = "Sales bin", y = "Average number of workers")
+
+Sales_and_num_work_plot_eq_freq
+
+```
+```{r}
+# Plot
+Sales_and_num_work_plot_eq_freq_cut <- ggplot(Num_emp_and_sales_bin, aes(x = Sales_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales bin (equal frequency bins)", x = "Sales bin", y = "Average number of workers") + ylim(0, 30)
+
+Sales_and_num_work_plot_eq_freq_cut
 ```
 
 
@@ -841,13 +963,13 @@ ggplot(INDUS_2565) + aes(x = ln_Capital_to_Labor, y = num_employ) + geom_point(a
 # 2565
 # First, have to bin K/L. Want 25 bins.
 
-INDUS_2565 <- INDUS_2565 %>% mutate(KL_bin = cut(Capital_to_Labor, breaks = 50, labels = FALSE))
+INDUS_2565 <- INDUS_2565 %>% mutate(KL_bin = cut(Capital_to_Labor, breaks = 25, labels = FALSE))
 
 # Calculate the weighted mean of number of workers in each K/L bin.
 Num_emp_and_KL_bin <- INDUS_2565 %>% group_by(KL_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
 
 # Plot
-KL_and_num_work_plot_raw <- ggplot(Num_emp_and_KL_bin, aes(x = KL_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each K/L bin", x = "K/L bin", y = "Average number of workers") 
+KL_and_num_work_plot_raw <- ggplot(Num_emp_and_KL_bin, aes(x = KL_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each K/L bin (equal width bins)", x = "K/L bin", y = "Average number of workers") 
 
 KL_and_num_work_plot_raw
 
@@ -867,7 +989,7 @@ INDUS_2565 <- INDUS_2565 %>% mutate(K_bin = cut(E08, breaks = 25, labels = FALSE
 Num_emp_and_K_bin <- INDUS_2565 %>% group_by(K_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
 
 # Plot
-K_and_num_work_plot_raw <- ggplot(Num_emp_and_K_bin, aes(x = K_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each K bin", x = "K bin", y = "Average number of workers")
+K_and_num_work_plot_raw <- ggplot(Num_emp_and_K_bin, aes(x = K_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each K bin (equal width bins)", x = "K bin", y = "Average number of workers")
 
 K_and_num_work_plot_raw
 
@@ -876,9 +998,38 @@ K_and_num_work_plot_raw
 ```{r}
 ### Plot weighted mean of number of workers in each K bin. But limit y-axis to 10000.
 
-K_and_num_work_plot_cut <- ggplot(Num_emp_and_K_bin, aes(x = K_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each K bin", x = "K bin", y = "Average number of workers") + ylim(0, 10000)
+K_and_num_work_plot_cut <- ggplot(Num_emp_and_K_bin, aes(x = K_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each K bin (equal width bins)", x = "K bin", y = "Average number of workers") + ylim(0, 10000)
 
 K_and_num_work_plot_cut
+```
+
+```{r}
+### Plot weighted mean of number of workers in each K bin.
+
+## Create a dataframe with the weighted mean of number of workers in each K bin.
+
+# 2565
+# First, have to bin K. Want 25 bins. Using equal-frequency binning.
+
+INDUS_2565 <- INDUS_2565 %>% mutate(K_bin = weighted_ntile(E08, n = 25, weights = WGT))
+
+# Calculate the weighted mean of number of workers in each K bin.
+Num_emp_and_K_bin <- INDUS_2565 %>% group_by(K_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+K_and_num_work_plot_eq_freq <- ggplot(Num_emp_and_K_bin, aes(x = K_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each K bin (equal frequency bins)", x = "K bin", y = "Average number of workers")
+
+K_and_num_work_plot_eq_freq
+
+```
+
+```{r}
+### Plot weighted mean of number of workers in each K bin. But limit y-axis to 30.
+
+K_and_num_work_plot_eq_freq_cut <- ggplot(Num_emp_and_K_bin, aes(x = K_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each K bin (equal frequency bins)", x = "K bin", y = "Average number of workers") + ylim(0, 30)
+
+K_and_num_work_plot_eq_freq_cut
+
 ```
 
 
@@ -896,18 +1047,75 @@ ggplot(INDUS_2565) + aes(x = ln_Value_Added_per_emp, y = num_employ) + geom_poin
 ## Create a dataframe with the weighted mean of number of workers in each value-added bin.
 
 # 2565
-# First, have to bin value-added per worker. Want 50 bins.
+# First, have to bin value-added per worker. Want 25 bins.
 INDUS_2565 <- INDUS_2565 %>% mutate(VA_bin = cut(Value_Added_per_emp, breaks = 25, labels = FALSE))
 
 # Calculate the weighted mean of number of workers in each value-added bin.
 Num_emp_and_VA_bin <- INDUS_2565 %>% group_by(VA_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
 
 # Plot
-VA_and_num_work_plot_raw <- ggplot(Num_emp_and_VA_bin, aes(x = VA_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each value-added per worker bin", x = "Value-added per worker bin", y = "Average number of workers")
+VA_and_num_work_plot_raw <- ggplot(Num_emp_and_VA_bin, aes(x = VA_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each value-added per worker bin (equal width bins)", x = "Value-added per worker bin", y = "Average number of workers")
 
 VA_and_num_work_plot_raw
 ```
 
+```{r}
+### Plot weighted mean of number of workers in each value-added bin.
+
+## Create a dataframe with the weighted mean of number of workers in each value-added bin.
+
+# 2565
+# First, have to bin value-added per worker. Want 25 bins. Using equal-frequency binning.
+
+INDUS_2565 <- INDUS_2565 %>% mutate(VA_bin = weighted_ntile(Value_Added_per_emp, n = 25, weights = WGT))
+
+# Calculate the weighted mean of number of workers in each value-added bin.
+Num_emp_and_VA_bin <- INDUS_2565 %>% group_by(VA_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+VA_and_num_work_plot_raw <- ggplot(Num_emp_and_VA_bin, aes(x = VA_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each value-added per worker bin (equal frequency bins)", x = "Value-added per worker bin", y = "Average number of workers")
+
+VA_and_num_work_plot_raw
+
+```
+
+```{r}
+### Plot weighted mean of number of workers in each sales per worker bin.
+
+## Create a dataframe with the weighted mean of number of workers in each sales per worker bin.
+
+# 2565
+# First, have to bin sales per worker. Want 25 bins.
+INDUS_2565 <- INDUS_2565 %>% mutate(Sales_per_emp_bin = cut(Sales_per_emp, breaks = 25, labels = FALSE))
+
+# Calculate the weighted mean of number of workers in each sales per worker bin.
+Num_emp_and_Sales_per_emp_bin <- INDUS_2565 %>% group_by(Sales_per_emp_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+Sales_per_emp_and_num_work_plot_raw <- ggplot(Num_emp_and_Sales_per_emp_bin, aes(x = Sales_per_emp_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales per worker bin (equal width bins)", x = "Sales per worker bin", y = "Average number of workers")
+
+Sales_per_emp_and_num_work_plot_raw
+```
+
+```{r}
+### Plot weighted mean of number of workers in each sales per worker bin.
+
+## Create a dataframe with the weighted mean of number of workers in each sales per worker bin.
+
+# 2565
+# First, have to bin sales per worker. Want 25 bins. Using equal-frequency binning.
+
+INDUS_2565 <- INDUS_2565 %>% mutate(Sales_per_emp_bin = weighted_ntile(Sales_per_emp, n = 25, weights = WGT))
+
+# Calculate the weighted mean of number of workers in each sales per worker bin.
+Num_emp_and_Sales_per_emp_bin <- INDUS_2565 %>% group_by(Sales_per_emp_bin) %>% summarise(Avg_num_emp = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+Sales_per_emp_and_num_work_plot_eq_freq <- ggplot(Num_emp_and_Sales_per_emp_bin, aes(x = Sales_per_emp_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales per worker bin (equal frequency bins)", x = "Sales per worker bin", y = "Average number of workers")
+
+Sales_per_emp_and_num_work_plot_eq_freq
+
+```
 
 
 ```{r}
@@ -926,4 +1134,3 @@ cor.test(INDUS_2565$Capital_to_Labor, INDUS_2565$num_employ, method = "pearson",
 cor.test(INDUS_2565$Value_Added_per_emp, INDUS_2565$num_employ, method = "pearson", weights = INDUS_2565$WGT)
 
 ```
-

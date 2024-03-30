@@ -43,7 +43,7 @@ ii) 2565: E08 / number of workers
 
 Before analysing, I will trim the data by removing firms with sales lower than 6,000, fixed assets lower than 10,000, firms with zero workers. 
 
-I also remove firms with top and bottom 0.5% of sales per worker or top and bottom 0.5% of K/L.
+I also remove firms with top and bottom 1% of sales per worker or top and bottom 1% of K/L.
 
 Moreover, we remove obseravations detected to be duplicates based on seven variables: (i) years in operation,
 (ii) total employment, (iii) wage compensation, (iv) raw materials, (v) initial raw material stocks,
@@ -69,6 +69,7 @@ library(purrr)
 library(gt)
 library(patchwork)
 library(cNORM)
+library(hutils)
 
 # Set working directory
 setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
@@ -291,23 +292,23 @@ BICTS_2565 <- BICTS_2565 %>%
 
 
 ### Trimming sample
-Top and bottom 0.5% of sales per worker and K/L
+Top and bottom 1% of sales per worker and K/L
 
 
 ```{r}
 ## 2555
-# Calculate the 0.5% and 99.5% quantiles of sales per worker
-q_2555_s_w <- weighted.quantile(BICTS_2555$sales_per_worker, probs = c(0.005, 0.995), w = BICTS_2555$wgt5)
+# Calculate the 1% and 99% quantiles of sales per worker
+q_2555_s_w <- weighted.quantile(BICTS_2555$sales_per_worker, probs = c(0.01, 0.99), w = BICTS_2555$wgt5)
 
-# Calculate the 0.5% and 99.5% quantiles of K/L
-q_2555_KL <- weighted.quantile(BICTS_2555$KL, probs = c(0.005, 0.995), w = BICTS_2555$wgt5)
+# Calculate the 1% and 99% quantiles of K/L
+q_2555_KL <- weighted.quantile(BICTS_2555$KL, probs = c(0.01, 0.99), w = BICTS_2555$wgt5)
 
 ## 2565
-# Calculate the 0.5% and 99.5% quantiles of sales per worker
-q_2565_s_w <- weighted.quantile(BICTS_2565$sales_per_worker, probs = c(0.005, 0.995), w = BICTS_2565$WGT)
+# Calculate the 1% and 99% quantiles of sales per worker
+q_2565_s_w <- weighted.quantile(BICTS_2565$sales_per_worker, probs = c(0.01, 0.99), w = BICTS_2565$WGT)
 
-# Calculate the 0.5% and 99.5% quantiles of K/L
-q_2565_KL <- weighted.quantile(BICTS_2565$KL, probs = c(0.005, 0.995), w = BICTS_2565$WGT)
+# Calculate the 1% and 99% quantiles of K/L
+q_2565_KL <- weighted.quantile(BICTS_2565$KL, probs = c(0.01, 0.99), w = BICTS_2565$WGT)
 
 ```
 
@@ -618,4 +619,160 @@ BICTS_2565 %>%
 
 ```
 
+```{r}
+### Plot weighted mean of number of workers in each sales bin. 
+
+## Create a dataframe with the weighted mean of number of workers in each sales bin.
+
+# 2565
+# Create sales bins. Want 25 bins.
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(sales_bin = weighted_ntile(sales, 25, weights = WGT))
+
+# Calculate the weighted mean of number of workers in each sales bin.
+num_employ_sales_bin_2565 <- BICTS_2565 %>% group_by(sales_bin) %>% summarise(avg_num_employ = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+num_employ_sales_bin_2565 %>% 
+  ggplot(aes(x = sales_bin, y = avg_num_employ)) + geom_point() + labs(title = "Weighted mean of number of workers in each sales bin (equal frequency bins)", x = "Sales bin", y = "Average number of workers")
+
+```
+
+```{r}
+### Plot weighted mean of number of workers in each sales bin. 
+
+## Create a dataframe with the weighted mean of number of workers in each sales bin.
+
+# 2565
+# Create sales bins. Want 25 bins. Use equal width bins.
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(sales_bin = cut(sales, breaks = 25, labels = FALSE))
+
+# Calculate the weighted mean of number of workers in each sales bin.
+num_employ_sales_bin_2565 <- BICTS_2565 %>% group_by(sales_bin) %>% summarise(avg_num_employ = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+num_employ_sales_bin_2565 %>% 
+  ggplot(aes(x = sales_bin, y = avg_num_employ)) + geom_point() + labs(title = "Weighted mean of number of workers in each sales bin (equal width bins)", x = "Sales bin", y = "Average number of workers")
+
+
+```
+
+
+```{r}
+### Plot weighted mean of number of workers in each K/L bin.
+
+## Create a dataframe with the weighted mean of number of workers in each K/L bin.
+
+# 2565
+# First, have to bin K/L. Want 25 bins.
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(KL_bin = weighted_ntile(KL, 25, weights = WGT))
+
+# Calculate the weighted mean of number of workers in each K/L bin.
+num_employ_KL_bin_2565 <- BICTS_2565 %>% group_by(KL_bin) %>% summarise(avg_num_employ = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+num_employ_KL_bin_2565 %>% 
+  ggplot(aes(x = KL_bin, y = avg_num_employ)) + geom_point() + labs(title = "Weighted mean of number of workers in each K/L bin (equal frequency bins)", x = "K/L bin", y = "Average number of workers") + ylim(0, 10)
+
+```
+
+```{r}
+### Plot weighted mean of number of workers in each K/L bin.
+
+## Create a dataframe with the weighted mean of number of workers in each K/L bin.
+
+# 2565
+# First, have to bin K/L. Want 25 bins. Use equal width bins.
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(KL_bin = cut(KL, breaks = 25, labels = FALSE))
+
+# Calculate the weighted mean of number of workers in each K/L bin.
+num_employ_KL_bin_2565 <- BICTS_2565 %>% group_by(KL_bin) %>% summarise(avg_num_employ = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+num_employ_KL_bin_2565 %>% 
+  ggplot(aes(x = KL_bin, y = avg_num_employ)) + geom_point() + labs(title = "Weighted mean of number of workers in each K/L bin (equal width bins)", x = "K/L bin", y = "Average number of workers") + ylim(0, 10)
+```
+
+
+```{r}
+### Plot weighted mean of number of workers in each K bin.
+
+## Create a dataframe with the weighted mean of number of workers in each K bin.
+
+# 2565
+# First, have to bin K. Want 25 bins.
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(K_bin = weighted_ntile(E08, 25, weights = WGT))
+
+# Calculate the weighted mean of number of workers in each K bin.
+num_employ_K_bin_2565 <- BICTS_2565 %>% group_by(K_bin) %>% summarise(avg_num_employ = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+num_employ_K_bin_2565 %>% 
+  ggplot(aes(x = K_bin, y = avg_num_employ)) + geom_point() + labs(title = "Weighted mean of number of workers in each K bin (equal frequency bins)", x = "K bin", y = "Average number of workers") + ylim(0, 10)
+
+```
+
+```{r}
+### Plot weighted mean of number of workers in each K bin.
+
+## Create a dataframe with the weighted mean of number of workers in each K bin.
+
+# 2565
+# First, have to bin K. Want 25 bins. Use equal width bins.
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(K_bin = cut(E08, breaks = 25, labels = FALSE))
+
+# Calculate the weighted mean of number of workers in each K bin.
+num_employ_K_bin_2565 <- BICTS_2565 %>% group_by(K_bin) %>% summarise(avg_num_employ = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+num_employ_K_bin_2565 %>% 
+  ggplot(aes(x = K_bin, y = avg_num_employ)) + geom_point() + labs(title = "Weighted mean of number of workers in each K bin (equal width bins)", x = "K bin", y = "Average number of workers")
+
+
+```
+
+
+```{r}
+### Plot weighted mean of number of workers in each sales per worker bin.
+
+## Create a dataframe with the weighted mean of number of workers in each sales per worker bin.
+
+# 2565
+# First, have to bin sales per worker. Want 25 bins.
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(sales_per_worker_bin = weighted_ntile(sales_per_worker, 25, weights = WGT))
+
+# Calculate the weighted mean of number of workers in each sales per worker bin.
+num_employ_sales_per_worker_bin_2565 <- BICTS_2565 %>% group_by(sales_per_worker_bin) %>% summarise(avg_num_employ = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+num_employ_sales_per_worker_bin_2565 %>% 
+  ggplot(aes(x = sales_per_worker_bin, y = avg_num_employ)) + geom_point() + labs(title = "Weighted mean of number of workers in each sales per worker bin (equal frequency bins)", x = "Sales per worker bin", y = "Average number of workers") + ylim(0, 10)
+
+```
+```{r}
+### Plot weighted mean of number of workers in each sales per worker bin.
+
+## Create a dataframe with the weighted mean of number of workers in each sales per worker bin.
+
+# 2565
+# First, have to bin sales per worker. Want 25 bins. Use equal width bins.
+
+BICTS_2565 <- BICTS_2565 %>% 
+  mutate(sales_per_worker_bin = cut(sales_per_worker, breaks = 25, labels = FALSE))
+
+# Calculate the weighted mean of number of workers in each sales per worker bin.
+num_employ_sales_per_worker_bin_2565 <- BICTS_2565 %>% group_by(sales_per_worker_bin) %>% summarise(avg_num_employ = weighted.mean(num_employ, WGT, na.rm = TRUE))
+
+# Plot
+num_employ_sales_per_worker_bin_2565 %>% 
+  ggplot(aes(x = sales_per_worker_bin, y = avg_num_employ)) + geom_point() + labs(title = "Weighted mean of number of workers in each sales per worker bin (equal width bins)", x = "Sales per worker bin", y = "Average number of workers")
+
+
+```
 

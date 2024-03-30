@@ -50,7 +50,9 @@ In this document/code, I will examine key dimensions of manafacturing firms. The
   iii) 2560: E08/(B04 + B08)
   iv) 2565: E08/(B04 + B08)
 
-Before analysing, I will trim the data by removing firms with sales lower than 12,000, fixed assets lower than 6,000, firms with zero workers.
+Before analysing, I will trim the data by removing firms with sales lower than 6,000, fixed assets lower than 10,000, firms with zero workers. 
+
+I also remove firms with top and bottom 0.5% of value-added per worker or top and bottom 0.5% of K/L.
 
 Moreover, we remove obseravations detected to be duplicates based on seven variables: (i) years in operation,
 (ii) total employment, (iii) wage compensation, (iv) raw materials, (v) initial raw material stocks,
@@ -182,6 +184,12 @@ INDUS_2565 <- INDUS_2565 %>% filter(num_employ > 0)
 ```
 
 
+```{r}
+### See if there's absurdly high number of workers
+INDUS_2550 %>% filter(num_employ > 2500)
+```
+
+
 
 ## Detect duplicates
 
@@ -189,8 +197,19 @@ We will use the following variables to detect duplicates: (i) years in operation
 
 ```{r}
 ## 2550
-INDUS_2550 %>% distinct(num_employ, .keep_all = TRUE)
+INDUS_2550 <- INDUS_2550 %>% distinct(A04, num_employ, B05, C01 ,D01, D03, H08, .keep_all = TRUE)
 
+
+## 2555
+INDUS_2555 <- INDUS_2555 %>% distinct(A04, num_employ, B07, C01 ,D01, D03, H05, .keep_all = TRUE)
+
+
+## 2560
+INDUS_2560 <- INDUS_2560 %>% distinct(A04, num_employ, B19, C01 ,C07, C09, E08, .keep_all = TRUE)
+
+
+## 2565
+INDUS_2565 <- INDUS_2565 %>% distinct(A04, num_employ, B19, C01 ,C07, C09, E08, .keep_all = TRUE)
 ```
 
 
@@ -200,35 +219,35 @@ INDUS_2550 %>% distinct(num_employ, .keep_all = TRUE)
 ```{r}
 ## Using only firms with sales > 12.000
 # 2550. (G01 + (D05 - D01) - C01)/num_employ
-INDUS_2550_VA_filtered <- INDUS_2550 %>% filter(G01 > 12000, !is.na(G01), !is.na(D05), !is.na(D01), !is.na(C01))
+INDUS_2550 <- INDUS_2550 %>% filter(G01 > 12000, !is.na(G01), !is.na(D05), !is.na(D01), !is.na(C01))
 # Calculate value-added.
-INDUS_2550_VA_filtered <- INDUS_2550_VA_filtered %>% mutate(Value_Added = (G01 + (D05 - D01) - C01))
+INDUS_2550 <- INDUS_2550 %>% mutate(Value_Added = (G01 + (D05 - D01) - C01))
 # Calculate value-added per worker.
-INDUS_2550_VA_filtered <- INDUS_2550_VA_filtered %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
+INDUS_2550 <- INDUS_2550 %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
 
 
 # 2555. (G01 + (D05 - D01) - C01)/num_employ
-INDUS_2555_VA_filtered <- INDUS_2555 %>% filter(G01 > 12000, !is.na(G01), !is.na(D05), !is.na(D01), !is.na(C01))
+INDUS_2555 <- INDUS_2555 %>% filter(G01 > 12000, !is.na(G01), !is.na(D05), !is.na(D01), !is.na(C01))
 # Calculate value-added.
-INDUS_2555_VA_filtered <- INDUS_2555_VA_filtered %>% mutate(Value_Added = (G01 + (D05 - D01) - C01))
+INDUS_2555 <- INDUS_2555 %>% mutate(Value_Added = (G01 + (D05 - D01) - C01))
 # Calculate value-added per worker.
-INDUS_2555_VA_filtered <- INDUS_2555_VA_filtered %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
+INDUS_2555 <- INDUS_2555 %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
 
 
 # 2560. (D01 + (C12 – C07) – C01)/num_employ
-INDUS_2560_VA_filtered <- INDUS_2560 %>% filter(D01 > 12000, !is.na(D01), !is.na(C12), !is.na(C07), !is.na(C01))
+INDUS_2560 <- INDUS_2560 %>% filter(D01 > 12000, !is.na(D01), !is.na(C12), !is.na(C07), !is.na(C01))
 # Calculate value-added.
-INDUS_2560_VA_filtered <- INDUS_2560_VA_filtered %>% mutate(Value_Added = (D01 + (C12 - C07) - C01))
+INDUS_2560 <- INDUS_2560 %>% mutate(Value_Added = (D01 + (C12 - C07) - C01))
 # Calculate value-added per worker.
-INDUS_2560_VA_filtered <- INDUS_2560_VA_filtered %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
+INDUS_2560 <- INDUS_2560 %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
 
 
 # 2565. (D01 + (C12 – C07) – C01)/num_employ
-INDUS_2565_VA_filtered <- INDUS_2565 %>% filter(D01 > 12000, !is.na(D01), !is.na(C12), !is.na(C07), !is.na(C01))
+INDUS_2565 <- INDUS_2565 %>% filter(D01 > 12000, !is.na(D01), !is.na(C12), !is.na(C07), !is.na(C01))
 # Calculate value-added.
-INDUS_2565_VA_filtered <- INDUS_2565_VA_filtered %>% mutate(Value_Added = (D01 + (C12 - C07) - C01))
+INDUS_2565 <- INDUS_2565 %>% mutate(Value_Added = (D01 + (C12 - C07) - C01))
 # Calculate value-added per worker.
-INDUS_2565_VA_filtered <- INDUS_2565_VA_filtered %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
+INDUS_2565 <- INDUS_2565 %>% mutate(Value_Added_per_emp = Value_Added/num_employ)
 ```
 
 
@@ -341,6 +360,60 @@ INDUS_2560 <- INDUS_2560 %>% mutate(SIZE_R = factor(SIZE_R, levels = c(1, 2, 3, 
 
 INDUS_2565 <- INDUS_2565 %>% mutate(SIZE_R = factor(SIZE_R, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14), labels = c("1", "2-3", "4-5", "6-10", "11-15", "16-20", "21-25", "26-30", "31-50", "51-100", "101-200", "201-500", "501-1000", ">1000")))
 
+
+```
+
+
+### Trimming sample
+Top and bottom 0.5% of value-added per worker or top and bottom 0.5% of K/L.
+
+
+```{r}
+### Trimming those with value-added per worker in bottom 0.5% and top 0.5% or top and bottom 0.5% of K/L.
+
+## 2550
+# Calculate the 0.5% and 99.5% quantiles of value-added per worker
+q_2550 <- weighted.quantile(INDUS_2550$Value_Added_per_emp, probs = c(0.005, 0.995), weights = INDUS_2550$WGT_REG)
+
+# Calculate the 0.5% and 99.5% quantiles of K/L
+q_2550_KL <- weighted.quantile(INDUS_2550$Capital_to_Labor, probs = c(0.005, 0.995), weights = INDUS_2550$WGT_REG)
+
+## 2555
+# Calculate the 0.5% and 99.5% quantiles of value-added per worker
+q_2555 <- weighted.quantile(INDUS_2555$Value_Added_per_emp, probs = c(0.005, 0.995), weights = INDUS_2555$WGT17)
+
+# Calculate the 0.5% and 99.5% quantiles of K/L
+q_2555_KL <- weighted.quantile(INDUS_2555$Capital_to_Labor, probs = c(0.005, 0.995), weights = INDUS_2555$WGT17)
+
+## 2560
+# Calculate the 0.5% and 99.5% quantiles of value-added per worker
+q_2560 <- weighted.quantile(INDUS_2560$Value_Added_per_emp, probs = c(0.005, 0.995), weights = INDUS_2560$WGT)
+
+# Calculate the 0.5% and 99.5% quantiles of K/L
+q_2560_KL <- weighted.quantile(INDUS_2560$Capital_to_Labor, probs = c(0.005, 0.995), weights = INDUS_2560$WGT)
+
+## 2565
+# Calculate the 0.5% and 99.5% quantiles of value-added per worker
+q_2565 <- weighted.quantile(INDUS_2565$Value_Added_per_emp, probs = c(0.005, 0.995), weights = INDUS_2565$WGT)
+
+# Calculate the 0.5% and 99.5% quantiles of K/L
+q_2565_KL <- weighted.quantile(INDUS_2565$Capital_to_Labor, probs = c(0.005, 0.995), weights = INDUS_2565$WGT)
+
+```
+
+```{r}
+## Trim the sample (if satisfied either condition)
+# 2550
+INDUS_2550 <- INDUS_2550 %>% filter(!(Value_Added_per_emp < q_2550[1] | Value_Added_per_emp > q_2550[2] | Capital_to_Labor < q_2550_KL[1] | Capital_to_Labor > q_2550_KL[2]))
+
+# 2555
+INDUS_2555 <- INDUS_2555 %>% filter(!(Value_Added_per_emp < q_2555[1] | Value_Added_per_emp > q_2555[2] | Capital_to_Labor < q_2555_KL[1] | Capital_to_Labor > q_2555_KL[2]))
+
+# 2560
+INDUS_2560 <- INDUS_2560 %>% filter(!(Value_Added_per_emp < q_2560[1] | Value_Added_per_emp > q_2560[2] | Capital_to_Labor < q_2560_KL[1] | Capital_to_Labor > q_2560_KL[2]))
+
+# 2565
+INDUS_2565 <- INDUS_2565 %>% filter(!(Value_Added_per_emp < q_2565[1] | Value_Added_per_emp > q_2565[2] | Capital_to_Labor < q_2565_KL[1] | Capital_to_Labor > q_2565_KL[2]))
 
 ```
 
@@ -470,16 +543,16 @@ Capital_to_Labor_2565 <- INDUS_2565 %>% group_by(REG) %>% summarise(Avg_Capital_
 ```{r}
 ### Calculate average value-added per worker by region.
 # 2550
-Value_Added_per_emp_2550 <- INDUS_2550_VA_filtered %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT_REG, na.rm = TRUE))
+Value_Added_per_emp_2550 <- INDUS_2550 %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT_REG, na.rm = TRUE))
 
 # 2555
-Value_Added_per_emp_2555 <- INDUS_2555_VA_filtered %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT17, na.rm = TRUE))
+Value_Added_per_emp_2555 <- INDUS_2555 %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT17, na.rm = TRUE))
 
 # 2560
-Value_Added_per_emp_2560 <- INDUS_2560_VA_filtered %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT, na.rm = TRUE))
+Value_Added_per_emp_2560 <- INDUS_2560 %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT, na.rm = TRUE))
 
 # 2565
-Value_Added_per_emp_2565 <- INDUS_2565_VA_filtered %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT, na.rm = TRUE))
+Value_Added_per_emp_2565 <- INDUS_2565 %>% group_by(REG) %>% summarise(Avg_Value_Added_per_emp = weighted.mean(Value_Added_per_emp, WGT, na.rm = TRUE))
 ```
 
 
@@ -643,26 +716,26 @@ ggplot(Emp_Num_LF_long) + aes(x = Year, y = Value, fill = Variable) + geom_col(p
 ```{r}
 # 2550
 # Make REG as character
-INDUS_2550_VA_filtered$REG <- as.character(INDUS_2550_VA_filtered$REG)
+INDUS_2550$REG <- as.character(INDUS_2550$REG)
 
 # Make ln(Value_Added_per_emp)
-INDUS_2550_VA_filtered <- INDUS_2550_VA_filtered %>% mutate(ln_Value_Added_per_emp = log(Value_Added_per_emp))
+INDUS_2550 <- INDUS_2550 %>% mutate(ln_Value_Added_per_emp = log(Value_Added_per_emp))
 
 # Plot
-ggplot(INDUS_2550_VA_filtered, aes(x = ln_Value_Added_per_emp, weight = WGT_REG,  group = REG, color = REG)) + geom_density(warnWbw = FALSE) + labs(title = "Distribution of value-added per worker (by region) in 2006", x = "ln(Value-added per worker)", y = "Density") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange"), labels = c( "Bangkok", "Central", "North", "Northeast", "South")) + theme(legend.position = "bottom", legend.title = element_blank())
+ggplot(INDUS_2550, aes(x = ln_Value_Added_per_emp, weight = WGT_REG,  group = REG, color = REG)) + geom_density(warnWbw = FALSE) + labs(title = "Distribution of value-added per worker (by region) in 2006", x = "ln(Value-added per worker)", y = "Density") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange"), labels = c( "Bangkok", "Central", "North", "Northeast", "South")) + theme(legend.position = "bottom", legend.title = element_blank())
 
 ```
 
 ```{r}
-# 2560
+# 2565
 # Make REG as character
-INDUS_2560_VA_filtered$REG <- as.character(INDUS_2560_VA_filtered$REG)
+INDUS_2565$REG <- as.character(INDUS_2565$REG)
 
 # Make ln(Value_Added_per_emp)
-INDUS_2560_VA_filtered <- INDUS_2560_VA_filtered %>% mutate(ln_Value_Added_per_emp = log(Value_Added_per_emp))
+INDUS_2565 <- INDUS_2565 %>% mutate(ln_Value_Added_per_emp = log(Value_Added_per_emp))
 
 # Plot
-ggplot(INDUS_2560_VA_filtered, aes(x = ln_Value_Added_per_emp, weight = WGT,  group = REG, color = REG)) + geom_density(warnWbw = FALSE) + labs(title = "Distribution of value-added per worker (by region) in 2016", x = "ln(Value-added per worker)", y = "Density") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange"), labels = c( "Bangkok", "Central", "North", "Northeast", "South")) + theme(legend.position = "bottom", legend.title = element_blank())
+ggplot(INDUS_2565, aes(x = ln_Value_Added_per_emp, weight = WGT,  group = REG, color = REG)) + geom_density(warnWbw = FALSE) + labs(title = "Distribution of value-added per worker (by region) in 2021", x = "ln(Value-added per worker)", y = "Density") + theme(legend.position = "bottom") + scale_color_manual(values = c("red", "blue", "green", "purple", "orange"), labels = c( "Bangkok", "Central", "North", "Northeast", "South")) + theme(legend.position = "bottom", legend.title = element_blank())
 
 ```
 
@@ -721,46 +794,18 @@ K_LL_plot + VA_plot + plot_annotation(title = "Mean K/L and Mean Value-added per
 ## Correlating stuff with the size of firms (scatter plot)
 
 ```{r}
-## Firm size vs K/L
+### Scatter plot between ln(K/L) and number of workers
 # 2565
-ggplot(INDUS_2565, aes(x = Capital_to_Labor, y = num_employ , weight = WGT)) + geom_point() + ylim(0,5000) + xlim(0,50000000)
+ggplot(INDUS_2565) + aes(x = ln_Capital_to_Labor, y = num_employ) + geom_point(alpha = 0.3) + ylim(0, 1500)
 
 ```
 
 ```{r}
-## Firm size vs Value-added per worker
+### Scatter plot between ln(Value-added per worker) and number of workers
 # 2565
-ggplot(INDUS_2565_VA_filtered, aes(x = Value_Added_per_emp, y = num_employ , weight = WGT)) + geom_point() + ylim(0,5000) + xlim(0,50000000)
-
+ggplot(INDUS_2565) + aes(x = ln_Value_Added_per_emp, y = num_employ) + geom_point(alpha = 0.3) + ylim(0, 1500)
 
 ```
-
-
-```{r}
-### Let's examine the role of A03 (Form of economic organization).
-# 2565
-# Make A03 as character
-INDUS_2565$A03 <- as.character(INDUS_2565$A03)
-
-ggplot(INDUS_2565, aes(x = Capital_to_Labor, y = num_employ , weight = WGT, color = A03)) + geom_point() + ylim(0,2000) 
-
-
-```
-
-
-```{r}
-### Let's examine the role of A01 (Form of legal organization).
-# 2565
-# Make A01 as character
-INDUS_2565$A01 <- as.character(INDUS_2565$A01)
-
-# Don't plot A01 = 4 (Government, State-enterprises)
-ggplot(INDUS_2565 %>% filter(A01 != "4"), aes(x = Capital_to_Labor, y = num_employ , weight = WGT, color = A01)) + geom_point() + ylim(0,2000) 
-
-
-
-```
-
 
 
 ```{r}
@@ -771,3 +816,12 @@ ggplot(INDUS_2565 %>% filter(A01 != "4"), aes(x = Capital_to_Labor, y = num_empl
 cor.test(INDUS_2565$Capital_to_Labor, INDUS_2565$num_employ, method = "pearson", weights = INDUS_2565$WGT)
 
 ```
+```{r}
+### Correlation between value-added per worker and number of workers
+# weighted correlation
+# 2565
+
+cor.test(INDUS_2565$Value_Added_per_emp, INDUS_2565$num_employ, method = "pearson", weights = INDUS_2565$WGT)
+
+```
+

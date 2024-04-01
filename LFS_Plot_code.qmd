@@ -40,9 +40,6 @@ LFS_HIGH_EDU_value <- LFS_HIGH_EDU_tab %>% group_by(reg, Year) %>% summarise(Per
 ## Proportion of employment in agriculture
 LFS_AGR_prop <- LFS_sec %>% filter(SECTOR == "Agriculture")
 
-# Use only year => 2541
-LFS_HIGH_EDU_value <- LFS_HIGH_EDU_value %>% filter(Year > 2540)
-LFS_AGR_prop <- LFS_AGR_prop %>% filter(Year > 2540)
 
 ## Make year C.E. (-543)
 LFS_HIGH_EDU_value$Year <- LFS_HIGH_EDU_value$Year - 543
@@ -69,7 +66,7 @@ region_labeller <- as_labeller(c( "0" = "National",
 # Plotting the proportion of labor force with at least upper secondary education and the proportion of employment in agriculture
 
 ggplot() + geom_line(data = LFS_HIGH_EDU_value, aes(x = Year, y = Percentage ,color = "black")) + 
-  geom_line(data = LFS_AGR_prop, aes(x = Year, y = Percentage, color = "red")) + facet_rep_wrap(~reg, labeller = region_labeller, ncol = 2, repeat.tick.labels = TRUE) + scale_color_manual(values = c("black", "red"), labels = c("% of labor force completed at least upper-secondary education", "% of employment in agriculture sector")) + labs(title = "Education and Agricultural Employment by regioon", x = "Year", y = "Percentage (%)") + theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) + scale_x_continuous(breaks = seq(1998, 2022, 2))
+  geom_line(data = LFS_AGR_prop, aes(x = Year, y = Percentage, color = "red")) + facet_rep_wrap(~reg, labeller = region_labeller, ncol = 2, repeat.tick.labels = TRUE) + scale_color_manual(values = c("black", "red"), labels = c("% of labor force completed at least upper-secondary education", "% of employment in agriculture sector")) + labs(title = "Education and Agricultural Employment by regioon", x = "Year", y = "Percentage (%)") + theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) + scale_x_continuous(breaks = seq(1993, 2022, 2))
 ```
 
 ```{r}
@@ -86,4 +83,20 @@ LFS_wage <- LFS_wage %>% filter(!(SECTOR == "Agriculture" & reg == "1"))
 # Plot
 ggplot(LFS_wage, aes(x = Year, y = WAGE, color = SECTOR)) + geom_line() + facet_rep_wrap(~reg, labeller = region_labeller, ncol = 2, repeat.tick.labels = TRUE) + labs(title = "Average wage by sector and region", x = "Year", y = "Average wage (Baht)") + theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) + scale_x_continuous(breaks = seq(1998, 2022, 2))
 ```
+```{r}
+### Plot distribution of sectoral employment by region. Stacked bar chart.
+
+## Make year C.E. (-543)
+LFS_sec$Year <- LFS_sec$Year - 543
+
+# Plot
+options(repr.plot.width = 9, repr.plot.height = 10)
+
+ggplot(LFS_sec %>% filter(reg != "0"), aes(x = Year, y = Percentage, fill = SECTOR)) + geom_bar(stat = "identity") + facet_rep_wrap(~reg, labeller = region_labeller, ncol = 1, repeat.tick.labels = TRUE) + labs(title = "Distribution of sectoral employment by region", x = "Year", y = "Percentage (%)") + theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) + scale_x_continuous(breaks = seq(1993, 2022, 2)) + geom_text(aes(label = paste0(round(Percentage), "%")), position = position_stack(vjust = 0.5), size = 2)
+
+
+# Save the plot
+ggsave("Output/LFS_sec_dist.png", width = 9, height = 10)
+```
+
 

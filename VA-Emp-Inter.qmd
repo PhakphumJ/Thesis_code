@@ -1,0 +1,104 @@
+---
+title: "VA-Emp-Inter"
+format: html
+---
+
+## Explanation
+
+In this document/code, I explore the The Economic Transformation Database. 
+
+## Data
+
+```{r}
+remove(list = ls())
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readxl)
+
+
+# Load the data
+setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
+
+Data <- read_excel("Data/VA_EMP_across_countries.xlsx", sheet = "Data")
+```
+
+
+## Pre-processing
+
+```{r}
+## Summing up the value added and employment into three sectors.
+Data <- Data %>%
+  mutate(Manufacturing_new = Mining + Manufacturing + Utilities + Construction, Service = `Trade services` + `Transport services` + `Business services` + `Financial services` + `Real estate` + `Government services` + `Other services`)
+
+## Dropping the columns
+Data <- Data %>%
+  select(-c(Mining, Manufacturing, Utilities, Construction, `Trade services`, `Transport services`, `Business services`, `Financial services`, `Real estate`, `Government services`, `Other services`))
+
+## Renaming manufacturing_new to manufacturing
+Data <- Data %>%
+  rename(Manufacturing = Manufacturing_new)
+
+```
+
+```{r}
+### Create Dataframe containing seperate var.
+## Value added (Nominal)
+Data_VA_Nominal <- Data %>% filter(var == "VA")
+
+## Value added (Real)
+Data_VA_Real <- Data %>% filter(var == "VA_Q15")
+
+## Employment
+Data_EMP <- Data %>% filter(var == "EMP")
+```
+
+## Feature Engineering
+### Create Value added per worker
+
+```{r}
+### First, merge the dataframes
+Data_Nom_VA_to_EMP <- merge(Data_VA_Nominal %>% select(-var), Data_EMP %>% select(-var), by = c("country", "year"), suffixes = c("_VA_Nominal", "_EMP"))
+```
+
+```{r}
+### Create Value added per worker
+Data_Nom_VA_to_EMP <- Data_Nom_VA_to_EMP %>%
+  mutate(Nom_VA_per_EMP_Agriculture = Agriculture_VA_Nominal / Agriculture_EMP,
+         Nom_VA_per_EMP_Manufacturing = Manufacturing_VA_Nominal / Manufacturing_EMP,
+         Nom_VA_per_EMP_Service = Service_VA_Nominal / Service_EMP)
+
+## Keep only relevant columns
+Data_Nom_VA_to_EMP <- Data_Nom_VA_to_EMP %>%
+  select(country, year, Nom_VA_per_EMP_Agriculture, Nom_VA_per_EMP_Manufacturing, Nom_VA_per_EMP_Service)
+
+```
+
+
+```{r}
+### Merge the dataframes
+Data_Real_VA_to_EMP <- merge(Data_VA_Real %>% select(-var), Data_EMP %>% select(-var), by = c("country", "year"), suffixes = c("_VA_Real", "_EMP"))
+```
+
+```{r}
+### Create Value added per worker
+Data_Real_VA_to_EMP <- Data_Real_VA_to_EMP %>%
+  mutate(Real_VA_per_EMP_Agriculture = Agriculture_VA_Real / Agriculture_EMP,
+         Real_VA_per_EMP_Manufacturing = Manufacturing_VA_Real / Manufacturing_EMP,
+         Real_VA_per_EMP_Service = Service_VA_Real / Service_EMP)
+
+## Keep only relevant columns
+Data_Real_VA_to_EMP <- Data_Real_VA_to_EMP %>%
+  select(country, year, Real_VA_per_EMP_Agriculture, Real_VA_per_EMP_Manufacturing, Real_VA_per_EMP_Service)
+
+
+```
+
+```{r}
+## Export the data
+write.csv(Data_Nom_VA_to_EMP, "Data/VA_EMP_across_countries_Nominal.csv")
+write.csv(Data_Real_VA_to_EMP, "Data/VA_EMP_across_countries_Real.csv")
+```
+
+

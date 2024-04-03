@@ -1,0 +1,66 @@
+---
+title: "GPP_Analysis"
+format: html
+---
+
+## Explantion
+
+In this code/document, I explore the level and growth of value-added per worker in each sector by region.
+
+## Importing the data
+
+```{r}
+remove(list = ls())
+
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(lemon)
+
+# Set working directory
+setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
+
+# Import the data
+LFS_sec_num <- read_excel("Data/Output/All_YEAR_ALL_AGE_SEC_annual_num_final.xlsx")
+
+GPP_data <- read_excel("Data/GPP/GPP_Compiled.xlsx")
+
+```
+
+## Pre-processing the data
+
+```{r}
+## Make year C.E.
+LFS_sec_num$Year <- LFS_sec_num$Year - 543
+```
+
+```{r}
+## Sum the value added of Region_New = 2 together.
+GPP_data %>% filter(Region_New == 2) %>% 
+  group_by(Year) %>% summarise(GPP_Agriculture = sum(GPP_Agriculture),
+                                GPP_Manufacturing = sum(GPP_Manufacturing),
+                                GPP_Service = sum(GPP_Service)) -> GPP_data_sum_central
+
+```
+
+```{r}
+## Add column Region_New = 2 to the GPP_data_sum_central
+GPP_data_sum_central$Region_New <- 2
+
+## Remove those with Region_New = 2 from the GPP_data
+GPP_data <- GPP_data %>% filter(Region_New != 2)
+
+## Remove column Province_Region from GPP_data
+GPP_data <- GPP_data %>% select(-Province_Region)
+
+## Bind the two data together
+GPP_data <- rbind(GPP_data, GPP_data_sum_central)
+
+```
+
+```{r}
+## Pivot LFS_sec_num to wide format
+LFS_sec_num %>% pivot_wider(names_from = SECTOR, values_from = wgt) -> LFS_sec_num_wide
+```
+

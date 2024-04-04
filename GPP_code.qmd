@@ -17,6 +17,8 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(lemon)
+library(gt)
+library(kableExtra)
 
 # Set working directory
 setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
@@ -33,7 +35,31 @@ GPP_data <- read_excel("Data/GPP/GPP_Compiled.xlsx")
 ```{r}
 ## Make year C.E.
 LFS_sec_num$Year <- LFS_sec_num$Year - 543
+
+## Divide wgt by 10000 during 2001 - 2012
+for (i in 1:nrow(LFS_sec_num)){
+  if (LFS_sec_num$Year[i] >= 2001 & LFS_sec_num$Year[i] <= 2012){
+    LFS_sec_num$wgt[i] <- LFS_sec_num$wgt[i] / 10000
+# Divide wgt by 100 during 1993 - 2000
+  } else if (LFS_sec_num$Year[i] >= 1993 & LFS_sec_num$Year[i] <= 2000){
+    LFS_sec_num$wgt[i] <- LFS_sec_num$wgt[i] / 100
+  }
+}
 ```
+
+```{r}
+## Exclude 1997
+LFS_sec_num <- LFS_sec_num %>% filter(Year != 1997)
+GPP_data <- GPP_data %>% filter(Year != 1997)
+```
+
+```{r}
+## Multiply GPP by 1000000
+GPP_data$GPP_Agriculture <- GPP_data$GPP_Agriculture * 1000000
+GPP_data$GPP_Manufacturing <- GPP_data$GPP_Manufacturing * 1000000
+GPP_data$GPP_Service <- GPP_data$GPP_Service * 1000000
+```
+
 
 ```{r}
 ## Sum the value added of Region_New = 2 together.
@@ -62,5 +88,199 @@ GPP_data <- rbind(GPP_data, GPP_data_sum_central)
 ```{r}
 ## Pivot LFS_sec_num to wide format
 LFS_sec_num %>% pivot_wider(names_from = SECTOR, values_from = wgt) -> LFS_sec_num_wide
+
+## Rename the columns
+names(LFS_sec_num_wide) <- c("reg", "Year", "Employment_Agriculture", "Employment_Manufacturing", "Employment_Service")
+```
+
+```{r}
+## Merge the two data
+GPP_Employment <- GPP_data %>% left_join(LFS_sec_num_wide, by = c("Year" = "Year", "Region_New" = "reg"))
+
+```
+
+### Make agri vs non-agri version of data
+
+```{r}
+## Sum up the employment of non-agriculture sectors
+
+GPP_Employment_Ag_NoAg <- GPP_Employment %>% mutate(Employment_NonAg = Employment_Manufacturing + Employment_Service)
+
+# Sum up the GPP of non-agriculture sectors
+GPP_Employment_Ag_NoAg <- GPP_Employment_Ag_NoAg %>% mutate(GPP_NonAg = GPP_Manufacturing + GPP_Service)
+
+```
+
+```{r}
+## Keep only the relevant columns
+GPP_Employment_Ag_NoAg <- GPP_Employment_Ag_NoAg %>% select(Region_New, Year, GPP_Agriculture, GPP_NonAg, Employment_Agriculture, Employment_NonAg)
+
+```
+
+
+## Calculated value-added per worker.
+
+```{r}
+## Calculate value-added per worker
+GPP_perwk_reg <- GPP_Employment %>% mutate(GPP_Agriculture_per_worker = GPP_Agriculture / Employment_Agriculture, GPP_Manufacturing_per_worker = GPP_Manufacturing/ Employment_Manufacturing, GPP_Service_per_worker = GPP_Service / Employment_Service)
+
+## Keep only the relevant columns
+GPP_perwk_reg <- GPP_perwk_reg %>% select(Region_New, Year, GPP_Agriculture_per_worker, GPP_Manufacturing_per_worker, GPP_Service_per_worker)
+
+```
+
+```{r}
+## Make it long format
+GPP_perwk_reg %>% pivot_longer(cols = c(GPP_Agriculture_per_worker, GPP_Manufacturing_per_worker, GPP_Service_per_worker), names_to = "Sector", values_to = "GPP_per_worker") -> GPP_perwk_reg_long
+
+```
+
+
+```{r}
+### Calculate the growth over the 25 years.
+GPP_perwk_reg %>% filter(Year == 1998 | Year == 2022) %>% group_by(Region_New) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2022] - GPP_Agriculture_per_worker[Year == 1998]) / GPP_Agriculture_per_worker[Year == 1998])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2022] - GPP_Manufacturing_per_worker[Year == 1998]) / GPP_Manufacturing_per_worker[Year == 1998])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2022] - GPP_Service_per_worker[Year == 1998]) / GPP_Service_per_worker[Year == 1998])*100) -> GPP_perwk_reg_growth
+
+```
+
+
+```{r}
+### Calculate the relative productivity of each sector to agriculture each region and year.
+
+GPP_perwk_reg %>% mutate(Manu_Relative = GPP_Manufacturing_per_worker / GPP_Agriculture_per_worker, Serv_Relative = GPP_Service_per_worker / GPP_Agriculture_per_worker) -> Relative_Prod
+
+## Drop unnecessary columns
+Relative_Prod <- Relative_Prod %>% select(-GPP_Agriculture_per_worker, -GPP_Manufacturing_per_worker, -GPP_Service_per_worker)
+
+```
+
+
+### Do the same for the agri vs non-agri version of the data
+
+```{r}
+## Calculate value-added per worker
+GPP_perwk_reg_Ag_NoAg <- GPP_Employment_Ag_NoAg %>% mutate(GPP_Agriculture_per_worker = GPP_Agriculture / Employment_Agriculture, GPP_NonAg_per_worker = GPP_NonAg / Employment_NonAg)
+
+## Keep only the relevant columns
+GPP_perwk_reg_Ag_NoAg <- GPP_perwk_reg_Ag_NoAg %>% select(Region_New, Year, GPP_Agriculture_per_worker, GPP_NonAg_per_worker)
+
+```
+
+```{r}
+## Make it long format
+GPP_perwk_reg_Ag_NoAg %>% pivot_longer(cols = c(GPP_Agriculture_per_worker, GPP_NonAg_per_worker), names_to = "Sector", values_to = "GPP_per_worker") -> GPP_perwk_reg_Ag_NoAg_long
+
+
+```
+
+```{r}
+### Calculate the growth over the 25 years.
+GPP_perwk_reg_Ag_NoAg %>% filter(Year == 1998 | Year == 2022) %>% group_by(Region_New) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2022] - GPP_Agriculture_per_worker[Year == 1998]) / GPP_Agriculture_per_worker[Year == 1998])*100, NonAg_Growth = ((GPP_NonAg_per_worker[Year == 2022] - GPP_NonAg_per_worker[Year == 1998]) / GPP_NonAg_per_worker[Year == 1998])*100) -> GPP_perwk_reg_Ag_NoAg_growth
+
+```
+
+```{r}
+### Calculate the relative productivity of each sector to agriculture each region and year.
+
+GPP_perwk_reg_Ag_NoAg %>% mutate(NonAg_Relative = GPP_NonAg_per_worker / GPP_Agriculture_per_worker) -> Relative_Prod_Ag_NoAg
+
+## Drop unnecessary columns
+Relative_Prod_Ag_NoAg <- Relative_Prod_Ag_NoAg %>% select(-GPP_Agriculture_per_worker, -GPP_NonAg_per_worker)
+
+
+```
+
+
+## Plotting the data
+
+```{r}
+## Make a region labeller.
+region_labeller <- as_labeller(c( "0" = "National",
+  "1" = "Bangkok",
+  "2" = "Central",
+  "3" = "North",
+  "4" = "Northeast",
+  "5" = "South"
+))
+```
+
+
+```{r}
+## Plot the value-added per worker in each sector by region.
+GPP_perwk_reg_long %>% ggplot(aes(x = Year, y = GPP_per_worker, color = Sector)) + geom_line() + facet_rep_wrap(~Region_New, labeller = region_labeller, ncol = 2, repeat.tick.labels = 'all') + theme_minimal() + labs(title = "Value-added per worker in each sector by region", x = "Year", y = "Value-added per worker (THB)") + theme(legend.position = "bottom") + scale_x_continuous(breaks = seq(1998, 2022, 5)) + scale_y_continuous(labels = scales::comma) + scale_color_discrete(name = "Sector", labels = c("Agriculture", "Manufacturing", "Service"))
+
+# Save the plot
+ggsave("Output/GPP_perwk_reg.png", width = 10, height = 6, bg = "white")
+
+```
+
+
+```{r}
+## Plot the relative productivity of each sector to agriculture by region.
+Relative_Prod %>% pivot_longer(cols = c(Manu_Relative, Serv_Relative), names_to = "Sector", values_to = "Relative") %>% ggplot(aes(x = Year, y = Relative, color = Sector)) + geom_line() + facet_rep_wrap(~Region_New, labeller = region_labeller, ncol = 2, repeat.tick.labels = 'all') + theme_minimal() + labs(title = "Relative productivity of each sector to agriculture by region", x = "Year", y = "Relative productivity") + theme(legend.position = "bottom") + scale_x_continuous(breaks = seq(1998, 2022, 5)) + scale_y_continuous(labels = scales::comma, breaks = seq(0, 24, 4), limits = c(0, 24)) + scale_color_discrete(name = "Sector", labels = c("Manufacturing", "Service"))
+
+# Save the plot
+ggsave("Output/Relative_Prod.png", width = 10, height = 6, bg = "white")
+
+```
+
+### Do the same for the agri vs non-agri version of the data
+
+```{r}
+## Plot the value-added per worker in each sector by region.
+GPP_perwk_reg_Ag_NoAg_long %>% ggplot(aes(x = Year, y = GPP_per_worker, color = Sector)) + geom_line() + facet_rep_wrap(~Region_New, labeller = region_labeller, ncol = 2, repeat.tick.labels = 'all') + theme_minimal() + labs(title = "Value-added per worker in each sector by region", x = "Year", y = "Value-added per worker (THB)") + theme(legend.position = "bottom") + scale_x_continuous(breaks = seq(1998, 2022, 5)) + scale_y_continuous(labels = scales::comma) + scale_color_discrete(name = "Sector", labels = c("Agriculture", "Non-agriculture"))
+
+# Save the plot
+ggsave("Output/GPP_perwk_reg_Ag_NoAg.png", width = 10, height = 6 , bg = "white")
+
+
+```
+
+```{r}
+## Plot the relative productivity of each sector to agriculture by region.
+Relative_Prod_Ag_NoAg %>% ggplot(aes(x = Year, y = NonAg_Relative)) + geom_line() + facet_rep_wrap(~Region_New, labeller = region_labeller, ncol = 2, repeat.tick.labels = 'all') + theme_minimal() + labs(title = "Relative productivity of non-agriculture to agriculture by region", x = "Year", y = "Relative productivity") + theme(legend.position = "bottom") + scale_x_continuous(breaks = seq(1998, 2022, 5)) + scale_y_continuous(labels = scales::comma, limits = c(0, 20), breaks = seq(0, 20, 4))
+
+
+# Save the plot
+ggsave("Output/Relative_Prod_Ag_NoAg.png", width = 10, height = 6 , bg = "white")
+
+```
+
+## Make nice table
+
+```{r}
+### Make nice table with GT.
+# Change region to actual names
+
+GPP_perwk_reg_growth <- GPP_perwk_reg_growth %>% mutate(Region_New = case_when(Region_New == "1" ~ "Bangkok", Region_New == "2" ~ "Central", Region_New == "3" ~ "North", Region_New == "4" ~ "Northeast", Region_New == "5" ~ "South"))
+```
+
+```{r}
+## Let's try creating the table with gt.
+
+GPP_perwk_reg_growth %>% gt() %>% cols_label(Region_New = "Region", Agri_Growth = "Agriculture", Manu_Growth = "Manufacturing", Serv_Growth = "Service") %>% tab_header(title = "Growth of value-added per worker in each sector by region (%)", subtitle = "from 1998 - 2022") %>% fmt_number(decimals = 2) -> GPP_perwk_reg_growth_table
+
+## Save the table
+gtsave(GPP_perwk_reg_growth_table, "Output/GPP_perwk_reg_growth_table.html")
+
+```
+
+
+
+### Do the same for the agri vs non-agri version of the data
+
+
+```{r}
+### Make nice table with GT.
+# Change region to actual names
+GPP_perwk_reg_Ag_NoAg_growth <- GPP_perwk_reg_Ag_NoAg_growth %>% mutate(Region_New = case_when(Region_New == "1" ~ "Bangkok", Region_New == "2" ~ "Central", Region_New == "3" ~ "North", Region_New == "4" ~ "Northeast", Region_New == "5" ~ "South"))
+```
+
+```{r}
+## Let's try creating the table with gt.
+GPP_perwk_reg_Ag_NoAg_growth %>% gt() %>% cols_label(Region_New = "Region", Agri_Growth = "Agriculture", NonAg_Growth = "Non-agriculture") %>% tab_header(title = "Growth of value-added per worker in each sector by region (%)", subtitle = "from 1998 - 2022") %>% fmt_number(decimals = 2) -> GPP_perwk_reg_Ag_NoAg_growth_table
+
+## Save the table
+gtsave(GPP_perwk_reg_Ag_NoAg_growth_table, "Output/GPP_perwk_reg_Ag_NoAg_growth_table.html")
+
 ```
 

@@ -661,8 +661,12 @@ Emp_Num_LF_scaled <- Emp_Num_LF_scaled %>% mutate(REG = case_when(REG == "1" ~ "
 
 ```{r}
 ## Let's try creating the table with gt.
-Emp_Num_LF_scaled %>% gt(rowname_col = "REG", groupname_col = "Year") %>% cols_label(Avg_emp = "Average number of workers", Num_firms = "Number of firms (10,000)", Labor_Force = "Labor force (millions)") %>% cols_align(align = "center") %>% cols_width(everything() ~ px(160)) %>% fmt_number(decimals = 2)
-  
+Emp_Num_LF_scaled %>% gt(rowname_col = "REG", groupname_col = "Year") %>% cols_label(Avg_emp = "Average number of workers", Num_firms = "Number of firms (10,000)", Labor_Force = "Labor force (millions)") %>% cols_align(align = "center") %>% cols_width(everything() ~ px(160)) %>% fmt_number(decimals = 2) -> tab_emp_num_lf
+
+## Save the table
+gtsave(tab_emp_num_lf,"Output/emp_num_lf_Indust.html")
+
+tab_emp_num_lf
 
 ```
 
@@ -728,8 +732,12 @@ KLVAPerEmp <- KLVAPerEmp %>% mutate(REG = case_when(REG == "1" ~ "Bangkok", REG 
 
 ```{r}
 ## Let's try creating the table with gt.
-KLVAPerEmp %>% gt(rowname_col = "REG", groupname_col = "Year") %>% cols_label(Avg_Capital_to_Labor = "Average K/L", Avg_Value_Added_per_emp = "Average Value-added per worker", Avg_Sales_per_emp = "Average Sales per worker") %>% cols_align(align = "center") %>% cols_width(everything() ~ px(160)) %>% fmt_number(decimals = 0)
-  
+KLVAPerEmp %>% gt(rowname_col = "REG", groupname_col = "Year") %>% cols_label(Avg_Capital_to_Labor = "Average K/L", Avg_Value_Added_per_emp = "Average Value-added per worker", Avg_Sales_per_emp = "Average Sales per worker") %>% cols_align(align = "center") %>% cols_width(everything() ~ px(160)) %>% fmt_number(decimals = 0) -> tab_KLVAPerEmp
+
+## Save the table
+gtsave(tab_KLVAPerEmp,"Output/KLVAPerEmp_Indust.html")
+
+tab_KLVAPerEmp
 
 ```
 
@@ -752,14 +760,18 @@ region_labeller <- as_labeller(c( "0" = "National",
 
 ```{r}
 # 2550
-ggplot(INDUS_2550 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT_REG, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of workers", y = "Proportion")
+ggplot(INDUS_2550 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT_REG, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region) in 2006", x = "Number of workers", y = "Proportion") + ylim(0, 0.6)
+
+## save the plot
+ggsave("Output/Firm_size_2550_Indust.png", width = 8, height = 9)
+
 ```
 
 
 ```{r}
 
 # 2560
-ggplot(INDUS_2560 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of workers", y = "Proportion")
+ggplot(INDUS_2560 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region) in 2016", x = "Number of workers", y = "Proportion") + ylim(0, 0.6)
 
 
 ```
@@ -767,7 +779,11 @@ ggplot(INDUS_2560 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT, y = after
 ```{r}
 
 # 2565
-ggplot(INDUS_2565 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region)", x = "Number of workers", y = "Proportion")
+ggplot(INDUS_2565 %>% drop_na(SIZE_R)) + aes(x = SIZE_R, weight = WGT, y = after_stat(prop)) + geom_bar(stat = "prop") + facet_rep_wrap(~REG, labeller = region_labeller, ncol = 1) + labs(title = "Distribution of Firm Size (by region) in 2021", x = "Number of workers", y = "Proportion") + ylim(0, 0.6)
+
+## Save the plot
+ggsave("Output/Firm_size_2565_Indust.png" , width = 8, height = 9)
+
 ```
 
 
@@ -780,6 +796,8 @@ Dist_overlay
 
 
 ```
+
+
 
 ### Number of firms, average number of workers, and labor force (by region)
 
@@ -919,6 +937,10 @@ Num_emp_and_sales_bin <- INDUS_2565 %>% group_by(Sales_bin) %>% summarise(Avg_nu
 Sales_and_num_work_plot_raw <- ggplot(Num_emp_and_sales_bin, aes(x = Sales_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales bin (equal width bins)", x = "Sales bin", y = "Average number of workers")
 
 Sales_and_num_work_plot_raw
+
+## Save the plot
+ggsave("Output/Sales_and_num_work_plot_Indust_eq_width.png", width = 8, height = 6)
+
 ```
 
 ```{r}
@@ -939,12 +961,21 @@ Sales_and_num_work_plot_eq_freq <- ggplot(Num_emp_and_sales_bin, aes(x = Sales_b
 
 Sales_and_num_work_plot_eq_freq
 
+## Save the plot
+ggsave("Output/Sales_and_num_work_plot_eq_freq_Indust.png", width = 8, height = 6)
+
 ```
+
+
 ```{r}
 # Plot
 Sales_and_num_work_plot_eq_freq_cut <- ggplot(Num_emp_and_sales_bin, aes(x = Sales_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales bin (equal frequency bins)", x = "Sales bin", y = "Average number of workers") + ylim(0, 30)
 
 Sales_and_num_work_plot_eq_freq_cut
+
+## Save the plot
+ggsave("Output/Sales_and_num_work_plot_eq_freq_cut_Indust.png", width = 8, height = 6)
+
 ```
 
 
@@ -973,7 +1004,11 @@ KL_and_num_work_plot_raw <- ggplot(Num_emp_and_KL_bin, aes(x = KL_bin, y = Avg_n
 
 KL_and_num_work_plot_raw
 
+## Save the plot
+ggsave("Output/KL_and_num_work_plot_Indust_eq_width.png", width = 8, height = 6)
+
 ```
+
 
 ```{r}
 ### Plot weighted mean of number of workers in each K bin.
@@ -992,6 +1027,9 @@ Num_emp_and_K_bin <- INDUS_2565 %>% group_by(K_bin) %>% summarise(Avg_num_emp = 
 K_and_num_work_plot_raw <- ggplot(Num_emp_and_K_bin, aes(x = K_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each K bin (equal width bins)", x = "K bin", y = "Average number of workers")
 
 K_and_num_work_plot_raw
+
+## Save the plot
+ggsave("Output/K_and_num_work_plot_Indust_eq_width.png", width = 8, height = 6)
 
 ```
 
@@ -1057,6 +1095,10 @@ Num_emp_and_VA_bin <- INDUS_2565 %>% group_by(VA_bin) %>% summarise(Avg_num_emp 
 VA_and_num_work_plot_raw <- ggplot(Num_emp_and_VA_bin, aes(x = VA_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each value-added per worker bin (equal width bins)", x = "Value-added per worker bin", y = "Average number of workers")
 
 VA_and_num_work_plot_raw
+
+## Save the plot
+ggsave("Output/VA_and_num_work_plot_Indust_eq_width.png", width = 8, height = 6)
+
 ```
 
 ```{r}
@@ -1077,6 +1119,10 @@ VA_and_num_work_plot_raw <- ggplot(Num_emp_and_VA_bin, aes(x = VA_bin, y = Avg_n
 
 VA_and_num_work_plot_raw
 
+## Save the plot
+ggsave("Output/VA_and_num_work_plot_eq_freq_Indust.png", width = 8, height = 6)
+
+
 ```
 
 ```{r}
@@ -1095,6 +1141,10 @@ Num_emp_and_Sales_per_emp_bin <- INDUS_2565 %>% group_by(Sales_per_emp_bin) %>% 
 Sales_per_emp_and_num_work_plot_raw <- ggplot(Num_emp_and_Sales_per_emp_bin, aes(x = Sales_per_emp_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales per worker bin (equal width bins)", x = "Sales per worker bin", y = "Average number of workers")
 
 Sales_per_emp_and_num_work_plot_raw
+
+## Save the plot
+ggsave("Output/Sales_per_emp_and_num_work_plot_Indust_eq_width.png", width = 8, height = 6)
+
 ```
 
 ```{r}
@@ -1114,6 +1164,10 @@ Num_emp_and_Sales_per_emp_bin <- INDUS_2565 %>% group_by(Sales_per_emp_bin) %>% 
 Sales_per_emp_and_num_work_plot_eq_freq <- ggplot(Num_emp_and_Sales_per_emp_bin, aes(x = Sales_per_emp_bin, y = Avg_num_emp)) + geom_point() + labs(title = "Mean of number of workers in each sales per worker bin (equal frequency bins)", x = "Sales per worker bin", y = "Average number of workers")
 
 Sales_per_emp_and_num_work_plot_eq_freq
+
+## Save the plot
+ggsave("Output/Sales_per_emp_and_num_work_plot_eq_freq_Indust.png", width = 8, height = 6)
+
 
 ```
 

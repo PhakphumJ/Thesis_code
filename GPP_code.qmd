@@ -21,7 +21,7 @@ library(gt)
 library(kableExtra)
 
 # Set working directory
-setwd("D:/Onedrive-CEU/OneDrive - Central European University/CEU/Thesis/Thesis_code")
+setwd("D:/OneDrive - Central European University/CEU/Thesis/Thesis_code")
 
 # Import the data
 LFS_sec_num <- read_excel("Data/Output/All_YEAR_ALL_AGE_SEC_annual_num_final.xlsx")
@@ -98,6 +98,14 @@ names(LFS_sec_num_wide) <- c("reg", "Year", "Employment_Agriculture", "Employmen
 GPP_Employment <- GPP_data %>% left_join(LFS_sec_num_wide, by = c("Year" = "Year", "Region_New" = "reg"))
 
 ```
+
+### Make national level data
+
+```{r}
+## Sum GPP across regions in each year
+GPP_Employment_nat <- GPP_Employment %>% group_by(Year) %>% summarise(GPP_Agriculture = sum(GPP_Agriculture), GPP_Manufacturing = sum(GPP_Manufacturing), GPP_Service = sum(GPP_Service), Employment_Agriculture = sum(Employment_Agriculture), Employment_Manufacturing = sum(Employment_Manufacturing), Employment_Service = sum(Employment_Service))
+```
+
 
 ### Make agri vs non-agri version of data
 
@@ -176,6 +184,7 @@ GPP_perwk_reg_Ag_NoAg %>% pivot_longer(cols = c(GPP_Agriculture_per_worker, GPP_
 ### Calculate the growth over the 25 years.
 GPP_perwk_reg_Ag_NoAg %>% filter(Year == 1998 | Year == 2022) %>% group_by(Region_New) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2022] - GPP_Agriculture_per_worker[Year == 1998]) / GPP_Agriculture_per_worker[Year == 1998])*100, NonAg_Growth = ((GPP_NonAg_per_worker[Year == 2022] - GPP_NonAg_per_worker[Year == 1998]) / GPP_NonAg_per_worker[Year == 1998])*100) -> GPP_perwk_reg_Ag_NoAg_growth
 
+
 ```
 
 ```{r}
@@ -186,6 +195,138 @@ GPP_perwk_reg_Ag_NoAg %>% mutate(NonAg_Relative = GPP_NonAg_per_worker / GPP_Agr
 ## Drop unnecessary columns
 Relative_Prod_Ag_NoAg <- Relative_Prod_Ag_NoAg %>% select(-GPP_Agriculture_per_worker, -GPP_NonAg_per_worker)
 
+
+```
+
+
+### Do the same of national level data
+
+```{r}
+## Calculate value-added per worker
+GPP_perwk_nat <- GPP_Employment_nat %>% mutate(GPP_Agriculture_per_worker = GPP_Agriculture / Employment_Agriculture, GPP_Manufacturing_per_worker = GPP_Manufacturing/ Employment_Manufacturing, GPP_Service_per_worker = GPP_Service / Employment_Service)
+
+## Keep only the relevant columns
+GPP_perwk_nat <- GPP_perwk_nat %>% select(Year, GPP_Agriculture_per_worker, GPP_Manufacturing_per_worker, GPP_Service_per_worker)
+
+```
+
+
+```{r}
+## Make it long format
+GPP_perwk_nat %>% pivot_longer(cols = c(GPP_Agriculture_per_worker, GPP_Manufacturing_per_worker, GPP_Service_per_worker), names_to = "Sector", values_to = "GPP_per_worker") -> GPP_perwk_nat_long
+
+```
+
+```{r}
+### Calculate the growth over the 25 years.
+GPP_perwk_nat %>% filter(Year == 1998 | Year == 2022) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2022] - GPP_Agriculture_per_worker[Year == 1998]) / GPP_Agriculture_per_worker[Year == 1998])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2022] - GPP_Manufacturing_per_worker[Year == 1998]) / GPP_Manufacturing_per_worker[Year == 1998])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2022] - GPP_Service_per_worker[Year == 1998]) / GPP_Service_per_worker[Year == 1998])*100) -> GPP_perwk_nat_growth
+
+```
+
+```{r}
+### Calculate the relative productivity of each sector to agriculture each year.
+
+GPP_perwk_nat %>% mutate(Manu_Relative = GPP_Manufacturing_per_worker / GPP_Agriculture_per_worker, Serv_Relative = GPP_Service_per_worker / GPP_Agriculture_per_worker) -> Relative_Prod_nat
+
+## Drop unnecessary columns
+Relative_Prod_nat <- Relative_Prod_nat %>% select(-GPP_Agriculture_per_worker, -GPP_Manufacturing_per_worker, -GPP_Service_per_worker)
+
+```
+
+```{r}
+## Calculate relative productivity of non-agriculture to agriculture
+GPP_perwk_nat %>% mutate(NonAg_Relative = (GPP_Manufacturing_per_worker + GPP_Service_per_worker) / GPP_Agriculture_per_worker) -> Relative_Prod_Ag_NoAg_nat
+
+## Drop unnecessary columns
+Relative_Prod_Ag_NoAg_nat <- Relative_Prod_Ag_NoAg_nat %>% select(-GPP_Agriculture_per_worker, -GPP_Manufacturing_per_worker, -GPP_Service_per_worker)
+
+```
+
+
+## Calculated the growth of value-added per worker in each 5-year period.
+
+```{r}
+### Calculate the growth of value-added per worker in each 5-year period.
+## 1998 - 2002
+GPP_perwk_reg %>% filter(Year == 1998 | Year == 2002) %>% group_by(Region_New) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2002] - GPP_Agriculture_per_worker[Year == 1998]) / GPP_Agriculture_per_worker[Year == 1998])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2002] - GPP_Manufacturing_per_worker[Year == 1998]) / GPP_Manufacturing_per_worker[Year == 1998])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2002] - GPP_Service_per_worker[Year == 1998]) / GPP_Service_per_worker[Year == 1998])*100) -> GPP_perwk_reg_growth_1998_2002
+
+# Add time period column
+GPP_perwk_reg_growth_1998_2002$Time_Period <- "1998 - 2002"
+
+## 2003 - 2007
+GPP_perwk_reg %>% filter(Year == 2003 | Year == 2007) %>% group_by(Region_New) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2007] - GPP_Agriculture_per_worker[Year == 2003]) / GPP_Agriculture_per_worker[Year == 2003])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2007] - GPP_Manufacturing_per_worker[Year == 2003]) / GPP_Manufacturing_per_worker[Year == 2003])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2007] - GPP_Service_per_worker[Year == 2003]) / GPP_Service_per_worker[Year == 2003])*100) -> GPP_perwk_reg_growth_2003_2007
+
+# Add time period column
+GPP_perwk_reg_growth_2003_2007$Time_Period <- "2003 - 2007"
+
+## 2008 - 2012
+GPP_perwk_reg %>% filter(Year == 2008 | Year == 2012) %>% group_by(Region_New) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2012] - GPP_Agriculture_per_worker[Year == 2008]) / GPP_Agriculture_per_worker[Year == 2008])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2012] - GPP_Manufacturing_per_worker[Year == 2008]) / GPP_Manufacturing_per_worker[Year == 2008])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2012] - GPP_Service_per_worker[Year == 2008]) / GPP_Service_per_worker[Year == 2008])*100) -> GPP_perwk_reg_growth_2008_2012
+
+# Add time period column
+GPP_perwk_reg_growth_2008_2012$Time_Period <- "2008 - 2012"
+
+## 2013 - 2017
+GPP_perwk_reg %>% filter(Year == 2013 | Year == 2017) %>% group_by(Region_New) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2017] - GPP_Agriculture_per_worker[Year == 2013]) / GPP_Agriculture_per_worker[Year == 2013])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2017] - GPP_Manufacturing_per_worker[Year == 2013]) / GPP_Manufacturing_per_worker[Year == 2013])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2017] - GPP_Service_per_worker[Year == 2013]) / GPP_Service_per_worker[Year == 2013])*100) -> GPP_perwk_reg_growth_2013_2017
+
+# Add time period column
+GPP_perwk_reg_growth_2013_2017$Time_Period <- "2013 - 2017"
+
+## 2018 - 2022
+GPP_perwk_reg %>% filter(Year == 2018 | Year == 2022) %>% group_by(Region_New) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2022] - GPP_Agriculture_per_worker[Year == 2018]) / GPP_Agriculture_per_worker[Year == 2018])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2022] - GPP_Manufacturing_per_worker[Year == 2018]) / GPP_Manufacturing_per_worker[Year == 2018])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2022] - GPP_Service_per_worker[Year == 2018]) / GPP_Service_per_worker[Year == 2018])*100) -> GPP_perwk_reg_growth_2018_2022
+
+# Add time period column
+GPP_perwk_reg_growth_2018_2022$Time_Period <- "2018 - 2022"
+
+```
+
+
+```{r}
+## Combine the growth of value-added per worker in each 5-year period.
+GPP_perwk_reg_growth_1998_2002 %>% bind_rows(GPP_perwk_reg_growth_2003_2007) %>% bind_rows(GPP_perwk_reg_growth_2008_2012) %>% bind_rows(GPP_perwk_reg_growth_2013_2017) %>% bind_rows(GPP_perwk_reg_growth_2018_2022) -> GPP_perwk_reg_growth_5yrs
+
+
+
+```
+
+### Do the same for national level data
+
+```{r}
+### Calculate the growth of value-added per worker in each 5-year period.
+## 1998 - 2002
+GPP_perwk_nat %>% filter(Year == 1998 | Year == 2002) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2002] - GPP_Agriculture_per_worker[Year == 1998]) / GPP_Agriculture_per_worker[Year == 1998])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2002] - GPP_Manufacturing_per_worker[Year == 1998]) / GPP_Manufacturing_per_worker[Year == 1998])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2002] - GPP_Service_per_worker[Year == 1998]) / GPP_Service_per_worker[Year == 1998])*100) -> GPP_perwk_nat_growth_1998_2002
+
+# Add time period column
+GPP_perwk_nat_growth_1998_2002$Time_Period <- "1998 - 2002"
+
+## 2003 - 2007
+GPP_perwk_nat %>% filter(Year == 2003 | Year == 2007) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2007] - GPP_Agriculture_per_worker[Year == 2003]) / GPP_Agriculture_per_worker[Year == 2003])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2007] - GPP_Manufacturing_per_worker[Year == 2003]) / GPP_Manufacturing_per_worker[Year == 2003])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2007] - GPP_Service_per_worker[Year == 2003]) / GPP_Service_per_worker[Year == 2003])*100) -> GPP_perwk_nat_growth_2003_2007
+
+# Add time period column
+GPP_perwk_nat_growth_2003_2007$Time_Period <- "2003 - 2007"
+
+## 2008 - 2012
+GPP_perwk_nat %>% filter(Year == 2008 | Year == 2012) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2012] - GPP_Agriculture_per_worker[Year == 2008]) / GPP_Agriculture_per_worker[Year == 2008])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2012] - GPP_Manufacturing_per_worker[Year == 2008]) / GPP_Manufacturing_per_worker[Year == 2008])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2012] - GPP_Service_per_worker[Year == 2008]) / GPP_Service_per_worker[Year == 2008])*100) -> GPP_perwk_nat_growth_2008_2012
+
+# Add time period column
+GPP_perwk_nat_growth_2008_2012$Time_Period <- "2008 - 2012"
+
+## 2013 - 2017
+GPP_perwk_nat %>% filter(Year == 2013 | Year == 2017) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2017] - GPP_Agriculture_per_worker[Year == 2013]) / GPP_Agriculture_per_worker[Year == 2013])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2017] - GPP_Manufacturing_per_worker[Year == 2013]) / GPP_Manufacturing_per_worker[Year == 2013])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2017] - GPP_Service_per_worker[Year == 2013]) / GPP_Service_per_worker[Year == 2013])*100) -> GPP_perwk_nat_growth_2013_2017
+
+# Add time period column
+GPP_perwk_nat_growth_2013_2017$Time_Period <- "2013 - 2017"
+
+## 2018 - 2022
+GPP_perwk_nat %>% filter(Year == 2018 | Year == 2022) %>% summarise(Agri_Growth = ((GPP_Agriculture_per_worker[Year == 2022] - GPP_Agriculture_per_worker[Year == 2018]) / GPP_Agriculture_per_worker[Year == 2018])*100, Manu_Growth = ((GPP_Manufacturing_per_worker[Year == 2022] - GPP_Manufacturing_per_worker[Year == 2018]) / GPP_Manufacturing_per_worker[Year == 2018])*100, Serv_Growth = ((GPP_Service_per_worker[Year == 2022] - GPP_Service_per_worker[Year == 2018]) / GPP_Service_per_worker[Year == 2018])*100) -> GPP_perwk_nat_growth_2018_2022
+
+# Add time period column
+GPP_perwk_nat_growth_2018_2022$Time_Period <- "2018 - 2022"
+
+```
+
+```{r}
+## Combine the growth of value-added per worker in each 5-year period.
+GPP_perwk_nat_growth_1998_2002 %>% bind_rows(GPP_perwk_nat_growth_2003_2007) %>% bind_rows(GPP_perwk_nat_growth_2008_2012) %>% bind_rows(GPP_perwk_nat_growth_2013_2017) %>% bind_rows(GPP_perwk_nat_growth_2018_2022) -> GPP_perwk_nat_growth_5yrs
 
 ```
 
@@ -245,6 +386,26 @@ ggsave("Output/Relative_Prod_Ag_NoAg.png", width = 10, height = 6 , bg = "white"
 
 ```
 
+## Make national level plots
+### Relative productivity of manufacturing and service to agriculture
+
+
+```{r}
+## Plot the relative productivity of each sector.
+Relative_Prod_nat %>% pivot_longer(cols = c(Manu_Relative, Serv_Relative), names_to = "Sector", values_to = "Relative") %>% ggplot(aes(x = Year, y = Relative, color = Sector)) + geom_line() + theme_minimal() + labs(title = "Relative productivity of each sector to agriculture", x = "Year", y = "Relative productivity") + theme(legend.position = "bottom") + scale_x_continuous(breaks = seq(1998, 2022, 5)) + scale_y_continuous(labels = scales::comma, breaks = seq(0, 24, 4), limits = c(0, 24)) + scale_color_discrete(name = "Sector", labels = c("Manufacturing", "Service"))
+```
+
+
+### Relative productivity of non-agriculture to agriculture
+
+```{r}
+## Plot the relative productivity of non-agriculture to agriculture.
+Relative_Prod_Ag_NoAg_nat %>% ggplot(aes(x = Year, y = NonAg_Relative)) + geom_line() + theme_minimal() + labs(title = "Relative productivity of non-agriculture to agriculture", x = "Year", y = "Relative productivity") + theme(legend.position = "bottom") + scale_x_continuous(breaks = seq(1998, 2022, 5)) + scale_y_continuous(labels = scales::comma, limits = c(0, 20), breaks = seq(0, 20, 4))
+
+
+```
+
+
 ## Make nice table
 
 ```{r}
@@ -261,6 +422,8 @@ GPP_perwk_reg_growth %>% gt() %>% cols_label(Region_New = "Region", Agri_Growth 
 
 ## Save the table
 gtsave(GPP_perwk_reg_growth_table, "Output/GPP_perwk_reg_growth_table.html")
+
+GPP_perwk_reg_growth_table
 
 ```
 
@@ -281,6 +444,8 @@ GPP_perwk_reg_Ag_NoAg_growth %>% gt() %>% cols_label(Region_New = "Region", Agri
 
 ## Save the table
 gtsave(GPP_perwk_reg_Ag_NoAg_growth_table, "Output/GPP_perwk_reg_Ag_NoAg_growth_table.html")
+
+GPP_perwk_reg_Ag_NoAg_growth_table
 
 ```
 

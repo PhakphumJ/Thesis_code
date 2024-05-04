@@ -12,7 +12,7 @@ g_z_m = 0.05;
 % Human capital parameters
 H_bar_0 = 1;
 g_H_bar = 0.05;
-SD = 1.5;
+Nu = 0.7;
 
 % Utility parameters
 Beta = 0.98;
@@ -23,7 +23,7 @@ g_P = 0.01;
 
 
 N = 30;
-%% Create Exogeneous Variables (Z, p, H_bar)
+%% Create Exogeneous Variables (Z, p, H_bar, SD)
 Z_a = [];
 Z_a = [Z_a; Z_a_0];
 for t = 1:N-1
@@ -58,6 +58,10 @@ for t = 1:N-1
     H_bar = [H_bar; H_bar_t_plus1];
 end
 
+
+SD_vec = H_bar*Nu;
+
+
 T = 5; %Land
 %% Solve the model for each t
 % Description: % L_a -> x(1), Y_a -> x(2), Y_m -> x(3), W_a -> x(4), 
@@ -73,6 +77,7 @@ for t = 1:N
     Z_mt = Z_m(t);
     Hbar_t = H_bar(t);
     P_t = P(t);
+    SD = SD_vec(t);
 
     % Find the equilibrium
     x_star = fsolve(@(x)Model1_Function(x, Z_at, Z_mt, alpha, Hbar_t, SD, P_t, T), x0);

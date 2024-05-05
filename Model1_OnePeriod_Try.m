@@ -19,7 +19,7 @@ P_t = 5;
 
 %% Try out the function
 % Description: % L_a -> x(1), W_a -> x(2), W_m -> x(3)
-x0 = [0.5; 20; 2];
+x0 = [0.5; 20; 2; 1.2; 2];
 
 x_star = fsolve(@(x)Model1_Function(x, Z_at, Z_mt, alpha, Hbar_t, SD, P_t, T), x0);
 

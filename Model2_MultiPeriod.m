@@ -3,24 +3,24 @@ cd 'D:\OneDrive - Central European University\CEU\Thesis\Thesis_code'
 clear
 %% Declare parameters values
 % Production parameters
-Z_l_0 = 5;
-Z_t_0 = 5;
-Z_m_0 = 20;
-Gamma = 0.7;
+Z_l_0 = 30;
+Z_t_0 = 10;
+Z_m_0 = 100;
+Gamma = 0.5;
 Mu = 0.5;
 
-g_z_l = 0.03;
-g_z_t = 0.01;
+g_z_l = 0.04;
+g_z_t = 0.03;
 g_z_m = 0.02;
 
 % Human capital parameters
 H_bar_0 = 0.1;
-g_H_bar = 0.08;
+g_H_bar = 0.1;
 SD = 1;
 
 % Price
-P_0 = 1;
-g_P = 0.02;
+P_0 = 2;
+g_P = 0.01;
 
 
 N = 30;
@@ -68,11 +68,11 @@ for t = 1:N-1
 end
 
 
-T = 5; %Land
+T = 10; %Land
 %% Solve the model for each t
 % Description: L_a -> x(1), W_a -> x(2), W_m -> x(3)
 
-x0 = [0.5; 2; 10]; % Just a starting point for fsolve.
+x0 = [0.5; 20; 2]; % Just a starting point for fsolve.
 
 endo_mat = zeros(N,3); % To store results from all t.
 Real_world_W_m_vec = zeros(N,1); %To store results from all t.

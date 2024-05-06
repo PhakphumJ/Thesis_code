@@ -3,10 +3,10 @@ cd 'D:\OneDrive - Central European University\CEU\Thesis\Thesis_code'
 clear
 %% Declare parameters values
 % Production parameters
-Z_l_0 = 30;
+Z_l_0 = 10;
 Z_t_0 = 10;
-Z_m_0 = 100;
-Gamma = 0.5;
+Z_m_0 = 80;
+Gamma = 0.1;
 Mu = 0.5;
 
 g_z_l = 0.04;

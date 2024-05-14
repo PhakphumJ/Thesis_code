@@ -48,13 +48,13 @@ SD_list = linspace(2,400,200);
 L_a0 = 0.5;
 L_a1 = 0.3;
 
-W_a_0_to_W_m_rw_0 = 0.3;
-W_a_1_to_W_m_rw_1 = 0.5;
+W_a_0_to_W_m_rw_0 = 0.5;
+W_a_1_to_W_m_rw_1 = 0.4;
 
 Y_a_0_to_Y_0 = 0.15;
 Y_a_1_to_Y_1 = 0.10;
 
-Actual_MM = [L_a0, L_a1, W_a_0_to_W_m_rw_0; W_a_1_to_W_m_rw_1, Y_a_0_to_Y_0, Y_a_1_to_Y_1];
+Actual_MM = [L_a0, W_a_0_to_W_m_rw_0, Y_a_0_to_Y_0; L_a1, W_a_1_to_W_m_rw_1, Y_a_1_to_Y_1];
 
 %% Do random serch.
 % Draw random combination of parameters. Do it 3,000 times.
@@ -120,7 +120,14 @@ while i <= n
         % Store in the matrix.
         soln_mat(t,:) = [L_a_sim, W_a_to_W_m_rw_sim, Y_a_to_Y_sim];
     end
-        %
+        % Calculate Loss (percentage difference squared)
+        Loss_mat = ((soln_mat - Actual_MM)./Actual_MM).^2;
+
+        % Summarize by using average (give equal weight to each moment)
+        avg_loss = mean(Loss_mat,"all");
+
+        % Store the loss.
+        Search_results_Mat(i,5) = avg_loss;
 
     i = i+1;
 end

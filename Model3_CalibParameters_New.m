@@ -28,7 +28,7 @@ Z_l_series = [Z_l_0, Z_l_0*(1+ g_z_l)];
 
 
 %% Set-up the grid of parameters for searching
-% Z_m_0, H_bar_0, H_bar_0
+% Z_m_0, Z_t_0, H_bar_0
 % g_z_m, g_z_t, g_H_bar
 
 Z_m_0_list = logspace(log10(0.1), log10(4), 75);
@@ -38,12 +38,12 @@ Z_t_0_list = logspace(log10(0.01), log10(3), 60);
 g_z_t_list = linspace(0.2,1.2,51);
 
 H_bar_0_list = logspace(log10(0.1), log10(100), 200);
-g_H_bar_list = linspace(0.2,1.2,51);
+g_H_bar_list = linspace(0.2,1.5,66);
 
 %% Declare target moments
 
-L_a0 = 0.5288;
-L_a1 = 0.3021;
+L_a0 = 0.5825;
+L_a1 = 0.3039;
 
 W_a_0_to_W_m_rw_0 = 0.5;
 W_a_1_to_W_m_rw_1 = 0.4178;
@@ -197,3 +197,99 @@ for t = 1:2
     % Store in the matrix.
     soln_mat_calibrated(t,:) = [L_a_sim, W_a_to_W_m_rw_sim, Y_a_to_Y_sim];
 end
+
+%% Counterfactual analysis (change g_z_l, and g_H_bar)
+% Case 1: Only increase g_H_bar
+% Case 2: Only increse g_z_l
+% Case 3: Increase both
+
+new_g_z_l = g_z_l*1.20;
+new_g_H_bar = Best_g_H_bar*1.20;
+
+% Only need to solve for the last period.
+% Create exogenous variables (Z_l_1, Z_t_1, Z_m_1, H_bar_1, P_1, T_1)
+
+new_Z_l_1 = Z_l_0*(1 + new_g_z_l);
+old_Z_l_1 = Z_l_0*(1 + g_z_l);
+Z_t_1 = Z_t_series(2);
+Z_m_1 = Z_m_series(2);
+new_H_bar_1 = Best_H_bar_0*(1 + new_g_H_bar);
+old_H_bar_1 = Best_H_bar_0*(1 + Best_g_H_bar);
+P_1 = P_series(2);
+T_1 = T_series(2);
+
+% Solve the model for the counterfactual parameters.
+% Find the equilibrium
+%% Case 1 (change only g_H_bar)
+x_star_counter_case1 = fsolve(@(x)Final_Model_Function(x, old_Z_l_1, Z_t_1, Z_m_1, Mu, new_H_bar_1, SD, P_1, T_1), x0);
+
+% Calculate W_m * avg h in sector m
+h_in_m = (new_H_bar_1 +  ...
+SD*pdf('Normal', ((x_star_counter_case1(2)/x_star_counter_case1(3)) - new_H_bar_1)/SD, 0, 1)/(1- cdf('Normal', ((x_star_counter_case1(2)/x_star_counter_case1(3)) - new_H_bar_1)/SD, 0, 1)));
+
+Real_world_W_m = x_star_counter_case1(3)*h_in_m;
+
+% Calculate Y_a_t, Y_m_t
+Y_a_t = ((old_Z_l_1*x_star_counter_case1(1))^((Mu-1)/Mu) + (Z_t_1*T_1)^((Mu-1)/Mu))...
+^(Mu/(Mu - 1));
+Y_m_t = Z_m_1 * h_in_m;
+
+% Calculate the simulated moments
+L_a_sim = x_star_counter_case1(1);
+W_a_to_W_m_rw_sim = x_star_counter_case1(2)/Real_world_W_m;
+Y_a_to_Y_sim = Y_a_t/(Y_a_t + Y_m_t);
+
+% Store in the matrix.
+soln_mat_counter_1 = [L_a_sim, W_a_to_W_m_rw_sim, Y_a_to_Y_sim];
+
+%% Case 2 (change only g_z_l)
+x_star_counter_case2 = fsolve(@(x)Final_Model_Function(x, new_Z_l_1, Z_t_1, Z_m_1, Mu, old_H_bar_1, SD, P_1, T_1), x0);
+
+% Calculate W_m * avg h in sector m
+h_in_m = (old_H_bar_1 +  ...
+SD*pdf('Normal', ((x_star_counter_case2(2)/x_star_counter_case2(3)) - old_H_bar_1)/SD, 0, 1)/(1- cdf('Normal', ((x_star_counter_case2(2)/x_star_counter_case2(3)) - old_H_bar_1)/SD, 0, 1)));
+
+Real_world_W_m = x_star_counter_case2(3)*h_in_m;
+
+% Calculate Y_a_t, Y_m_t
+Y_a_t = ((new_Z_l_1*x_star_counter_case2(1))^((Mu-1)/Mu) + (Z_t_1*T_1)^((Mu-1)/Mu))...
+^(Mu/(Mu - 1));
+Y_m_t = Z_m_1 * h_in_m;
+
+% Calculate the simulated moments
+L_a_sim = x_star_counter_case2(1);
+W_a_to_W_m_rw_sim = x_star_counter_case2(2)/Real_world_W_m;
+Y_a_to_Y_sim = Y_a_t/(Y_a_t + Y_m_t);
+
+% Store in the matrix.
+soln_mat_counter_2 = [L_a_sim, W_a_to_W_m_rw_sim, Y_a_to_Y_sim];
+
+%% Case 3 (change both of the two growth rates)
+x_star_counter_case3 = fsolve(@(x)Final_Model_Function(x, new_Z_l_1, Z_t_1, Z_m_1, Mu, new_H_bar_1, SD, P_1, T_1), x0);
+
+% Calculate W_m * avg h in sector m
+h_in_m = (new_H_bar_1 +  ...
+SD*pdf('Normal', ((x_star_counter_case3(2)/x_star_counter_case3(3)) - new_H_bar_1)/SD, 0, 1)/(1- cdf('Normal', ((x_star_counter_case3(2)/x_star_counter_case3(3)) - new_H_bar_1)/SD, 0, 1)));
+
+Real_world_W_m = x_star_counter_case3(3)*h_in_m;
+
+% Calculate Y_a_t, Y_m_t
+Y_a_t = ((new_Z_l_1*x_star_counter_case3(1))^((Mu-1)/Mu) + (Z_t_1*T_1)^((Mu-1)/Mu))...
+^(Mu/(Mu - 1));
+Y_m_t = Z_m_1 * h_in_m;
+
+% Calculate the simulated moments
+L_a_sim = x_star_counter_case3(1);
+W_a_to_W_m_rw_sim = x_star_counter_case3(2)/Real_world_W_m;
+Y_a_to_Y_sim = Y_a_t/(Y_a_t + Y_m_t);
+
+% Store in the matrix.
+soln_mat_counter_3 = [L_a_sim, W_a_to_W_m_rw_sim, Y_a_to_Y_sim];
+
+%% Compile the results (Actual data, Baseline, Counter Factual Case 1, 2, and 3)
+
+Compiled_results_mat = [Actual_MM(2,:); soln_mat_calibrated(2,:); soln_mat_counter_1; soln_mat_counter_2; soln_mat_counter_3];
+
+Compiled_results_tab = array2table(Compiled_results_mat, "VariableNames", {'Agricultural Employment Share', 'Relative Wages', 'Agricultural Value-added Share'});
+
+Compiled_results_tab.Properties.RowNames = {'Data', 'Baseline', 'Increased growth rate of H_bar', 'Increased growth rate of Z_l', 'Incresed growth rates of H_bar and Z_l'};

@@ -11,6 +11,11 @@ function loss = objective_function(params, P_series, T_series, target_vec)
     H_bar_0 = params(6);
     SD = params(7);
 
+    global Z_m_0
+    global Mu
+    global g_H_bar
+    global Weight
+
     % Create exogenous variables (Z_mt, Z_lt, Z_tt, H_bar)
     Z_m_series = [Z_m_0, Z_m_0 * (1+g_z_m)];
     Z_l_series = [Z_l_0, Z_l_0 * (1+g_z_l)];
@@ -36,35 +41,38 @@ function loss = objective_function(params, P_series, T_series, target_vec)
 
         % Choose a reasonable starting point of endo var.
         x0 = [0.5; Z_lt; Z_mt];
+
+        try
         
-        % Find the equilibrium
-        x_star = fsolve(@(x)Final_Model_Function(x, Z_lt, Z_tt, Z_mt, Mu, Hbar_t, SD, P_t, T_t), x0);
-
-        % Calculate W_m * avg h in sector m
-        h_in_m = (Hbar_t +  ...
-        SD*pdf('Normal', ((x_star(2)/x_star(3)) - Hbar_t)/SD, 0, 1)/(1- cdf('Normal', ((x_star(2)/x_star(3)) - Hbar_t)/SD, 0, 1)));
-
-        Real_world_W_m = x_star(3)*h_in_m;
-
-        % Calculate Y_a_t, Y_m_t
-        Y_a_t = ((Z_lt*x_star(1))^((Mu-1)/Mu) + (Z_tt*T_t)^((Mu-1)/Mu))...
-        ^(Mu/(Mu - 1));
-        Y_m_t = Z_mt * h_in_m;
-
-        % Calculate the simulated moments
-        L_a_sim = x_star(1);
-        W_a_to_W_m_rw_sim = x_star(2)/Real_world_W_m;
-        Agri_VA_Share_sim = (P_t * Y_a_t)/(P_t * Y_a_t + Y_m_t);
-
-        % Calculate the norminal gdp
-        gdp_sim = P_t * Y_a_t + Y_m_t;
-
-        % Store in the matrix.
-        soln_mat(t,:) = [L_a_sim, W_a_to_W_m_rw_sim, Agri_VA_Share_sim];
-        gdp_mat(t) = gdp_sim;
+            % Find the equilibrium
+            x_star = fsolve(@(x)Final_Model_Function(x, Z_lt, Z_tt, Z_mt, Mu, Hbar_t, SD, P_t, T_t), x0);
+        
+            % Calculate W_m * avg h in sector m
+            h_in_m = (Hbar_t +  ...
+            SD*pdf('Normal', ((x_star(2)/x_star(3)) - Hbar_t)/SD, 0, 1)/(1- cdf('Normal', ((x_star(2)/x_star(3)) - Hbar_t)/SD, 0, 1)));
+        
+            Real_world_W_m = x_star(3)*h_in_m;
+        
+            % Calculate Y_a_t, Y_m_t
+            Y_a_t = ((Z_lt*x_star(1))^((Mu-1)/Mu) + (Z_tt*T_t)^((Mu-1)/Mu))...
+            ^(Mu/(Mu - 1));
+            Y_m_t = Z_mt * h_in_m;
+        
+            % Calculate the simulated moments
+            L_a_sim = x_star(1);
+            W_a_to_W_m_rw_sim = x_star(2)/Real_world_W_m;
+            Agri_VA_Share_sim = (P_t * Y_a_t)/(P_t * Y_a_t + Y_m_t);
+        
+            % Calculate the norminal gdp
+            gdp_sim = P_t * Y_a_t + Y_m_t;
+        
+            % Store in the matrix.
+            soln_mat(t,:) = [L_a_sim, W_a_to_W_m_rw_sim, Agri_VA_Share_sim];
+            gdp_mat(t) = gdp_sim;
+        end
     end
     % Convert to 1*6 matrix.
-    soln_mat = reshape(soln_mat, [1,6]);
+    soln_mat = reshape(soln_mat', [1,6]);
 
     % Calculate and store the last moment (ratio b/w gdp of the 2 years)
     GDP2022toGDPto1993_sim = gdp_mat(2)/gdp_mat(1);

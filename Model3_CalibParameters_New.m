@@ -11,15 +11,15 @@ Z_m_0 = 1; % Normalized to 1
 
 Mu = 0.5;
 
-g_H_bar = 0.8166; %(growth of mean years of schooling)
+g_H_bar =  0.4608; %(growth of mean years of schooling)
 
 
 %% Exogenous variables 
 % Land series
-T_series = [6.8763, 5.9502];
+T_series = [6.8489, 5.9502];
 
 % Price series
-P_series = [0.9082,  1.4156];
+P_series = [0.9247,  1.4156];
 
 
 %% Set-up the grid of parameters for searching (7 parameters)
@@ -39,16 +39,16 @@ SD_list = logspace(log10(0.05), log10(15), 175);
 
 %% Declare target moments
 
-L_a0 = 0.5825;
+L_a0 = 0.4239;
 L_a1 = 0.3039;
 
-W_a_0_to_W_m_rw_0 = 0.4517;
+W_a_0_to_W_m_rw_0 = 0.3167;
 W_a_1_to_W_m_rw_1 = 0.4178;
 
-Agri_VA_Share_0 = 0.0804;
+Agri_VA_Share_0 = 0.0860;
 Agri_VA_Share_1 = 0.0872;
 
-GDP2022toGDPto1993 = 4.17;
+GDP2022toGDPto1993 = 2.6667;
 
 Actual_MM = [L_a0, W_a_0_to_W_m_rw_0, Agri_VA_Share_0, L_a1, W_a_1_to_W_m_rw_1, Agri_VA_Share_1, GDP2022toGDPto1993];
 

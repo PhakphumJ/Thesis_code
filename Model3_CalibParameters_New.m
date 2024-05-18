@@ -16,8 +16,7 @@ g_H_bar =  0.4608; %(growth of mean years of schooling)
 
 %% Exogenous variables 
 % Land series
-T_series = [6.8489, 5.9502];
-
+T_series = [6848, 5991];
 % Price series
 P_series = [1,  1.5309];
 
@@ -30,7 +29,7 @@ Z_l_0_list = linspace(0.2,1.2,56);
 g_z_l_list = linspace(0.8,1.9,56);
 
 Z_t_0_list = linspace(1.5,6,226);
-g_z_t_list = linspace(0.8,3.9,156);
+g_z_t_list = linspace(0.8,2.8,101);
 
 g_z_m_list = linspace(0.8,1.9,56);
 
@@ -58,7 +57,7 @@ Weight = [1.5, 1.25, 1.5, 1.5, 1.25, 1.5, 1.5];
 %% Do random serch.
 % Draw random combination of parameters. Do it 100,000 times. 
 % There are 16,022,476,166,400 possible combination of parameter values. 
-n = 100000; %(5,000 for now)
+n = 5000; %(5,000 for now)
 
 % set seed
 rng(2024);

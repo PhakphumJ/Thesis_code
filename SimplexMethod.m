@@ -18,10 +18,10 @@ g_H_bar =  0.4608; %(growth of mean years of schooling)
 
 %% Exogenous variables 
 % Land series
-T_series = [6.8489, 5.9502];
+T_series = [6848, 5991];
 
 % Price series
-P_series = [0.9247,  1.4156];
+P_series = [1,  1.5309];
 
 %% Declare target moments
 
@@ -40,24 +40,27 @@ Actual_MM = [L_a0, W_a_0_to_W_m_rw_0, Agri_VA_Share_0, L_a1, W_a_1_to_W_m_rw_1, 
 
 %% Weight Matrix. Give less weight to relative wage since it is less reliable and not the main focus.
 global Weight
-Weight = [1, 1, 1, 1, 1, 1, 1];
+Weight = [1.6, 1, 1.6, 1.6, 1, 1.6, 1.6];
 
 
 %% Optimize the parameters
 % Initial guess for the parameters
 
-initial_params = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5];
+initial_params = [0.5, 1, 1, 0.5, 1, 0.5, 0.5];
 
 % Define lower and upper bounds for the parameters
-lb = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
-ub = [10, 10, 10, 10, 10, 100, 100];  
+lb = [0.3, 0.3, 0.3, 0.3, 0.3, 0.5, 0.25];
+ub = [3, 3, 3, 3, 3, 8, 12];  
 
 % use simplex method to select the parameters.
-optimized_params = fminsearchbnd(@(params) objective_function(params, P_series, T_series, Actual_MM), initial_params, lb, ub);
+[optimized_params, fval] = fminsearchbnd(@(params) objective_function(params, P_series, T_series, Actual_MM), initial_params, lb, ub);
 
 % Display the optimized parameters
 disp('Optimized Parameters:');
 disp(optimized_params);
+
+% Make it into a nice table
+Best_para_tab = array2table(optimized_params, "VariableNames", {'Z_l_0'; 'g_z_l'; 'g_z_m'; 'Z_t_0'; 'g_z_t'; 'H_bar_0'; 'SD'});
 
 %% Try out the obtained parameters.
 
@@ -128,3 +131,70 @@ soln_mat = reshape(soln_mat', [1,6]);
 GDP2022toGDPto1993_sim = gdp_mat(2)/gdp_mat(1);
 
 soln_mat_calibrated = [soln_mat, GDP2022toGDPto1993_sim];
+
+%% Couter factual analysis 
+% (increase the growth rate of g_z_l by : [10%, 15%, 20%, 25%]
+% (increase the growth rate of g_H_bar by : [10%, 15%, 20%, 25%]
+% Hence 5 * 5 cases.
+
+% Specify the counter factual growth rate of g_z_l and g_H_bar
+
+Base_g_z_l = Best_g_z_l;
+g_z_l_list = [Base_g_z_l, Base_g_z_l*1.1, Base_g_z_l*1.15, Base_g_z_l*1.2, Base_g_z_l*1.25];
+
+Base_g_H_bar = g_H_bar;
+g_H_bar_list = [Base_g_H_bar, Base_g_H_bar*1.1, Base_g_H_bar*1.15, Base_g_H_bar*1.2, Base_g_H_bar*1.25];
+
+
+% Matrix to store the results. Only solve for the last period.
+Counter_results_mat_LA = zeros(5,5);
+Counter_results_mat_VA = zeros(5,5);
+Counter_results_mat_GDP = zeros(5,5);
+
+for i = 1:5
+    for j = 1:5
+       g_zl = g_z_l_list(i);
+       g_Hbar =  g_H_bar_list(j);
+
+       % Create the exogenous
+       Hbar_t = Best_H_bar_0*(1+g_Hbar);
+       Z_lt = Best_Z_l_0*(1+g_zl);
+
+       Z_tt = Z_t_series(2);
+       Z_mt = Z_m_series(2);
+       P_t = P_series(2);
+       T_t = T_series(2);
+
+       % Solve the model.
+       % Choose a reasonable starting point
+        x0 = [0.5; Z_lt; Z_mt];
+
+        % Find the equilibrium
+        x_star = fsolve(@(x)Final_Model_Function(x, Z_lt, Z_tt, Z_mt, Mu, Hbar_t, Best_SD, P_t, T_t), x0);
+
+        % Calculate W_m * avg h in sector m
+        h_in_m = (Hbar_t +  ...
+        Best_SD*pdf('Normal', ((x_star(2)/x_star(3)) - Hbar_t)/Best_SD, 0, 1)/(1- cdf('Normal', ((x_star(2)/x_star(3)) - Hbar_t)/Best_SD, 0, 1)));
+
+        Real_world_W_m = x_star(3)*h_in_m;
+
+        % Calculate Y_a_t, Y_m_t
+        Y_a_t = ((Z_lt*x_star(1))^((Mu-1)/Mu) + (Z_tt*T_t)^((Mu-1)/Mu))...
+        ^(Mu/(Mu - 1));
+        Y_m_t = Z_mt * h_in_m;
+
+        % Calculate the simulated moments
+        L_a_sim = x_star(1);
+        Agri_VA_Share_sim = P_t * Y_a_t/(P_t * Y_a_t + Y_m_t);
+
+        % Calculate the norminal gdp
+        gdp_sim = P_t * Y_a_t + Y_m_t;
+
+        % Store in the matrix.
+        Counter_results_mat_LA(i,j) = L_a_sim;
+        Counter_results_mat_VA(i,j) = Agri_VA_Share_sim;
+        Counter_results_mat_GDP(i,j) = gdp_sim;
+    end
+end
+
+

@@ -11,7 +11,7 @@ global Z_m_0
 Z_m_0 = 1; % Normalized to 1 
 
 global Mu
-Mu = 0.5;
+Mu = 0.7;
 
 global g_H_bar
 g_H_bar =  0.4608; %(growth of mean years of schooling)
@@ -46,11 +46,11 @@ Weight = [1.6, 1, 1.6, 1.6, 1, 1.6, 1.6];
 %% Optimize the parameters
 % Initial guess for the parameters
 
-initial_params = [0.5, 1, 1, 0.5, 1, 0.5, 0.5];
+initial_params = [0.1, 1, 1, 0.1, 1, 0.5, 0.5];
 
 % Define lower and upper bounds for the parameters
-lb = [0.3, 0.3, 0.3, 0.3, 0.3, 0.5, 0.25];
-ub = [3, 3, 3, 3, 3, 8, 12];  
+lb = [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05];
+ub = [1, 5, 5, 5, 1, 10, 15];  
 
 % use simplex method to select the parameters.
 [optimized_params, fval] = fminsearchbnd(@(params) objective_function(params, P_series, T_series, Actual_MM), initial_params, lb, ub);
@@ -133,17 +133,18 @@ GDP2022toGDPto1993_sim = gdp_mat(2)/gdp_mat(1);
 soln_mat_calibrated = [soln_mat, GDP2022toGDPto1993_sim];
 
 %% Couter factual analysis 
-% (increase the growth rate of g_z_l by : [10%, 15%, 20%, 25%]
-% (increase the growth rate of g_H_bar by : [10%, 15%, 20%, 25%]
+% (increase z_l by : [5%, 10%, 15%, 20%]
+% (increase H_bar by : [5%, 10%, 15%, 20%]
 % Hence 5 * 5 cases.
 
-% Specify the counter factual growth rate of g_z_l and g_H_bar
+% Specify the counter factual parameters.
 
-Base_g_z_l = Best_g_z_l;
-g_z_l_list = [Base_g_z_l, Base_g_z_l*1.1, Base_g_z_l*1.15, Base_g_z_l*1.2, Base_g_z_l*1.25];
+Base_Z_l_1 = Z_l_series(2);
+Base_H_bar_1 = H_bar_series(2);
 
-Base_g_H_bar = g_H_bar;
-g_H_bar_list = [Base_g_H_bar, Base_g_H_bar*1.1, Base_g_H_bar*1.15, Base_g_H_bar*1.2, Base_g_H_bar*1.25];
+Z_l_list = [Base_Z_l_1, Base_Z_l_1*1.05, Base_Z_l_1*1.1, Base_Z_l_1*1.15, Base_Z_l_1*1.20];
+
+H_bar_list = [Base_H_bar_1, Base_H_bar_1*1.05, Base_H_bar_1*1., Base_H_bar_1*1.15, Base_H_bar_1*1.20];
 
 
 % Matrix to store the results. Only solve for the last period.
@@ -153,13 +154,11 @@ Counter_results_mat_GDP = zeros(5,5);
 
 for i = 1:5
     for j = 1:5
-       g_zl = g_z_l_list(i);
-       g_Hbar =  g_H_bar_list(j);
+       Z_lt = Z_l_list(i);
+       Hbar_t = H_bar_list(j);
+
 
        % Create the exogenous
-       Hbar_t = Best_H_bar_0*(1+g_Hbar);
-       Z_lt = Best_Z_l_0*(1+g_zl);
-
        Z_tt = Z_t_series(2);
        Z_mt = Z_m_series(2);
        P_t = P_series(2);
@@ -197,4 +196,7 @@ for i = 1:5
     end
 end
 
+% Create Change in GDP mat.
+BaselineGDP_mat = ones(1,1).*Counter_results_mat_GDP(1,1);
+Change_GDP_mat = (Counter_results_mat_GDP - BaselineGDP_mat)*100./BaselineGDP_mat;
 

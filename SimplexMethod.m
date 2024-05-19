@@ -11,7 +11,7 @@ global Z_m_0
 Z_m_0 = 1; % Normalized to 1 
 
 global Mu
-Mu = 0.7;
+Mu = 0.5;
 
 global g_H_bar
 g_H_bar =  0.4608; %(growth of mean years of schooling)
@@ -46,11 +46,11 @@ Weight = [1.6, 1, 1.6, 1.6, 1, 1.6, 1.6];
 %% Optimize the parameters
 % Initial guess for the parameters
 
-initial_params = [0.1, 1, 1, 0.1, 1, 0.5, 0.5];
+initial_params = [0.1, 1, 1, 1, 1, 0.5, 0.5];
 
 % Define lower and upper bounds for the parameters
 lb = [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05];
-ub = [1, 5, 5, 5, 1, 10, 15];  
+ub = [2, 7, 7, 2, 7, 10, 15];  
 
 % use simplex method to select the parameters.
 [optimized_params, fval] = fminsearchbnd(@(params) objective_function(params, P_series, T_series, Actual_MM), initial_params, lb, ub);
@@ -60,7 +60,13 @@ disp('Optimized Parameters:');
 disp(optimized_params);
 
 % Make it into a nice table
-Best_para_tab = array2table(optimized_params, "VariableNames", {'Z_l_0'; 'g_z_l'; 'g_z_m'; 'Z_t_0'; 'g_z_t'; 'H_bar_0'; 'SD'});
+Best_para_tab = array2table(optimized_params', "RowNames", {'Z_l_2001'; 'g_Z_l'; 'g_Z_m'; 'Z_T_2001'; 'g_Z_T'; 'H_bar_2001'; 'Sigma'});
+new_order = [1,2,4,5,3,6,7];
+Best_para_tab = Best_para_tab(new_order,:);
+Best_para_tab.Properties.VariableNames = {'Values'};
+
+% Export to CSV
+writetable(Best_para_tab,'Calibrated_Parameters.csv', 'WriteRowNames',true);
 
 %% Try out the obtained parameters.
 
@@ -132,7 +138,21 @@ GDP2022toGDPto1993_sim = gdp_mat(2)/gdp_mat(1);
 
 soln_mat_calibrated = [soln_mat, GDP2022toGDPto1993_sim];
 
-%% Couter factual analysis 
+% Calculate land share.
+condition = (Z_tt*T_t)^((Mu-1)/Mu)/((Z_lt*x_star(1))^((Mu-1)/Mu) + (Z_tt*T_t)^((Mu-1)/Mu));
+
+% Compile into a table (Actual and Simulated)
+Target_compare_tab = array2table([Actual_MM ; soln_mat_calibrated]', "VariableNames", {'Actual', 'Simulated'});
+
+% Add row names
+Target_compare_tab.Properties.RowNames = {'Agricultural Employment Share 2001'; 'Relative Wage 2001'; 'Agricultural Value-added Share 2001'; 'Agricultural Employment Share 2022'; 'Relative Wage 2022'; 'Agricultural Value-added Share 2022'; 'GDP 2022/ GDP 2001'};
+
+% Change row order
+newOrder = [1, 4, 2, 5, 3, 6, 7]; 
+Target_compare_tab = Target_compare_tab(newOrder,:);
+
+
+%% Couterfactual analysis 
 % (increase z_l by : [5%, 10%, 15%, 20%]
 % (increase H_bar by : [5%, 10%, 15%, 20%]
 % Hence 5 * 5 cases.
@@ -144,7 +164,7 @@ Base_H_bar_1 = H_bar_series(2);
 
 Z_l_list = [Base_Z_l_1, Base_Z_l_1*1.05, Base_Z_l_1*1.1, Base_Z_l_1*1.15, Base_Z_l_1*1.20];
 
-H_bar_list = [Base_H_bar_1, Base_H_bar_1*1.05, Base_H_bar_1*1., Base_H_bar_1*1.15, Base_H_bar_1*1.20];
+H_bar_list = [Base_H_bar_1, Base_H_bar_1*1.05, Base_H_bar_1*1.1 , Base_H_bar_1*1.15, Base_H_bar_1*1.20];
 
 
 % Matrix to store the results. Only solve for the last period.
@@ -200,3 +220,119 @@ end
 BaselineGDP_mat = ones(1,1).*Counter_results_mat_GDP(1,1);
 Change_GDP_mat = (Counter_results_mat_GDP - BaselineGDP_mat)*100./BaselineGDP_mat;
 
+%% Make counterfactual results into nice tables.
+Counter_results_tab_LA = array2table(Counter_results_mat_LA);
+Change_GDP_tab = array2table(Change_GDP_mat);
+
+Counter_results_tab_LA.Properties.VariableNames = {'Baseline H_bar 2001', 'Increases H_bar by 5%', 'Increases H_bar by 10%', 'Increases H_bar by 15%', 'Increases H_bar by 20%'};
+Counter_results_tab_LA.Properties.RowNames = {'Baseline Z_l 2001', 'Increases Z_l by 5%', 'Increases Z_l by 10%', 'Increases Z_l by 15%', 'Increases Z_l by 20%'};
+
+Change_GDP_tab.Properties.VariableNames = {'Baseline H_bar 2001', 'Increases H_bar by 5%', 'Increases H_bar by 10%', 'Increases H_bar by 15%', 'Increases H_bar by 20%'};
+Change_GDP_tab.Properties.RowNames = {'Baseline Z_l 2001', 'Increases Z_l by 5%', 'Increases Z_l by 10%', 'Increases Z_l by 15%', 'Increases Z_l by 20%'};
+
+%% generate a table and save as a LaTex file
+% Best_para_tab
+input.data = Best_para_tab;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.4f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 1;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 1;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Best_para_tab.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end
+
+% Target_compare_tab
+input.data = Target_compare_tab;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.4f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 1;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 1;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Target_compare_tab.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end
+
+
+% Counter_results_tab_LA
+input.data = Counter_results_tab_LA;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.4f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 1;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 1;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Counter_results_tab_LA.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end
+
+
+% Change_GDP_tab
+input.data = Change_GDP_tab;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.4f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 1;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 1;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Change_GDP_tab.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end

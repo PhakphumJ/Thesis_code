@@ -159,13 +159,14 @@ Target_compare_tab = Target_compare_tab(newOrder,:);
 % for parameter with pp as unit. Examine the change in parameter values by
 % +- 0.01 pp, +-0.02 pp, +-0.03 pp, +- and 0.04 pp
 % for the rest, change the value of parameters by:
-% +- 0.05, +-0.10, +-0.15, +- and 0.20
+% +- 1%, +-2%, +-3%, +- and +-4%
+% +* 0.99, +-0.10, +-0.15, +- and 0.20
 
 %% Let's start with changing sigma.
 
 % Create the list of parameter being examined.
-sigma_list = [Best_SD - 0.20, Best_SD - 0.15, Best_SD - 0.10, Best_SD - 0.05, ...
-    Best_SD, Best_SD + 0.05, Best_SD + 0.10, Best_SD + 0.15, Best_SD + 0.20];
+sigma_list = [Best_SD * 0.96, Best_SD * 0.97, Best_SD * 0.98, Best_SD * 0.99, ...
+    Best_SD, Best_SD * 1.01, Best_SD * 1.02, Best_SD * 1.03, Best_SD * 1.04];
 
 % Create a matrix to store results. 7 x 9
 sen_sigma_result = zeros(7,9);
@@ -247,12 +248,12 @@ Change_sen_sigma_result = (sen_sigma_result - Baseline_case) *100 ./Baseline_cas
 
 % Make it into a nice table. 
 Change_sen_sigma_result_tab = array2table(Change_sen_sigma_result, "RowNames", {'Agricultural Employment Share 2001'; 'Relative Wage 2001'; 'Agricultural Value-added Share 2001'; 'Agricultural Employment Share 2022'; 'Relative Wage 2022'; 'Agricultural Value-added Share 2022'; 'GDP 2022/ GDP 2001'});
-Change_sen_sigma_result_tab.Properties.VariableNames = {'-0.20', '-0.15', '-0.10', '0.05', 'Cailibrated Value', '+0.05', '+0.10', '+0.15', '+0.20'};
+Change_sen_sigma_result_tab.Properties.VariableNames = {'-4\%', '-3\%', '-2\%', '-1\%', 'Cailibrated Value', '+1\%', '+2\%', '+3\%', '+4\%'};
 
 %% Next, h_bar_0
 % Create the list of parameter being examined.
-H_bar_0_list = [Best_H_bar_0 - 0.20, Best_H_bar_0 - 0.15, Best_H_bar_0 - 0.10, Best_H_bar_0 - 0.05, ...
-    Best_H_bar_0, Best_H_bar_0 + 0.05, Best_H_bar_0 + 0.10, Best_H_bar_0 + 0.15, Best_H_bar_0 + 0.20];
+H_bar_0_list = [Best_H_bar_0 * 0.96, Best_H_bar_0 * 0.97, Best_H_bar_0 * 0.98, Best_H_bar_0 * 0.99, ...
+    Best_H_bar_0, Best_H_bar_0 * 1.01, Best_H_bar_0 * 1.02, Best_H_bar_0 * 1.03, Best_H_bar_0 * 1.04];
 
 % Create a matrix to store results. 7 x 9
 sen_H_bar_0_result = zeros(7,9);
@@ -332,12 +333,12 @@ Change_sen_H_bar_0_result = (sen_H_bar_0_result - Baseline_case) *100 ./Baseline
 
 % Make it into a nice table. 
 Change_sen_H_bar_0_result_tab = array2table(Change_sen_H_bar_0_result, "RowNames", {'Agricultural Employment Share 2001'; 'Relative Wage 2001'; 'Agricultural Value-added Share 2001'; 'Agricultural Employment Share 2022'; 'Relative Wage 2022'; 'Agricultural Value-added Share 2022'; 'GDP 2022/ GDP 2001'});
-Change_sen_H_bar_0_result_tab.Properties.VariableNames = {'-0.20', '-0.15', '-0.10', '0.05', 'Cailibrated Value', '+0.05', '+0.10', '+0.15', '+0.20'};
+Change_sen_H_bar_0_result_tab.Properties.VariableNames = {'-4\%', '-3\%', '-2\%', '-1\%', 'Cailibrated Value', '+1\%', '+2\%', '+3\%', '+4\%'};
 
 %% Next, Z_L_0
 % Create the list of parameter being examined.
-Z_L_0_list = [Best_Z_l_0 - 0.20, Best_Z_l_0 - 0.15, Best_Z_l_0 - 0.10, Best_Z_l_0 - 0.05, ...
-    Best_Z_l_0, Best_Z_l_0 + 0.05, Best_Z_l_0 + 0.10, Best_Z_l_0 + 0.15, Best_Z_l_0 + 0.20];
+Z_L_0_list = [Best_Z_l_0 * 0.96, Best_Z_l_0 * 0.97, Best_Z_l_0 * 0.98, Best_Z_l_0 * 0.99, ...
+    Best_Z_l_0, Best_Z_l_0 * 1.01, Best_Z_l_0 * 1.02, Best_Z_l_0 * 1.03, Best_Z_l_0 * 1.04];
 
 % Create a matrix to store results. 7 x 9
 sen_Z_L_0_result = zeros(7,9);
@@ -417,12 +418,12 @@ Change_sen_Z_L_0_result = (sen_Z_L_0_result - Baseline_case) *100 ./Baseline_cas
 
 % Make it into a nice table. 
 Change_sen_Z_L_0_result_tab = array2table(Change_sen_Z_L_0_result, "RowNames", {'Agricultural Employment Share 2001'; 'Relative Wage 2001'; 'Agricultural Value-added Share 2001'; 'Agricultural Employment Share 2022'; 'Relative Wage 2022'; 'Agricultural Value-added Share 2022'; 'GDP 2022/ GDP 2001'});
-Change_sen_Z_L_0_result_tab.Properties.VariableNames = {'-0.20', '-0.15', '-0.10', '0.05', 'Cailibrated Value', '+0.05', '+0.10', '+0.15', '+0.20'};
+Change_sen_Z_L_0_result_tab.Properties.VariableNames = {'-4\%', '-3\%', '-2\%', '-1\%', 'Cailibrated Value', '+1\%', '+2\%', '+3\%', '+4\%'};
 
 %% Next, Z_T_0
 % Create the list of parameter being examined.
-Z_T_0_list = [Best_Z_t_0 - 0.20, Best_Z_t_0 - 0.15, Best_Z_t_0 - 0.10, Best_Z_t_0 - 0.05, ...
-    Best_Z_t_0, Best_Z_t_0 + 0.05, Best_Z_t_0 + 0.10, Best_Z_t_0 + 0.15, Best_Z_t_0 + 0.20];
+Z_T_0_list = [Best_Z_t_0 * 0.96, Best_Z_t_0 * 0.97, Best_Z_t_0 * 0.98, Best_Z_t_0 * 0.99, ...
+    Best_Z_t_0, Best_Z_t_0 * 1.01, Best_Z_t_0 * 1.02, Best_Z_t_0 * 1.03, Best_Z_t_0 * 1.04];
 
 % Create a matrix to store results. 7 x 9
 sen_Z_T_0_result = zeros(7,9);
@@ -502,12 +503,12 @@ Change_sen_Z_T_0_result = (sen_Z_T_0_result - Baseline_case) *100 ./Baseline_cas
 
 % Make it into a nice table. 
 Change_sen_Z_T_0_result_tab = array2table(Change_sen_Z_T_0_result, "RowNames", {'Agricultural Employment Share 2001'; 'Relative Wage 2001'; 'Agricultural Value-added Share 2001'; 'Agricultural Employment Share 2022'; 'Relative Wage 2022'; 'Agricultural Value-added Share 2022'; 'GDP 2022/ GDP 2001'});
-Change_sen_Z_T_0_result_tab.Properties.VariableNames = {'-0.20', '-0.15', '-0.10', '0.05', 'Cailibrated Value', '+0.05', '+0.10', '+0.15', '+0.20'};
+Change_sen_Z_T_0_result_tab.Properties.VariableNames = {'-4\%', '-3\%', '-2\%', '-1\%', 'Cailibrated Value', '+1\%', '+2\%', '+3\%', '+4\%'};
 
 %% Next, G_Z_L
 % Create the list of parameter being examined.
-G_Z_L_list = [Best_g_z_l - 0.04, Best_g_z_l - 0.03, Best_g_z_l - 0.02, Best_g_z_l - 0.01, ...
-    Best_g_z_l, Best_g_z_l + 0.01, Best_g_z_l + 0.02, Best_g_z_l + 0.03, Best_g_z_l + 0.04];
+G_Z_L_list = [Best_g_z_l * 0.96, Best_g_z_l * 0.97, Best_g_z_l * 0.98, Best_g_z_l * 0.99, ...
+    Best_g_z_l, Best_g_z_l * 1.01, Best_g_z_l * 1.02, Best_g_z_l * 1.03, Best_g_z_l * 1.04];
 
 % Create a matrix to store results. 7 x 9
 sen_G_Z_L_result = zeros(7,9);
@@ -517,7 +518,7 @@ sen_G_Z_L_result = zeros(7,9);
 
 
 for G_Z_L = 1:length(G_Z_L_list)
-    G_Z_l = G_Z_L_list(Z_T_0);
+    G_Z_l = G_Z_L_list(G_Z_L);
 
     % Create exogenous variables. 
     Z_m_series = [Z_m_0, Z_m_0 * (1+Best_g_z_m)];
@@ -538,7 +539,6 @@ for G_Z_L = 1:length(G_Z_L_list)
         Hbar_t = H_bar_series(t);
         P_t = P_series(t);
         T_t = T_series(t);
-        
         % Choose a reasonable starting point
         x0 = [0.5; Z_lt; Z_mt];
     
@@ -587,4 +587,172 @@ Change_sen_G_Z_L_result = (sen_G_Z_L_result - Baseline_case) *100 ./Baseline_cas
 
 % Make it into a nice table. 
 Change_sen_G_Z_L_result_tab = array2table(Change_sen_G_Z_L_result, "RowNames", {'Agricultural Employment Share 2001'; 'Relative Wage 2001'; 'Agricultural Value-added Share 2001'; 'Agricultural Employment Share 2022'; 'Relative Wage 2022'; 'Agricultural Value-added Share 2022'; 'GDP 2022/ GDP 2001'});
-Change_sen_G_Z_L_result_tab.Properties.VariableNames = {'-0.04 pp', '-0.03 pp', '-0.02 pp', '-0.01 pp', 'Cailibrated Value', '+0.01 pp', '+0.02 pp', '+0.03 pp', '+0.04 pp'};
+Change_sen_G_Z_L_result_tab.Properties.VariableNames = {'-4\%', '-3\%', '-2\%', '-1\%', 'Cailibrated Value', '+1\%', '+2\%', '+3\%', '+4\%'};
+
+%% Next, G_Z_T
+% Create the list of parameter being examined.
+G_Z_T_list = [Best_g_z_t * 0.96, Best_g_z_t * 0.97, Best_g_z_t * 0.98, Best_g_z_t * 0.99, ...
+    Best_g_z_t, Best_g_z_t * 1.01, Best_g_z_t * 1.02, Best_g_z_t * 1.03, Best_g_z_t * 1.04];
+
+% Create a matrix to store results. 7 x 9
+sen_G_Z_T_result = zeros(7,9);
+
+
+% Solve the model and compute the target moments.
+
+
+for G_Z_T = 1:length(G_Z_T_list)
+    G_Z_t = G_Z_L_list(G_Z_T);
+
+    % Create exogenous variables. 
+    Z_m_series = [Z_m_0, Z_m_0 * (1+Best_g_z_m)];
+    Z_l_series = [Best_Z_l_0, Best_Z_l_0 * (1+Best_g_z_l)];
+    Z_t_series = [Best_Z_t_0, Best_Z_t_0 * (1+G_Z_t)];
+    H_bar_series = [Best_H_bar_0, Best_H_bar_0*(1+g_H_bar)];
+
+    % Matrix to store results in each period (2*3)
+    soln_mat = zeros(2,3);
+    
+    gdp_mat = zeros(2,1);
+
+    for t = 1:2
+        Z_lt = Z_l_series(t);
+        Z_tt = Z_t_series(t);
+        Z_mt = Z_m_series(t);
+    
+        Hbar_t = H_bar_series(t);
+        P_t = P_series(t);
+        T_t = T_series(t);
+        % Choose a reasonable starting point
+        x0 = [0.5; Z_lt; Z_mt];
+    
+        % Find the equilibrium
+        x_star = fsolve(@(x)Final_Model_Function(x, Z_lt, Z_tt, Z_mt, Mu, Hbar_t, Best_SD, P_t, T_t), x0);
+    
+        % Calculate W_m * avg h in sector m
+        h_in_m = (Hbar_t +  ...
+        Best_SD*pdf('Normal', ((x_star(2)/x_star(3)) - Hbar_t)/SD, 0, 1)/(1- cdf('Normal', ((x_star(2)/x_star(3)) - Hbar_t)/Best_SD, 0, 1)));
+    
+        Real_world_W_m = x_star(3)*h_in_m;
+    
+        % Calculate Y_a_t, Y_m_t
+        Y_a_t = ((Z_lt*x_star(1))^((Mu-1)/Mu) + (Z_tt*T_t)^((Mu-1)/Mu))...
+        ^(Mu/(Mu - 1));
+        Y_m_t = Z_mt * h_in_m;
+    
+        % Calculate the simulated moments
+        L_a_sim = x_star(1);
+        W_a_to_W_m_rw_sim = x_star(2)/Real_world_W_m;
+        Agri_VA_Share_sim = P_t * Y_a_t/(P_t * Y_a_t + Y_m_t);
+    
+        % Calculate the norminal gdp
+        gdp_sim = P_t * Y_a_t + Y_m_t;
+    
+        % Store in the matrix.
+        soln_mat(t,:) = [L_a_sim, W_a_to_W_m_rw_sim, Agri_VA_Share_sim];
+        gdp_mat(t) = gdp_sim;
+    end
+
+    % Convert to 1*6 matrix.
+    soln_mat = reshape(soln_mat', [1,6]);
+    
+    % Calculate and store the last moment (ratio b/w gdp of the 2 years)
+    GDP2022toGDPto1993_sim = gdp_mat(2)/gdp_mat(1);
+    
+    soln_mat = [soln_mat, GDP2022toGDPto1993_sim];
+
+    % Compile the coumputed target moments for this value of parameter.
+    sen_G_Z_T_result(:, G_Z_T) = soln_mat;
+end
+
+% Compute the % change from the baseline case.
+Baseline_case = sen_G_Z_T_result(:,5);
+Change_sen_G_Z_T_result = (sen_G_Z_T_result - Baseline_case) *100 ./Baseline_case;
+
+% Make it into a nice table. 
+Change_sen_G_Z_T_result_tab = array2table(Change_sen_G_Z_T_result, "RowNames", {'Agricultural Employment Share 2001'; 'Relative Wage 2001'; 'Agricultural Value-added Share 2001'; 'Agricultural Employment Share 2022'; 'Relative Wage 2022'; 'Agricultural Value-added Share 2022'; 'GDP 2022/ GDP 2001'});
+Change_sen_G_Z_T_result_tab.Properties.VariableNames = {'-4\%', '-3\%', '-2\%', '-1\%', 'Cailibrated Value', '+1\%', '+2\%', '+3\%', '+4\%'};
+
+%% Next, G_Z_M
+% Create the list of parameter being examined.
+G_Z_M_list = [Best_g_z_m * 0.96, Best_g_z_m * 0.97, Best_g_z_m * 0.98, Best_g_z_m * 0.99, ...
+    Best_g_z_m, Best_g_z_m * 1.01, Best_g_z_m * 1.02, Best_g_z_m * 1.03, Best_g_z_m * 1.04];
+
+% Create a matrix to store results. 7 x 9
+sen_G_Z_M_result = zeros(7,9);
+
+
+% Solve the model and compute the target moments.
+
+
+for G_Z_M = 1:length(G_Z_M_list)
+    G_Z_m = G_Z_M_list(G_Z_M);
+
+    % Create exogenous variables. 
+    Z_m_series = [Z_m_0, Z_m_0 * (1+G_Z_m)];
+    Z_l_series = [Best_Z_l_0, Best_Z_l_0 * (1+Best_g_z_l)];
+    Z_t_series = [Best_Z_t_0, Best_Z_t_0 * (1+Best_g_z_t)];
+    H_bar_series = [Best_H_bar_0, Best_H_bar_0*(1+g_H_bar)];
+
+    % Matrix to store results in each period (2*3)
+    soln_mat = zeros(2,3);
+    
+    gdp_mat = zeros(2,1);
+
+    for t = 1:2
+        Z_lt = Z_l_series(t);
+        Z_tt = Z_t_series(t);
+        Z_mt = Z_m_series(t);
+    
+        Hbar_t = H_bar_series(t);
+        P_t = P_series(t);
+        T_t = T_series(t);
+        % Choose a reasonable starting point
+        x0 = [0.5; Z_lt; Z_mt];
+    
+        % Find the equilibrium
+        x_star = fsolve(@(x)Final_Model_Function(x, Z_lt, Z_tt, Z_mt, Mu, Hbar_t, Best_SD, P_t, T_t), x0);
+    
+        % Calculate W_m * avg h in sector m
+        h_in_m = (Hbar_t +  ...
+        Best_SD*pdf('Normal', ((x_star(2)/x_star(3)) - Hbar_t)/SD, 0, 1)/(1- cdf('Normal', ((x_star(2)/x_star(3)) - Hbar_t)/Best_SD, 0, 1)));
+    
+        Real_world_W_m = x_star(3)*h_in_m;
+    
+        % Calculate Y_a_t, Y_m_t
+        Y_a_t = ((Z_lt*x_star(1))^((Mu-1)/Mu) + (Z_tt*T_t)^((Mu-1)/Mu))...
+        ^(Mu/(Mu - 1));
+        Y_m_t = Z_mt * h_in_m;
+    
+        % Calculate the simulated moments
+        L_a_sim = x_star(1);
+        W_a_to_W_m_rw_sim = x_star(2)/Real_world_W_m;
+        Agri_VA_Share_sim = P_t * Y_a_t/(P_t * Y_a_t + Y_m_t);
+    
+        % Calculate the norminal gdp
+        gdp_sim = P_t * Y_a_t + Y_m_t;
+    
+        % Store in the matrix.
+        soln_mat(t,:) = [L_a_sim, W_a_to_W_m_rw_sim, Agri_VA_Share_sim];
+        gdp_mat(t) = gdp_sim;
+    end
+
+    % Convert to 1*6 matrix.
+    soln_mat = reshape(soln_mat', [1,6]);
+    
+    % Calculate and store the last moment (ratio b/w gdp of the 2 years)
+    GDP2022toGDPto1993_sim = gdp_mat(2)/gdp_mat(1);
+    
+    soln_mat = [soln_mat, GDP2022toGDPto1993_sim];
+
+    % Compile the coumputed target moments for this value of parameter.
+    sen_G_Z_M_result(:, G_Z_M) = soln_mat;
+end
+
+% Compute the % change from the baseline case.
+Baseline_case = sen_G_Z_M_result(:,5);
+Change_sen_G_Z_M_result = (sen_G_Z_M_result - Baseline_case) *100 ./Baseline_case;
+
+% Make it into a nice table. 
+Change_sen_G_Z_M_result_tab = array2table(Change_sen_G_Z_M_result, "RowNames", {'Agricultural Employment Share 2001'; 'Relative Wage 2001'; 'Agricultural Value-added Share 2001'; 'Agricultural Employment Share 2022'; 'Relative Wage 2022'; 'Agricultural Value-added Share 2022'; 'GDP 2022/ GDP 2001'});
+Change_sen_G_Z_M_result_tab.Properties.VariableNames = {'-4\%', '-3\%', '-2\%', '-1\%', 'Cailibrated Value', '+1\%', '+2\%', '+3\%', '+4\%'};

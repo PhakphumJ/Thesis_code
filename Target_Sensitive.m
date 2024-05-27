@@ -756,3 +756,191 @@ Change_sen_G_Z_M_result = (sen_G_Z_M_result - Baseline_case) *100 ./Baseline_cas
 % Make it into a nice table. 
 Change_sen_G_Z_M_result_tab = array2table(Change_sen_G_Z_M_result, "RowNames", {'Agricultural Employment Share 2001'; 'Relative Wage 2001'; 'Agricultural Value-added Share 2001'; 'Agricultural Employment Share 2022'; 'Relative Wage 2022'; 'Agricultural Value-added Share 2022'; 'GDP 2022/ GDP 2001'});
 Change_sen_G_Z_M_result_tab.Properties.VariableNames = {'-4\%', '-3\%', '-2\%', '-1\%', 'Cailibrated Value', '+1\%', '+2\%', '+3\%', '+4\%'};
+
+%% generate a table and save as a LaTex file
+% Change_sen_sigma_result_tab
+input.data = Change_sen_sigma_result_tab;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.4f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 0;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 0;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Change_sen_sigma_result_tab.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end
+
+
+% Change_sen_H_bar_0_result_tab
+input.data = Change_sen_H_bar_0_result_tab;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.4f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 0;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 0;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Change_sen_H_bar_0_result_tab.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end
+
+% Change_sen_Z_L_0_result_tab
+input.data = Change_sen_Z_L_0_result_tab;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.4f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 0;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 0;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Change_sen_Z_L_0_result_tab.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end
+
+
+% Change_sen_Z_T_0_result_tab
+input.data = Change_sen_Z_T_0_result_tab;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.6f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 0;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 0;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Change_sen_Z_T_0_result_tab.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end
+
+
+% Change_sen_G_Z_T_result_tab
+input.data = Change_sen_G_Z_T_result_tab;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.6f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 0;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 0;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Change_sen_G_Z_T_result_tab.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end
+
+
+% Change_sen_G_Z_L_result_tab
+input.data = Change_sen_G_Z_L_result_tab;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.4f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 0;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 0;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Change_sen_G_Z_L_result_tab.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end
+
+
+% Change_sen_G_Z_M_result_tab
+input.data = Change_sen_G_Z_M_result_tab;
+
+% Set the row format of the data values (in this example we want to use
+% integers only):
+input.dataFormat = {'%.4f'};
+
+% Column alignment ('l'=left-justified, 'c'=centered,'r'=right-justified):
+input.tableColumnAlignment = 'c';
+
+% Switch table borders on/off:
+input.tableBorders = 0;
+
+% Switch to generate a complete LaTex document or just a table:
+input.makeCompleteLatexDocument = 0;
+
+% Now call the function to generate LaTex code:
+latex = latexTable(input);
+
+% save LaTex code as file
+fid=fopen('Change_sen_G_Z_M_result_tab.tex','w');
+[nrows,ncols] = size(latex);
+for row = 1:nrows
+    fprintf(fid,'%s\n',latex{row,:});
+end

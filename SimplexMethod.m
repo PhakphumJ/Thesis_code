@@ -242,10 +242,10 @@ input.dataFormat = {'%.4f'};
 input.tableColumnAlignment = 'c';
 
 % Switch table borders on/off:
-input.tableBorders = 1;
+input.tableBorders = 0;
 
 % Switch to generate a complete LaTex document or just a table:
-input.makeCompleteLatexDocument = 1;
+input.makeCompleteLatexDocument = 0;
 
 % Now call the function to generate LaTex code:
 latex = latexTable(input);
@@ -268,10 +268,10 @@ input.dataFormat = {'%.4f'};
 input.tableColumnAlignment = 'c';
 
 % Switch table borders on/off:
-input.tableBorders = 1;
+input.tableBorders = 0;
 
 % Switch to generate a complete LaTex document or just a table:
-input.makeCompleteLatexDocument = 1;
+input.makeCompleteLatexDocument = 0;
 
 % Now call the function to generate LaTex code:
 latex = latexTable(input);
@@ -295,10 +295,10 @@ input.dataFormat = {'%.4f'};
 input.tableColumnAlignment = 'c';
 
 % Switch table borders on/off:
-input.tableBorders = 1;
+input.tableBorders = 0;
 
 % Switch to generate a complete LaTex document or just a table:
-input.makeCompleteLatexDocument = 1;
+input.makeCompleteLatexDocument = 0;
 
 % Now call the function to generate LaTex code:
 latex = latexTable(input);
@@ -322,10 +322,10 @@ input.dataFormat = {'%.4f'};
 input.tableColumnAlignment = 'c';
 
 % Switch table borders on/off:
-input.tableBorders = 1;
+input.tableBorders = 0;
 
 % Switch to generate a complete LaTex document or just a table:
-input.makeCompleteLatexDocument = 1;
+input.makeCompleteLatexDocument = 0;
 
 % Now call the function to generate LaTex code:
 latex = latexTable(input);

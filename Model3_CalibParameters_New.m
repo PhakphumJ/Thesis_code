@@ -16,26 +16,25 @@ g_H_bar =  0.4608; %(growth of mean years of schooling)
 
 %% Exogenous variables 
 % Land series
-T_series = [6.8489, 5.9502];
-
+T_series = [6848, 5991];
 % Price series
-P_series = [0.9247,  1.4156];
+P_series = [1,  1.5309];
 
 
 %% Set-up the grid of parameters for searching (7 parameters)
 % Z_l_0, Z_t_0, H_bar_0
 % g_z_m, g_z_l, g_z_t, SD
 
-Z_l_0_list = linspace(0.2,1.5,71);
-g_z_l_list = linspace(0.4,1.9,86);
+Z_l_0_list = linspace(0.2,1.2,56);
+g_z_l_list = linspace(0.8,1.9,56);
 
-Z_t_0_list = linspace(0.2,1.5,71);
-g_z_t_list = linspace(0.4,1.9,86);
+Z_t_0_list = linspace(1.5,6,226);
+g_z_t_list = linspace(0.8,2.8,101);
 
-g_z_m_list = linspace(0.4,1.9,86);
+g_z_m_list = linspace(0.8,1.9,56);
 
-H_bar_0_list = linspace(0.1, 7, 70);
-SD_list = logspace(log10(0.05), log10(14), 160);
+H_bar_0_list = linspace(0.1, 4, 40);
+SD_list = linspace(0.1, 6, 60);
 
 %% Declare target moments
 
@@ -53,11 +52,11 @@ GDP2022toGDPto1993 = 2.6667;
 Actual_MM = [L_a0, W_a_0_to_W_m_rw_0, Agri_VA_Share_0, L_a1, W_a_1_to_W_m_rw_1, Agri_VA_Share_1, GDP2022toGDPto1993];
 
 %% Weight Matrix. Give less weight to relative wage since it is less reliable and not the main focus.
-Weight = [1, 1, 1, 1, 1, 1, 1];
+Weight = [1.5, 1.25, 1.5, 1.5, 1.25, 1.5, 1.5];
 
 %% Do random serch.
-% Draw random combination of parameters. Do it 500,000 times. 
-% There are 6,543,049,590,000 possible combination of parameter values. 
+% Draw random combination of parameters. Do it 100,000 times. 
+% There are 16,022,476,166,400 possible combination of parameter values. 
 n = 5000; %(5,000 for now)
 
 % set seed
@@ -69,7 +68,7 @@ Search_results_Mat = zeros(n,8);
 i = 1;
 while i <= n
     % Randomly pick parameter values
-    Z_l_0 = randsample(Z_l_0_list, 1);
+    Z_l_0 = randsample(Z_l_0_list,   1);
     g_z_l = randsample(g_z_l_list, 1);
     g_z_m = randsample(g_z_m_list, 1);
     Z_t_0 = randsample(Z_t_0_list, 1);
